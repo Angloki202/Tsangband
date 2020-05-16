@@ -1431,6 +1431,10 @@ static void describe_monster_abilities(int r_idx, const monster_lore *l_ptr)
 	{
 		text_out(format("%^s is a being of ice and frost.  ", wd_he[msex]));
 	}
+	if (l_ptr->flags0 & (RF0_FIERY))
+	{
+		text_out(format("%^s is a being of flames.  ", wd_he[msex]));
+	}
 }
 
 
