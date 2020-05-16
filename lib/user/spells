@@ -1,0 +1,45 @@
+### (Automatic deletion marker) ### begin Projection attr/char definitions
+#
+# If marked, changes below will be deleted and replaced automatically.
+
+
+# Default set of projection graphics, used in all cases not specified below
+S:0:0/168:0/169:0/170:0/171:0/172
+
+# Rock
+S:1:0/9:0/9:0/9:0/9:0/174
+
+# Shot
+S:2:0/124:0/45:0/47:0/92:0/42
+
+# Arrow
+S:3:0/124:0/45:0/47:0/92:0/42
+
+# Missile
+S:4:0/124:0/45:0/47:0/92:0/42
+
+# Poison Missile
+S:5:0/124:0/45:0/47:0/92:0/42
+
+# Whip
+S:6:0/124:0/45:0/47:0/92:0/42
+
+# Lightning
+S:9:0/168:0/169:0/170:0/171:0/173
+
+# Plasma
+S:13:0/168:0/169:0/170:0/171:0/173
+
+# Force
+S:31:0/168:0/169:0/170:0/171:0/174
+
+# Water
+S:32:0/124:0/45:0/47:0/92:0/172
+
+# Chaos
+S:42:0/168:0/169:0/170:0/171:0/174
+
+
+# If marked, changes above will be deleted and replaced automatically.
+#
+### (Automatic deletion marker) ### end Projection attr/char definitions
