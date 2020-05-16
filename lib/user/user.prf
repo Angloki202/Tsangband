@@ -1,0 +1,2151 @@
+### (Automatic deletion marker) ### begin Object attr/char definitions
+#
+# If marked, changes below will be deleted and replaced automatically.
+
+
+# <pile>
+K:0:w:42
+
+# blindness
+K:1:d:44
+
+# paranoia
+K:2:d:44
+
+# confusion
+K:3:d:44
+
+# hallucination
+K:4:d:44
+
+# paralysis
+K:5:d:44
+
+# poison
+K:7:d:44
+
+# envenomation
+K:8:d:44
+
+# sickness
+K:9:d:44
+
+# disease
+K:10:d:44
+
+# ruination
+K:11:d:44
+
+# metamorphosis
+K:12:d:44
+
+# mania
+K:13:d:44
+
+# mana
+K:15:d:44
+
+# cure poison
+K:16:d:44
+
+# cure blindness
+K:17:d:44
+
+# cure confusion
+K:18:d:44
+
+# mending
+K:19:d:44
+
+# curing
+K:20:d:44
+
+# restoring
+K:21:d:44
+
+# boldness
+K:23:d:44
+
+# heroism
+K:24:d:44
+
+# berserkergang
+K:25:d:44
+
+# vitality
+K:26:d:44
+
+# armoring
+K:27:d:44
+
+# slime mold
+K:30:m:44
+
+# hard biscuit
+K:31:U:44
+
+# strip of beef jerky
+K:32:u:44
+
+# ration of food
+K:33:U:44
+
+# cake of the beornings
+K:34:U:44
+
+# piece of elvish waybread
+K:35:B:44
+
+# pint of fine ale
+K:36:y:44
+
+# flagon of fine wine
+K:37:r:44
+
+# sprig of athelas
+K:38:g:44
+
+# dram of orcish firewater
+K:39:R:44
+
+# strip of mumak jerky
+K:40:u:44
+
+# broken sword
+K:42:D:124
+
+# throwing knife
+K:43:o:124
+
+# dagger
+K:44:W:124
+
+# main gauche
+K:45:W:124
+
+# rapier
+K:47:W:124
+
+# small sword
+K:48:W:124
+
+# short sword
+K:50:W:124
+
+# sabre
+K:51:W:124
+
+# cutlass
+K:52:W:124
+
+# sacrificial dagger
+K:55:W:124
+
+# broad sword
+K:56:W:124
+
+# long sword
+K:57:W:124
+
+# scimitar
+K:58:W:124
+
+# katana
+K:60:W:124
+
+# bastard sword
+K:61:W:124
+
+# two-handed sword
+K:65:W:124
+
+# fellblade
+K:67:o:124
+
+# executioner's sword
+K:68:W:124
+
+# bluesteel blade
+K:69:B:124
+
+# blade of chaos
+K:70:P:124
+
+# whip
+K:72:W:92
+
+# quarterstaff
+K:73:U:92
+
+# throwing hammer
+K:74:o:92
+
+# mace
+K:75:D:92
+
+# ball-and-chain
+K:76:D:92
+
+# war hammer
+K:78:D:92
+
+# spiked club
+K:80:U:92
+
+# morning star
+K:82:W:92
+
+# flail
+K:83:u:92
+
+# lead-filled mace
+K:85:D:92
+
+# two-handed flail
+K:88:y:92
+
+# mace of disruption
+K:90:P:92
+
+# javelin
+K:96:o:47
+
+# spear
+K:97:U:47
+
+# warspike
+K:98:D:47
+
+# trident
+K:99:y:47
+
+# pike
+K:100:u:47
+
+# throwing axe
+K:103:o:47
+
+# beaked axe
+K:104:D:47
+
+# broad axe
+K:105:D:47
+
+# battle axe
+K:106:D:47
+
+# great axe
+K:107:D:47
+
+# glaive
+K:110:W:47
+
+# halberd
+K:111:W:47
+
+# scythe
+K:113:W:47
+
+# scythe of slicing
+K:114:B:47
+
+# sling
+K:127:u:125
+
+# giantslayer sling
+K:128:o:125
+
+# short bow
+K:130:U:125
+
+# long bow
+K:131:U:125
+
+# true bow
+K:132:G:125
+
+# hand crossbow
+K:133:u:125
+
+# light crossbow
+K:134:W:125
+
+# heavy crossbow
+K:135:s:125
+
+# triple crossbow
+K:136:B:125
+
+# stone pebble
+K:137:W:8
+
+# lead shot
+K:138:s:8
+
+# seeker shot
+K:139:o:8
+
+# arrow
+K:141:W:166
+
+# arrow
+K:142:U:166
+
+# seeker arrow
+K:143:G:166
+
+# bolt
+K:145:D:166
+
+# bolt
+K:146:s:166
+
+# seeker bolt
+K:147:B:166
+
+# shovel
+K:150:s:92
+
+# gnomish shovel
+K:151:G:92
+
+# dwarven shovel
+K:152:B:92
+
+# pick
+K:153:s:92
+
+# orcish pick
+K:154:g:92
+
+# dwarven pick
+K:155:B:92
+
+# pair of sandals
+K:158:U:93
+
+# pair of leather boots
+K:159:U:93
+
+# pair of hard boots
+K:160:U:93
+
+# pair of reinforced boots
+K:161:s:93
+
+# pair of dwarven boots
+K:162:B:93
+
+# pair of excellent boots
+K:163:R:93
+
+# leather cap
+K:167:u:93
+
+# hardened cap
+K:168:s:93
+
+# barbut
+K:169:s:93
+
+# full helm
+K:170:s:93
+
+# war helmet
+K:171:W:93
+
+# dragon helm
+K:172:G:93
+
+# heroic helmet
+K:173:M:93
+
+# iron crown
+K:175:s:93
+
+# golden crown
+K:176:y:93
+
+# jewel encrusted crown
+K:177:P:93
+
+# filthy rag
+K:180:D:40
+
+# robe
+K:181:b:40
+
+# leather armor
+K:182:U:40
+
+# studded leather
+K:183:U:40
+
+# hard leather armor
+K:184:U:40
+
+# iron-padded leather
+K:185:U:40
+
+# leather scale mail
+K:188:U:40
+
+# mumakil armor
+K:189:m:40
+
+# brigandine armor
+K:191:D:91
+
+# rusty chain mail
+K:192:r:91
+
+# chain mail
+K:193:s:91
+
+# scale mail
+K:194:D:91
+
+# augmented chain mail
+K:196:s:91
+
+# segmented plate mail
+K:198:s:91
+
+# half-plate armor
+K:200:W:91
+
+# full plate armor
+K:202:W:91
+
+# imperial plate armor
+K:204:W:91
+
+# mithril chain mail
+K:206:B:91
+
+# mithril plate armor
+K:208:B:91
+
+# adamantite plate armor
+K:210:G:91
+
+# black dragon scale mail
+K:213:s:91
+
+# blue dragon scale mail
+K:214:b:91
+
+# white dragon scale mail
+K:215:w:91
+
+# red dragon scale mail
+K:216:r:91
+
+# green dragon scale mail
+K:217:g:91
+
+# multi-hued dragon scale mail
+K:218:P:91
+
+# ethereal dragon scale mail
+K:220:o:91
+
+# morphic dragon scale mail
+K:222:M:91
+
+# bronze dragon scale mail
+K:223:U:91
+
+# gold dragon scale mail
+K:224:y:91
+
+# chaos dragon scale mail
+K:226:P:91
+
+# law dragon scale mail
+K:227:B:91
+
+# balance dragon scale mail
+K:228:P:91
+
+# power dragon scale mail
+K:229:P:91
+
+# cloak
+K:230:g:40
+
+# battle cape
+K:231:U:40
+
+# elven cloak
+K:232:G:40
+
+# shadow cloak
+K:233:D:40
+
+# ethereal cloak
+K:235:W:40
+
+# set of leather gloves
+K:237:U:93
+
+# set of mail gauntlets
+K:238:s:93
+
+# set of steel gauntlets
+K:239:w:93
+
+# set of cesti
+K:240:W:93
+
+# set of runed gloves
+K:241:v:93
+
+# wicker shield
+K:244:U:41
+
+# small shield
+K:245:U:41
+
+# buckler
+K:246:s:41
+
+# round shield
+K:247:U:41
+
+# battle shield
+K:248:s:41
+
+# knight's shield
+K:249:W:41
+
+# body shield
+K:250:U:41
+
+# shield of deflection
+K:253:B:41
+
+# woe
+K:260:d:61
+
+# aggravation
+K:261:d:61
+
+# teleportation
+K:262:d:61
+
+# holiness
+K:265:d:61
+
+# darkness
+K:266:d:61
+
+# resist acid
+K:267:d:61
+
+# resist fire
+K:268:d:61
+
+# resist cold
+K:269:d:61
+
+# poison resistance
+K:270:d:61
+
+# nether resistance
+K:271:d:61
+
+# chaos resistance
+K:272:d:61
+
+# sustain body
+K:275:d:61
+
+# sustain mind
+K:276:d:61
+
+# protection
+K:277:d:61
+
+# acid
+K:278:d:61
+
+# lightning
+K:279:d:61
+
+# flames
+K:280:d:61
+
+# ice
+K:281:d:61
+
+# venom
+K:282:d:61
+
+# free action
+K:283:d:61
+
+# see invisible
+K:284:d:61
+
+# awareness
+K:285:d:61
+
+# invisibility
+K:286:d:61
+
+# speed
+K:287:d:61
+
+# strength
+K:288:d:61
+
+# dexterity
+K:289:d:61
+
+# constitution
+K:290:d:61
+
+# skill
+K:294:d:61
+
+# deadliness
+K:295:d:61
+
+# combat
+K:296:d:61
+
+# doom
+K:300:d:34
+
+# teleportation
+K:301:d:34
+
+# infravision
+K:302:d:34
+
+# slow digestion
+K:303:d:34
+
+# feather falling
+K:304:d:34
+
+# magical item mastery
+K:305:d:34
+
+# sustenance
+K:306:d:34
+
+# escaping
+K:307:d:34
+
+# mana
+K:308:d:34
+
+# recharging
+K:309:d:34
+
+# the magi
+K:310:d:34
+
+# intelligence
+K:311:d:34
+
+# wisdom
+K:312:d:34
+
+# charisma
+K:313:d:34
+
+# trickery
+K:314:d:34
+
+# magical protection
+K:317:d:34
+
+# darkness
+K:320:w:63
+
+# aggravate monster
+K:321:w:63
+
+# curse armor
+K:322:w:63
+
+# curse weapon
+K:323:w:63
+
+# summon monster
+K:324:w:63
+
+# summon undead
+K:325:w:63
+
+# summon the host of hell
+K:326:w:63
+
+# trap creation
+K:327:w:63
+
+# phase door
+K:328:w:63
+
+# teleportation
+K:329:w:63
+
+# teleport level
+K:330:w:63
+
+# word of recall
+K:331:w:63
+
+# learn magic
+K:332:w:63
+
+# identify
+K:333:w:63
+
+# *identify*
+K:334:w:63
+
+# remove curse
+K:335:w:63
+
+# *remove curse*
+K:336:w:63
+
+# enchant armor
+K:337:w:63
+
+# enchant weapon (skill)
+K:338:w:63
+
+# enchant weapon (deadliness)
+K:339:w:63
+
+# *enchant armor*
+K:340:w:63
+
+# *enchant weapon*
+K:341:w:63
+
+# recharging
+K:342:w:63
+
+# *recharging*
+K:343:w:63
+
+# light
+K:344:w:63
+
+# magic mapping
+K:345:w:63
+
+# treasure detection
+K:346:w:63
+
+# object detection
+K:347:w:63
+
+# trap location
+K:348:w:63
+
+# door/stair location
+K:349:w:63
+
+# detect invisible
+K:350:w:63
+
+# elemental attacks
+K:351:w:63
+
+# satisfy hunger
+K:352:w:63
+
+# blessing
+K:353:w:63
+
+# holy chant
+K:354:w:63
+
+# holy prayer
+K:355:w:63
+
+# monster confusion
+K:356:w:63
+
+# protection from evil
+K:357:w:63
+
+# rune of protection
+K:358:w:63
+
+# force door
+K:359:w:63
+
+# questing
+K:360:w:63
+
+# *destruction*
+K:361:w:63
+
+# poison cloud
+K:362:w:63
+
+# invoke nexus
+K:363:w:63
+
+# genocide
+K:364:w:63
+
+# mass genocide
+K:365:w:63
+
+# acquirement
+K:366:w:63
+
+# *acquirement*
+K:367:w:63
+
+# alter reality
+K:368:w:63
+
+# madness
+K:369:w:63
+
+# nightfall
+K:370:w:63
+
+# forests
+K:371:w:63
+
+# the sea
+K:372:w:63
+
+# magma
+K:373:w:63
+
+# water
+K:380:d:33
+
+# apple juice
+K:381:d:33
+
+# slime mold juice
+K:382:d:33
+
+# essences
+K:383:d:33
+
+# slowness
+K:384:d:33
+
+# salt water
+K:385:d:33
+
+# poison
+K:386:d:33
+
+# blindness
+K:387:d:33
+
+# confusion
+K:389:d:33
+
+# sleep
+K:391:d:33
+
+# lose memories
+K:393:d:33
+
+# weakness
+K:396:d:33
+
+# stupidity
+K:397:d:33
+
+# naivety
+K:398:d:33
+
+# clumsiness
+K:399:d:33
+
+# sickliness
+K:400:d:33
+
+# ugliness
+K:401:d:33
+
+# detonations
+K:402:d:33
+
+# death
+K:403:d:33
+
+# infra-vision
+K:404:d:33
+
+# detect invisible
+K:405:d:33
+
+# slow poison
+K:406:d:33
+
+# mental awareness
+K:407:d:33
+
+# invisibility
+K:408:d:33
+
+# speed
+K:409:d:33
+
+# resist fire
+K:410:d:33
+
+# resist cold
+K:411:d:33
+
+# resist poison
+K:412:d:33
+
+# resistance
+K:413:d:33
+
+# cure light wounds
+K:414:d:33
+
+# cure serious wounds
+K:415:d:33
+
+# cure critical wounds
+K:416:d:33
+
+# healing
+K:417:d:33
+
+# *healing*
+K:418:d:33
+
+# life
+K:419:d:33
+
+# restore mana
+K:420:d:33
+
+# restore experience
+K:421:d:33
+
+# restore strength
+K:422:d:33
+
+# restore intelligence
+K:423:d:33
+
+# restore wisdom
+K:424:d:33
+
+# restore dexterity
+K:425:d:33
+
+# restore constitution
+K:426:d:33
+
+# restore charisma
+K:427:d:33
+
+# strength
+K:428:d:33
+
+# intelligence
+K:429:d:33
+
+# wisdom
+K:430:d:33
+
+# dexterity
+K:431:d:33
+
+# constitution
+K:432:d:33
+
+# charisma
+K:433:d:33
+
+# augmentation
+K:435:d:33
+
+# enlightenment
+K:436:d:33
+
+# *enlightenment*
+K:437:d:33
+
+# self knowledge
+K:438:d:33
+
+# gain skill
+K:439:d:33
+
+# *gain skill*
+K:440:d:33
+
+# trollform
+K:441:d:33
+
+# dragonform
+K:442:d:33
+
+# heal monster
+K:455:d:45
+
+# haste monster
+K:456:d:45
+
+# clone monster
+K:457:d:45
+
+# teleport away
+K:458:d:45
+
+# disarming
+K:459:d:45
+
+# force door
+K:460:d:45
+
+# stone to mud
+K:461:d:45
+
+# light
+K:462:d:45
+
+# sleep monster
+K:463:d:45
+
+# slow monster
+K:464:d:45
+
+# confuse monster
+K:465:d:45
+
+# scare monster
+K:466:d:45
+
+# polymorph
+K:467:d:45
+
+# stinking cloud
+K:468:d:45
+
+# magic missile
+K:469:d:45
+
+# acid bolts
+K:470:d:45
+
+# lightning bolts
+K:471:d:45
+
+# fire bolts
+K:472:d:45
+
+# frost bolts
+K:473:d:45
+
+# acid balls
+K:474:d:45
+
+# lightning balls
+K:475:d:45
+
+# fire balls
+K:476:d:45
+
+# cold balls
+K:477:d:45
+
+# wonder
+K:478:d:45
+
+# drain life
+K:479:d:45
+
+# annihilation
+K:480:d:45
+
+# dragon's flame
+K:481:d:45
+
+# dragon's frost
+K:482:d:45
+
+# dragon's breath
+K:483:d:45
+
+# doomblasts
+K:484:d:45
+
+# wizardry
+K:485:d:45
+
+# spark
+K:486:d:45
+
+# darkness
+K:500:d:95
+
+# slowness
+K:501:d:95
+
+# haste monsters
+K:502:d:95
+
+# summoning
+K:503:d:95
+
+# teleportation
+K:504:d:95
+
+# perception
+K:505:d:95
+
+# remove curse
+K:506:d:95
+
+# starlight
+K:507:d:95
+
+# light
+K:508:d:95
+
+# dungeon mapping
+K:509:d:95
+
+# treasure location
+K:510:d:95
+
+# object location
+K:511:d:95
+
+# trap location
+K:512:d:95
+
+# door/stair location
+K:513:d:95
+
+# detect invisible
+K:514:d:95
+
+# detect evil
+K:515:d:95
+
+# cure medium wounds
+K:516:d:95
+
+# healing
+K:518:d:95
+
+# banish evil
+K:519:d:95
+
+# sleep monsters
+K:520:d:95
+
+# slow monsters
+K:521:d:95
+
+# speed
+K:522:d:95
+
+# probing
+K:523:d:95
+
+# dispel evil
+K:524:d:95
+
+# power
+K:525:d:95
+
+# holiness
+K:526:d:95
+
+# earthquakes
+K:528:d:95
+
+# *destruction*
+K:529:d:95
+
+# detection
+K:530:d:95
+
+# doomspells
+K:531:d:95
+
+# chaos
+K:532:d:95
+
+# trap location
+K:568:d:45
+
+# door/stair location
+K:569:d:45
+
+# perception
+K:570:d:45
+
+# recall
+K:571:d:45
+
+# illumination
+K:572:d:45
+
+# sense surroundings
+K:573:d:45
+
+# probing
+K:575:d:45
+
+# curing
+K:576:d:45
+
+# healing
+K:577:d:45
+
+# restoration
+K:578:d:45
+
+# speed
+K:579:d:45
+
+# teleport away
+K:581:d:45
+
+# disarming
+K:582:d:45
+
+# light
+K:583:d:45
+
+# blinking
+K:584:d:45
+
+# summon hither
+K:585:d:45
+
+# drain life
+K:586:d:45
+
+# polymorph
+K:587:d:45
+
+# acid bolts
+K:588:d:45
+
+# lightning bolts
+K:589:d:45
+
+# fire bolts
+K:590:d:45
+
+# frost bolts
+K:591:d:45
+
+# acid balls
+K:592:d:45
+
+# lightning balls
+K:593:d:45
+
+# fire balls
+K:594:d:45
+
+# cold balls
+K:595:d:45
+
+# lightning strike
+K:596:d:45
+
+# northwinds
+K:597:d:45
+
+# dragonfire
+K:598:d:45
+
+# glaurung's blood
+K:599:d:45
+
+# small wooden chest
+K:616:u:162
+
+# large wooden chest
+K:617:o:162
+
+# small iron chest
+K:618:s:163
+
+# large iron chest
+K:619:W:163
+
+# small steel chest
+K:620:B:163
+
+# large steel chest
+K:621:T:163
+
+# small jeweled chest
+K:622:P:165
+
+# large jeweled chest
+K:623:Y:165
+
+# iron spike
+K:626:W:96
+
+# wooden torch
+K:627:U:126
+
+# brass lantern
+K:628:U:126
+
+# flask of oil
+K:629:y:33
+
+# shard of pottery
+K:636:r:96
+
+# broken stick
+K:637:U:96
+
+# boulder
+K:638:s:10
+
+# blanket
+K:639:D:126
+
+# broken skull
+K:641:D:37
+
+# canine skeleton
+K:642:s:37
+
+# gnome skeleton
+K:643:w:37
+
+# elf skeleton
+K:644:w:37
+
+# dwarf skeleton
+K:645:w:37
+
+# human skeleton
+K:646:w:37
+
+# giant skeleton
+K:647:W:37
+
+# mumak skeleton
+K:648:z:37
+
+# [apprentice magic]
+K:650:R:191
+
+# [lesser conjury]
+K:651:R:191
+
+# [elemental sorcery]
+K:652:R:191
+
+# [phantasms and illusions]
+K:653:r:191
+
+# [mordenkainen's escapes]
+K:654:r:191
+
+# [grimoire of wizardry]
+K:655:r:191
+
+# [raal's tome of destruction]
+K:656:r:191
+
+# [novitiate]
+K:660:B:191
+
+# [words of wisdom]
+K:661:B:191
+
+# [holy of holies]
+K:662:B:191
+
+# [shining spirit]
+K:663:Y:191
+
+# [canon of judgment]
+K:664:Y:191
+
+# [insight and purifications]
+K:665:Y:191
+
+# [testament of the almighty]
+K:666:Y:191
+
+# [call of the wild]
+K:670:G:191
+
+# [communion with nature]
+K:671:G:191
+
+# [book of combat]
+K:672:G:191
+
+# [druidic transformations]
+K:673:g:191
+
+# [weather mastery]
+K:674:g:191
+
+# [primal forces]
+K:675:g:191
+
+# [spirit of yavanna]
+K:676:g:191
+
+# [beginner's curses]
+K:680:D:191
+
+# [darker elements]
+K:681:D:191
+
+# [frightful realms]
+K:682:D:191
+
+# [mysteries of angmar]
+K:683:v:191
+
+# [doomspells]
+K:684:v:191
+
+# [triumph of the will]
+K:685:v:191
+
+# [necronomicon]
+K:686:v:191
+
+# copper
+K:700:u:36
+
+# silver
+K:701:s:36
+
+# garnets
+K:702:r:36
+
+# amber
+K:703:o:36
+
+# beryls
+K:704:t:36
+
+# amethysts
+K:705:v:36
+
+# gold
+K:706:y:36
+
+# pearls
+K:707:R:36
+
+# platinum
+K:708:w:36
+
+# mithril
+K:709:B:36
+
+# adamantite
+K:710:G:36
+
+# large sapphire
+K:715:b:164
+
+# large emerald
+K:716:G:164
+
+# large ruby
+K:717:R:164
+
+# large diamond
+K:718:w:164
+
+# aetheroi fang
+K:723:B:164
+
+# mighty hammer
+K:731:D:92
+
+# massive iron crown
+K:732:D:93
+
+# phial
+K:733:Y:126
+
+# star
+K:734:y:126
+
+# arkenstone
+K:735:y:126
+
+# palantr
+K:736:y:126
+
+# amulet
+K:738:d:34
+
+# amulet
+K:739:d:34
+
+# necklace
+K:740:d:34
+
+# ring
+K:743:d:61
+
+# ring
+K:744:d:61
+
+# ring
+K:745:d:61
+
+# ring
+K:746:d:61
+
+# ring
+K:747:d:61
+
+# ring
+K:748:y:61
+
+# copper
+K:755:u:35
+
+# bronze
+K:756:o:35
+
+# iron
+K:757:s:35
+
+# steel
+K:758:W:35
+
+# runegold
+K:759:y:35
+
+# mithril
+K:760:B:35
+
+# adamant
+K:761:G:35
+
+# blank parchment (paper)
+K:763:y:63
+
+# blank parchment (vellum)
+K:764:y:63
+
+# blank parchment (silk)
+K:765:y:63
+
+# blank parchment (ether)
+K:766:y:63
+
+# empty bottle (glass)
+K:769:y:33
+
+# empty bottle (crystal)
+K:770:y:33
+
+# empty bottle (agate)
+K:771:y:33
+
+# empty bottle (diamond)
+K:772:y:33
+
+# acid
+K:774:s:42
+
+# lightning
+K:775:b:42
+
+# fire
+K:776:r:42
+
+# frost
+K:777:w:42
+
+# venom
+K:778:g:42
+
+# light
+K:779:y:42
+
+# darkness
+K:780:D:42
+
+# confusion
+K:781:U:42
+
+# force
+K:782:u:42
+
+# nexus
+K:783:R:42
+
+# nether
+K:784:G:42
+
+# chaos
+K:785:P:42
+
+# time
+K:786:B:42
+
+# magic
+K:787:P:42
+
+# life
+K:788:W:42
+
+# death
+K:789:D:42
+
+# knowledge
+K:790:o:42
+
+# protection
+K:791:u:42
+
+# blessing
+K:792:B:42
+
+# pouch
+K:799:B:126
+
+
+# If marked, changes above will be deleted and replaced automatically.
+#
+### (Automatic deletion marker) ### end Object attr/char definitions
+### (Automatic deletion marker) ### begin Macro dump
+#
+# If marked, changes below will be deleted and replaced automatically.
+
+
+A:<
+P:^_x56
+
+A:>
+P:^_Sx56
+
+A:|
+P:^_Ax56
+
+A:/
+P:^_x35
+
+A:*
+P:^_x37
+
+A:7
+P:^_x47
+
+A:8
+P:^_x48
+
+A:9
+P:^_x49
+
+A:-
+P:^_x4A
+
+A:4
+P:^_x4B
+
+A:5
+P:^_x4C
+
+A:6
+P:^_x4D
+
+A:+
+P:^_x4E
+
+A:1
+P:^_x4F
+
+A:2
+P:^_x50
+
+A:3
+P:^_x51
+
+A:0
+P:^_x52
+
+A:^D
+P:^_x53
+
+A:\a
+P:^_Sx35
+
+A:\a
+P:^_Sx37
+
+A:\a\\.7
+P:^_Sx47
+
+A:\a\\.8
+P:^_Sx48
+
+A:\a\\.9
+P:^_Sx49
+
+A:\a
+P:^_Sx4A
+
+A:\a\\.4
+P:^_Sx4B
+
+A:\a\\.5
+P:^_Sx4C
+
+A:\a\\.6
+P:^_Sx4D
+
+A:\a
+P:^_Sx4E
+
+A:\a\\.1
+P:^_Sx4F
+
+A:\a\\.2
+P:^_Sx50
+
+A:\a\\.3
+P:^_Sx51
+
+A:\a
+P:^_Sx52
+
+A:\a
+P:^_Sx53
+
+A:\a
+P:^_Cx35
+
+A:\a
+P:^_Cx37
+
+A:\a\\+7
+P:^_Cx47
+
+A:\a\\+8
+P:^_Cx48
+
+A:\a\\+9
+P:^_Cx49
+
+A:\a
+P:^_Cx4A
+
+A:\a\\+4
+P:^_Cx4B
+
+A:\a\\+5
+P:^_Cx4C
+
+A:\a\\+6
+P:^_Cx4D
+
+A:\a
+P:^_Cx4E
+
+A:\a\\+1
+P:^_Cx4F
+
+A:\a\\+2
+P:^_Cx50
+
+A:\a\\+3
+P:^_Cx51
+
+A:\a
+P:^_Cx52
+
+A:\a
+P:^_Cx53
+
+A:\a
+P:^_Cx95
+
+A:\a
+P:^_Cx96
+
+A:\a\\+7
+P:^_Cx77
+
+A:\a\\+8
+P:^_Cx8D
+
+A:\a\\+9
+P:^_Cx84
+
+A:\a
+P:^_Cx8E
+
+A:\a\\+4
+P:^_Cx73
+
+A:\a\\+5
+P:^_Cx8F
+
+A:\a\\+6
+P:^_Cx74
+
+A:\a
+P:^_Cx90
+
+A:\a\\+1
+P:^_Cx75
+
+A:\a\\+2
+P:^_Cx91
+
+A:\a\\+3
+P:^_Cx76
+
+A:\a
+P:^_Cx92
+
+A:\a
+P:^_Cx93
+
+A:x
+P:x
+
+A::...resting\rR\r
+P:\t
+
+A::searching...\rs
+P:^D
+
+
+# If marked, changes above will be deleted and replaced automatically.
+#
+### (Automatic deletion marker) ### end Macro dump
+### (Automatic deletion marker) ### begin Feature attr/char definitions
+#
+# If marked, changes below will be deleted and replaced automatically.
+
+
+# nothing
+F:0:Q:3:w:32:w:32
+
+# open floor
+F:1:s:6:Y:6:D:6:torch_only
+
+# open floor
+F:2:s:5:m:5:D:5
+
+# open floor
+F:3:g:6:G:6:t:6
+
+# up shaft
+F:4:U:60:U:60:U:60
+
+# down shaft
+F:5:U:62:U:62:U:62
+
+# open door
+F:6:U:14:U:14:u:14
+
+# broken door
+F:7:u:15:u:15:D:15
+
+# up staircase
+F:8:w:60:w:60:W:60
+
+# down staircase
+F:9:w:62:w:62:W:62
+
+# lava
+F:10:r:4:R:4:r:4
+
+# water
+F:11:b:4:Z:4:b:4
+
+# trees
+F:12:g:-91:G:-91:g:-91
+
+# webs
+F:13:D:12:m:12:q:12
+
+# pit
+F:14:D:15:s:15:q:15
+
+# abyss
+F:16:s:127:D:127:q:3
+
+# bone pile
+F:17:o:11:R:11:u:11
+
+# bones
+F:18:s:5:W:5:D:5
+
+# open floor
+F:21:u:6:U:6:u:6
+
+# open floor
+F:22:t:6:B:6:s:6
+
+# open floor
+F:23:r:6:R:6:r:6
+
+# door
+F:32:U:13:U:13:U:13
+
+# pile of rubble
+F:49:s:11:Y:11:D:11:torch_only
+
+# magma vein
+F:50:s:3:z:3:D:3
+
+# quartz vein
+F:51:W:2:z:2:s:2
+
+# magma vein with treasure
+F:54:u:3:o:3:u:3
+
+# quartz vein with treasure
+F:55:u:2:o:2:u:2
+
+# granite wall
+F:56:s:2:w:2:W:2
+
+# permanent wall
+F:60:s:2:w:2:W:2
+
+# permanent wall
+F:61:z:2:W:2:z:2
+
+# pillar
+F:64:s:-89:w:-89:W:-89
+
+# pillar of gold
+F:65:o:-89:y:-89:o:-89
+
+# the General Store
+F:84:U:49:U:49:U:49
+
+# the Armory
+F:85:s:50:s:50:s:50
+
+# the Weapon Smiths
+F:86:w:51:w:51:w:51
+
+# the Temple
+F:87:B:52:B:52:B:52
+
+# the Alchemy Shop
+F:88:b:53:b:53:b:53
+
+# the Magic Shop
+F:89:r:54:r:54:r:54
+
+# the Bookstore
+F:90:o:55:o:55:o:55
+
+# your home
+F:91:y:56:y:56:y:56
+
+# the Inn
+F:92:u:43:u:43:u:43
+
+
+# If marked, changes above will be deleted and replaced automatically.
+#
+### (Automatic deletion marker) ### end Feature attr/char definitions
+### (Automatic deletion marker) ### begin Options dump
+#
+# If marked, changes below will be deleted and replaced automatically.
+
+
+# Option 'Rogue-like commands'
+X:rogue_like_commands
+
+# Option 'Verify destruction of objects'
+Y:verify_destroy
+
+# Option 'Pick things up by default'
+X:always_pickup
+
+# Option 'Display things before picking them up'
+Y:query_floor
+
+# Option 'Never haggle in stores'
+Y:never_haggle
+
+# Option 'Use old target by default'
+X:use_old_target
+
+# Option 'Ignore stairs when running'
+X:run_ignore_stairs
+
+# Option 'Ignore doors when running'
+X:run_ignore_doors
+
+# Option 'Cut corners when running'
+X:run_cut_corners
+
+# Option 'Allow accents in output files'
+Y:xchars_to_file
+
+# Option 'Merge inscriptions when stacking'
+Y:stack_force_notes
+
+# Option 'Merge discounts when stacking'
+X:stack_force_costs
+
+# Option 'Allow quantity specification'
+Y:allow_quantity
+
+# Option 'Change savefile names'
+X:change_save_names
+
+# Option 'Disturb whenever any monster moves'
+X:disturb_move
+
+# Option 'Disturb whenever map panel changes'
+X:disturb_panel
+
+# Option 'Disturb whenever player state changes'
+Y:disturb_state
+
+# Option 'Disturb whenever minor things happen'
+X:disturb_minor
+
+# Option 'Alert user to critical hitpoints'
+Y:alert_hitpoint
+
+# Option 'Audible bell (on errors, etc)'
+X:ring_bell
+
+# Option 'Activate quick messages'
+Y:quick_messages
+
+# Option 'Compress messages in savefiles'
+X:compress_messages
+
+# Option 'Flush input on various failures'
+Y:flush_failure
+
+# Option 'Flush input whenever disturbed'
+Y:flush_disturb
+
+# Option 'Delay on failure'
+Y:delay_failure
+
+# Option 'Colored messages when hit hard'
+Y:colored_hit_msg
+
+# Option 'Special colors for hurt character'
+Y:colored_hurt_char
+
+# Option 'Map remembers all seen grids'
+Y:remember_seen_grids
+
+# Option 'Use special colors for torch light'
+Y:torch_light
+
+# Option 'Use special colors for field of view'
+Y:sight_light
+
+# Option 'Use special colors for wall grids'
+Y:wall_lighting
+
+# Option 'Use special colors for floor grids'
+Y:floor_lighting
+
+# Option 'Highlight the player with the cursor'
+X:highlight_player
+
+# Option 'Flush output after various things'
+X:fresh_after
+
+# Option 'Don't hide traps when objects pile on them'
+Y:traps_display_on_top
+
+# Option 'Show dungeon level in feet (or meters)'
+X:depth_in_feet
+
+# Option 'Show labels in equipment listings'
+Y:show_labels
+
+# Option 'Show weights in all object listings'
+Y:show_weights
+
+# Option 'Show flavors in object descriptions'
+Y:show_flavors
+
+# Option 'Use metric (SI) measurements'
+X:use_metric
+
+# Option 'Menus pop up when selecting various things'
+Y:always_show_list
+
+# Option 'Move old messages to sub-window automatically'
+X:message_to_window
+
+# Option '(null)'
+X:  
+
+# Option '(null)'
+X:  
+
+# Option 'Know complete monster info'
+X:cheat_know
+
+# Option 'Allow multiple lives'
+X:beginner_play
+
+# Option 'Allow skill increase past power 100'
+X:no_skill_cap
+
+# Window 'Win-1', Flag 'Display visible monsters'
+W:2:4:1
+
+# Window 'Win-2', Flag 'Display messages'
+W:3:6:1
+
+# Window 'Win-3', Flag 'Display monster recall'
+W:4:8:1
+
+# Window 'Win-4', Flag 'Display inventory'
+W:5:0:1
+
+# Window 'Win-5', Flag 'Display equipment'
+W:6:1:1
+
+# Delay
+D:6
+
+# Hitpoint warning (x10%)
+H:2
+
+# Autosave  (autosave, frequency)
+a:0:0
+
+# Screen  (zero, more_tall_display, map_display_precise_fit, y-margin, x-margin)
+t:0:1:1:13:25
+
+
+# If marked, changes above will be deleted and replaced automatically.
+#
+### (Automatic deletion marker) ### end Options dump
