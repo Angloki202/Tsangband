@@ -5481,6 +5481,40 @@ void make_food(int y, int x)
 	required_tval = 0;
 }
 
+/* -KN-
+ * Make a skeleton and place it at given location
+ */
+void make_skeleton(int y, int x, int value)
+{
+	object_type *i_ptr;
+	object_type object_type_body;
+
+	/* value (ICI) to make some treasure at some point at deeper levels */
+	if (value > 0) printf("No treasure yet.");
+
+	/* Get local object */
+	i_ptr = &object_type_body;
+
+	/* Restrict to food/mushrooms */
+	required_tval = TV_SKELETON;
+
+	/* Keep trying */
+	while (TRUE)
+	{
+		/* Make an object (if possible) */
+		if (make_object(i_ptr, FALSE, FALSE, TRUE))
+		{
+			/* Give it to the floor */
+			(void)floor_carry(y, x, i_ptr);
+
+			/* All done */
+			break;
+		}
+	}
+
+	/* Clear restriction */
+	required_tval = 0;
+}
 
 /*
  * Describe the charges on an item in the inventory.

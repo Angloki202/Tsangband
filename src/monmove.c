@@ -95,6 +95,45 @@ static void find_range(monster_type *m_ptr)
 		/* Use given range as preferred range */
 		m_ptr->best_range = r_ptr->combat_range;
 
+		/* -KN- hack for lunging attackers (that often have range 2 or 3) */
+		if (r_ptr->blow[0].method == RBM_LUNGE)
+		{
+			/* start hunting if near the player */
+			if ((!m_ptr->hasted) && ((m_ptr->cdis == 2) || (m_ptr->cdis == 3)))
+			{
+				/* when feeling in the mood */
+				if (one_in_(3))
+				{
+					/* and haste very decently the monster */
+					m_ptr->hasted = 2;
+					
+					/* inform player when visible, but not adjacent */
+					if ((m_ptr->ml) && (m_ptr->cdis > 1))
+					{
+						char m_name[DESC_LEN];
+
+						/* Get the monster name */
+						monster_desc(m_name, m_ptr, 0x40);
+
+						/* Dump a message */
+						msg_format("%^s suddenly lunges forward!", m_name);
+					}
+				}
+			}
+			
+			/* if hunting (hasted), modify range */
+			if (m_ptr->hasted > 0)
+			{			
+				/* set range to go after the player */
+				m_ptr->best_range = 1;
+			}
+			else
+			{
+				/* reset the range to normal if not hunting */
+				m_ptr->best_range = r_ptr->combat_range;
+			}
+		}
+
 		/* Allow designer to specify minimum range as well */
 		if (r_ptr->combat_range >= 6)
 			m_ptr->min_range = MIN(5, r_ptr->combat_range / 2);
@@ -706,6 +745,12 @@ static void remove_limited_range_spells(int m_idx, u32b *f4p, u32b *f5p, u32b *f
 		if ((dist > 3) || (dist < 2)) f4 &= ~(RF4_LASH);
 	}
 
+	/* Don't do web beams from too far away */
+	if (f4 & (RF4_WEB1))
+	{
+		if (dist > 6) f4 &= ~(RF4_WEB1);
+	}
+
 	/* Remove all ranged attacks that are strictly limited range */
 	for (i = 0, flag = 1L; i < 32; i++, flag <<= 1)
 	{
@@ -1276,6 +1321,41 @@ bool cave_exist_mon(monster_race *r_ptr, int y, int x, bool occupied_ok,
 			else return (TRUE);
 		}
 
+		/* -KN- restrictions for WEBs */
+		if (feat == FEAT_WEB)
+		{
+			/* fliers don't want to enter webs at all */
+			if (r_ptr->flags2 & (RF2_FLYING)) return (FALSE);
+
+			/* spiders love hiding in webs, ghosties don't mind */
+			if ((r_ptr->flags2 & (RF2_PASS_WALL)) || (strchr("S", r_ptr->d_char)))
+			{
+				return (TRUE);
+			}
+			else
+			{
+				/* others might sometimes consider entering webs (ICI) */
+				if (one_in_(4)) return (TRUE);
+				else return (FALSE);
+			}
+		}
+
+		/* -KN- restrictions for PITs and ABYSS */
+		if ((feat == FEAT_PIT1) || (feat == FEAT_PIT0) || (feat == FEAT_ABYSS))
+		{
+			/* fliers and abyssals have no problem, same with ghosties and burrowers */
+			if (((r_ptr->flags2 & (RF2_FLYING))) ||
+				(r_ptr->flags2 & (RF2_PASS_WALL)) ||
+				(r_ptr->flags2 & (RF2_KILL_WALL)) ||
+				(r_ptr->flags2 & (RF2_ABYSSAL))) return (TRUE);
+			else
+			{
+				/* others might sometimes avoid the depths (ICI) */
+				if (one_in_(4)) return (FALSE);
+				else return (TRUE);
+			}
+		}
+
 		/* Only fiery or strong flying creatures can handle lava */
 		if (feat == FEAT_LAVA)
 		{
@@ -1429,6 +1509,11 @@ static int cave_passable_mon(monster_type *m_ptr, int y, int x, bool *bash)
 	{
 		int feat = cave_feat[y][x];
 
+		/* -KN- support for description of monster move */
+		bool seen = FALSE;
+		char m_name[DESC_LEN];
+		monster_desc(m_name, m_ptr, 0x40);
+
 		/* Closed doors */
 		if (f_ptr->flags & (TF_DOOR_CLOSED))
 		{
@@ -1530,6 +1615,42 @@ static int cave_passable_mon(monster_type *m_ptr, int y, int x, bool *bash)
 			else return (MIN(25, move_chance));
 		}
 
+		/* -KN- Bonepiles */
+		if (feat == FEAT_BONEPILE)
+		{
+			/* Some monsters move easily through bonepiles */
+			if ((r_ptr->flags2 & (RF2_PASS_WALL)) || (r_ptr->flags3 & (RF3_UNDEAD)) ||
+				(r_ptr->flags2 & (RF2_KILL_WALL)) || (r_ptr->flags2 & (RF2_FLYING)))
+			{
+				return (move_chance);
+			}
+
+			/* For most monsters, rubble takes more time to cross. */
+			else return (MIN(50, move_chance));
+		}
+
+		/* -KN- Webs */
+		if (feat == FEAT_WEB)
+		{
+			/* Some monsters move easily through webbings */
+			if ((r_ptr->flags2 & (RF2_PASS_WALL)) || (strchr("SXPD&", r_ptr->d_char)))
+			{
+				return (move_chance);
+			}
+
+			/* For flyiers it's not pleasant */
+			else if (r_ptr->flags2 & (RF2_FLYING))
+			{
+				return (MIN(25, move_chance));
+			}
+
+			/* For most monsters, web takes more time to cross */
+			else
+			{
+				return (MIN(50, move_chance));
+			}
+		}
+
 		/* Trees */
 		if (feat == FEAT_TREE)
 		{
@@ -1544,6 +1665,26 @@ static int cave_passable_mon(monster_type *m_ptr, int y, int x, bool *bash)
 			else
 			{
 				/* For many monsters, trees take more time to cross. */
+				return (MIN(50, move_chance));
+			}
+		}
+
+		/* -KN- pits & abyss support */
+		if ((feat == FEAT_PIT0) || (feat == FEAT_PIT1) || (feat == FEAT_ABYSS))
+		{
+			/* Some monsters can slide easily down */
+			if ((r_ptr->flags2 & (RF2_PASS_WALL)) ||
+				(r_ptr->flags2 & (RF2_KILL_WALL)) ||
+				(r_ptr->flags2 & (RF2_ABYSSAL)) ||
+				(r_ptr->flags2 & (RF2_FLYING)))
+			{
+				/* and then move freely */
+				return (move_chance);
+			}
+
+			else
+			{
+				/* For many monsters, pits take more time to cross. */
 				return (MIN(50, move_chance));
 			}
 		}
@@ -3014,6 +3155,8 @@ static void make_confused_move(monster_type *m_ptr, int y, int x)
 	bool death = TRUE;
 
 	bool confused = m_ptr->confused;
+    /* -KN- added support for confused spiders */
+    monster_race *r_ptr = &r_info[m_ptr->r_idx];
 
 	/* Check Bounds (fully) */
 	if (!in_bounds_fully(y, x)) return;
@@ -3024,10 +3167,8 @@ static void make_confused_move(monster_type *m_ptr, int y, int x)
 	/* Check visibility */
 	if ((m_ptr->ml) && (cave_info[y][x] & (CAVE_SEEN))) seen = TRUE;
 
-
 	/* Get the monster name/poss */
 	monster_desc(m_name, m_ptr, 0x40);
-
 
 	/* Feature is a wall (includes secret doors) */
 	if (cave_wall_bold(y, x))
@@ -3060,6 +3201,48 @@ static void make_confused_move(monster_type *m_ptr, int y, int x)
 
 			/* Light stunning */
 			if ((one_in_(5)) && (m_ptr->stunned < 9)) m_ptr->stunned += 3;
+		}
+
+		/* -KN- bump into web */
+		else if (feat == FEAT_WEB)
+		{
+			if (!strchr("S", r_ptr->d_char))
+			{
+				if (seen && confused)
+				msg_format("%^s sticks into webs.", m_name);
+
+				/* Light slowing */
+				if ((one_in_(2)) && (m_ptr->slowed < 9)) m_ptr->slowed += 2;
+			}
+			else
+			{
+				/* special message for spiders */
+				if (seen && confused) msg_format("%^s scuttles into webs.", m_name);
+			}
+		}
+
+		/* -KN- falls into a pit */
+		else if ((feat == FEAT_PIT0) || (feat == FEAT_PIT1) || (feat == FEAT_ABYSS))
+		{
+			/* Only 1 time in 5 or if at home in pits */
+			if ((!one_in_(5)) || (r_ptr->flags2 & (RF2_ABYSSAL))) return;
+
+			/* Assume death */
+			note_dies = " falls into depths of Angband!";
+
+			if (mon_take_hit(cave_m_idx[m_ptr->fy][m_ptr->fx], 0,
+				5 + m_ptr->maxhp / 33, &fear, note_dies))
+			{
+				death = TRUE;
+			}
+			else
+			{
+				if (seen && confused)
+					msg_format("%^s falls into the pit.", m_name);
+			}
+
+			/* Lose some energy */
+			mon_adjust_energy(m_ptr, 25);
 		}
 
 		/* Tree */
@@ -3518,6 +3701,9 @@ static bool make_move(monster_type *m_ptr, int *ty, int *tx, bool fear,
 		/* No good moves, so we just sit still and wait. */
 		if ((dir == 5) || (dir == 0))
 		{
+			/* -KN- do something interesting (ICI) ? */
+			printf("x=%d y=%d does nothing \n", ox, oy);
+
 			return (FALSE);
 		}
 
@@ -3802,8 +3988,8 @@ static void process_move(monster_type *m_ptr, int ty, int tx, bool bash)
 			/* Get the feature in the grid that the monster is trying to enter. */
 			feat = cave_feat[ny][nx];
 
-			/* Monsters that kill walls sometimes kill rubble too */
-			if (feat == FEAT_RUBBLE)
+			/* Monsters that kill walls sometimes kill rubble / web too -KN- */
+			if ((feat == FEAT_RUBBLE) || (feat == FEAT_WEB))
 			{
 				if ((r_ptr->flags2 & (RF2_KILL_WALL)) && (one_in_(3)))
 				{
@@ -3816,8 +4002,43 @@ static void process_move(monster_type *m_ptr, int ty, int tx, bool bash)
 						did_kill_wall = TRUE;
 					}
 
-					/* Reduce the rubble to floor */
+					/* Reduce the rubble or web to floor */
 					cave_set_feat(ny, nx, get_nearby_floor(ny, nx));
+				}
+			}
+
+			/* -KN- some monsters can trample the bone pile */
+			if (feat == FEAT_BONEPILE)
+			{
+				if (((r_ptr->flags2 & (RF2_KILL_WALL)) && (one_in_(5))) ||
+					((r_ptr->flags3 & (RF3_DRAGON)) && (one_in_(4))) ||
+					((r_ptr->flags3 & (RF3_TROLL)) && (one_in_(3))))
+				{
+					/* Forget the rubble -- if in sight */
+					if (player_can_see_bold(ny, nx))
+					{
+						do_view = TRUE;
+					}
+
+					/* Sometimes leave some bones */
+					if (one_in_(12))
+					{
+						if (player_can_see_bold(ny, nx))
+							msg_print("Some bones were revealed.");
+
+						make_skeleton(ny, nx, 0);
+					}
+					else if (one_in_(20 - div_round(p_ptr->depth, 8)))
+					{
+						/* sometimes the dead were disturbed */
+						if (player_can_see_bold(ny, nx))
+							msg_print("Undead has risen from the pile of bones!");
+
+						summon_specific(ny, nx, FALSE, p_ptr->depth, SUMMON_UNDEAD, 0);
+					}
+
+					/* Reduce the rubble to floor with bones */
+					cave_set_feat(ny, nx, FEAT_FLOOR_B);
 				}
 			}
 
@@ -4259,9 +4480,156 @@ static void process_move(monster_type *m_ptr, int ty, int tx, bool bash)
 				}
 			}
 		}
-	}             /* End of monster's move */
+	}
 
+	/* End of monster's move */
 
+	/* -KN- finally process effects of leaving and entering spec. terrain */
+	/* entering PIT, entering WEB, roaming ABYSS, leaving (?); better handling with INTERESTING_MOVE */
+	if ((cave_feat[ny][nx] == FEAT_PIT0) || (cave_feat[ny][nx] == FEAT_PIT1) ||
+		(cave_feat[ny][nx] == FEAT_ABYSS))
+	{
+		char m_name[DESC_LEN];
+
+		if (r_ptr->flags2 & (RF2_ABYSSAL))
+		{
+			/* abyssal creatures can meet a friend */
+			if ((one_in_(6)) && (cave_feat[ny][nx] == FEAT_PIT1))
+			{
+				/* specially if pit has potential */
+				summon_specific(oy, ox, FALSE, p_ptr->depth + 1, SUMMON_DEMON, 0);
+				monster_desc(m_name, m_ptr, 0x44);
+				if (player_has_los_bold(oy, ox)) msg_format("%^s has brought a demon forth!", m_name);
+			}
+			else if ((one_in_(24)) && (cave_feat[ny][nx] == FEAT_PIT0))
+			{
+				/* otherwise some low chance for an orc appearance */
+				summon_specific(oy, ox, FALSE, p_ptr->depth + 1, SUMMON_ORC, 0);
+				monster_desc(m_name, m_ptr, 0x44);
+				if (player_has_los_bold(oy, ox)) msg_format("%^s has called an orc from bellow!", m_name);
+			}
+			else
+			{
+				/* abyssal roaming in abyss (change into pit?) */
+			}
+		}
+		else
+		{
+			/* non-abyssal non-demon non-dragon entering a pit or an abyss */
+			if ((!strchr("Dd&I", r_ptr->d_char)) && (one_in_(10)))
+			{
+				/* ghosties also excluded */
+				if (r_ptr->flags2 & (RF2_PASS_WALL)) return;
+
+				/* most others can become slowed */
+				if ((player_has_los_bold(ny, nx)) && (one_in_(2)))
+				{
+					/* Alert player often */
+					monster_desc(m_name, m_ptr, 0x44);
+					msg_format("%^s appears lost in the pit!", m_name);
+				}
+				if (m_ptr->slowed < 12) m_ptr->slowed += 4;
+			}
+		}
+	}
+	else if (cave_feat[ny][nx] == FEAT_WEB)
+	{
+		char m_name[DESC_LEN];
+
+		/* For spiders webs mean something */
+		if (strchr("S", r_ptr->d_char))
+		{
+			if ((player_has_los_bold(ny, nx)) && (one_in_(9)))
+			{
+				/* Alert player sometimes */
+				monster_desc(m_name, m_ptr, 0x44);
+				msg_format("%^s hides in the webs.", m_name);
+			}
+		}
+		else if (r_ptr->flags2 & (RF2_PASS_WALL))
+		{
+			/* no special interaction for ghosties */
+			return;
+		}
+		else if (strchr("XPD&v*", r_ptr->d_char))
+		{
+			/* Rockies, giants, vortices, large dragons and demons tear webs always */
+			cave_set_feat(ny, nx, get_nearby_floor(ny, nx));
+		}
+		else
+		{
+			if ((!strchr("GWcikyrabelw,", r_ptr->d_char)) && (one_in_(6)))
+			{
+				/* non-weak creatures might tear the webs down */
+				cave_set_feat(ny, nx, get_nearby_floor(ny, nx));
+			}
+			if ((!strchr("W", r_ptr->d_char)) && (one_in_(4)))
+			{
+				/* most others can become slowed */
+				if ((player_has_los_bold(ny, nx)) && (one_in_(2)))
+				{
+					/* Alert player often */
+					monster_desc(m_name, m_ptr, 0x44);
+					msg_format("%^s is caught in the webs!", m_name);
+				}
+				if (m_ptr->slowed < 12) m_ptr->slowed += 4;
+			}
+		}
+	}
+	else if (cave_feat[ny][nx] == FEAT_BONEPILE)
+	{
+		char m_name[DESC_LEN];
+
+		if (r_ptr->flags3 & (RF3_UNDEAD))
+		{
+			/* special treatment for undead */
+			if (one_in_(8))
+			{
+				/* casual mini-summon */
+				if (player_can_see_bold(ny, nx))
+                {
+                    msg_print("A new undead emerged from the pile of bones!");
+                }
+				summon_specific(ny, nx, FALSE, p_ptr->depth, SUMMON_UNDEAD, 0);
+			}
+			else if (one_in_(4))
+			{
+				if (r_ptr->flags2 & (RF2_STUPID)) msg_print("Undead growls hungrily...");
+				else if ((r_ptr->flags2 & (RF2_SMART)) &&
+						(player_can_see_bold(ny, nx)))
+				{
+					/* menacing message */
+					monster_desc(m_name, m_ptr, 0x44);
+					msg_format("%^s explores the pile of bones...", m_name);
+				}
+				else msg_print("Undead roams around the pile of bones...");
+			}
+		}
+		else if (r_ptr->flags3 & (RF3_TROLL))
+		{
+			/* special treatment for non-undead trolls */
+			if (one_in_(4))
+			{
+				/* trolls like to mess around the bone piles */
+				if (player_can_see_bold(ny, nx))
+					msg_format("%^s dances and chants around the pile of bones...", m_name);
+				else msg_print("You hear horrible troll chants...");
+			}
+		}
+	}
+
+	/* -KN- allow web trails for some deeper spiders */
+	if ((r_ptr->flags7 & (RF7_S_SPIDER)) && (r_ptr->flags4 & (RF4_WEB1)))
+	{
+		if (cave_floor_bold(oy,ox))
+		{
+			/* Change to web at 16% chance */
+			if (one_in_(6))
+			{
+				cave_set_feat(oy, ox, FEAT_WEB);
+			}
+		}
+	}
 
 	/* Notice changes in view */
 	if (do_view)
@@ -5183,8 +5551,12 @@ static void recover_monster(monster_type *m_ptr, bool regen)
 				/* Get the monster name */
 				monster_desc(m_name, m_ptr, 0);
 
-				/* Message. */
-				msg_format("%^s is no longer hasted.", m_name);
+				/* Message. -KN- lunging monsters support */
+				if (r_ptr->blow[0].method == RBM_LUNGE)
+				{
+					msg_format("%^s prepares for another attack.", m_name);
+				}
+				else msg_format("%^s is no longer hasted.", m_name);
 			}
 		}
 		else

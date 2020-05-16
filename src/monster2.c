@@ -2769,7 +2769,10 @@ static bool summon_specific_okay(int r_idx)
 
 		case SUMMON_BEETLE:
 		{
-			okay = ((r_ptr->d_char == 'K') &&
+			/* -KN- extended beetle list */
+			okay = (((r_ptr->d_char == 'K') ||
+				(r_ptr->d_char == 'i') ||
+				(r_ptr->d_char == 'c'))	&&
 				!(r_ptr->flags1 & (RF1_UNIQUE)));
 			break;
 		}
@@ -2949,8 +2952,14 @@ int summon_specific(int y1, int x1, bool scattered, int lev, int type, int num)
 	/* Allow groups in most cases */
 	bool grp = ((type == SUMMON_ORC && rand_int(5)) ? FALSE : TRUE);
 
-	int count = 0;
+	/* -KN- hack: if called with num=0, we try to summon one solitary monster only */
+	if (num == 0)
+	{
+		num = 1;
+		grp = FALSE;
+	}
 
+	int count = 0;
 
 	/* Paranoia -- require a legal grid */
 	if (!in_bounds_fully(y1, x1)) return (0);
@@ -3857,6 +3866,46 @@ void mon_death_effect(int m_idx)
 
 		/* Drop the torch */
 		drop_near(i_ptr, 0, fy, fx, DROP_HERE);
+	}
+
+	/* -KN- Lousy Larva */
+	else if (m_ptr->r_idx == MON_LOUSY_LARVA)
+	{
+		/* Explode & spawn ants */
+		(void)mon_explode(m_idx, 1, fy, fx, 5, GF_ACID);
+		summon_specific(fy, fx, FALSE, 3, SUMMON_ANT, 0);
+		summon_specific(fy, fx, FALSE, 3, SUMMON_ANT, 0);
+		if (player_has_los_bold(fy, fx)) msg_print("Larva's explosion spawned ants!");
+	}
+
+	/* -KN- Bloated lemure */
+	else if (m_ptr->r_idx == MON_BLOATED_LEMURE)
+	{
+		/* Explode */
+		(void)mon_explode(m_idx, 1, fy, fx, 10, GF_FIRE);
+		if (player_has_los_bold(fy, fx)) msg_print("Lemure cracked with fiery explosion!");
+	}
+
+	/* -KN- Pulsating Larva */
+	else if (m_ptr->r_idx == MON_PULSATING_LARVA)
+	{
+		/* Explode & spawn beetle */
+		(void)mon_explode(m_idx, 2, fy, fx, 15, GF_POIS);
+		summon_specific(fy, fx, FALSE, p_ptr->depth, SUMMON_BEETLE, 0);
+		if (player_has_los_bold(fy, fx)) msg_print("Larva's explosion spawned a scuttler!");
+	}
+
+	/* -KN- Ostivore Larva */
+	else if (m_ptr->r_idx == MON_OSTIVORE_LARVA)
+	{
+		/* Explode & spawn bones and bone pile */
+		(void)mon_explode(m_idx, 2, fy, fx, 20, GF_SHARD);
+		if (cave_allow_object_bold(fy + 1, fx)) make_skeleton(fy + 1, fx, 0);
+		if (cave_allow_object_bold(fy - 1, fx)) make_skeleton(fy - 1, fx, 0);
+		if (cave_allow_object_bold(fy, fx + 1)) make_skeleton(fy, fx + 1, 0);
+		if (cave_allow_object_bold(fy, fx - 1)) make_skeleton(fy, fx - 1, 0);
+		if (cave_floor_bold(fy, fx)) cave_set_feat(fy, fx, FEAT_BONEPILE);
+		if (player_has_los_bold(fy, fx)) msg_print("Larva exploded with bone shards and pieces!");
 	}
 
 	/* Mana Fly */

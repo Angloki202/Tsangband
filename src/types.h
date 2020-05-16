@@ -568,6 +568,7 @@ struct monster_race
 	byte spell_power;			/* Power of (damage-dealing) spells */
 	byte combat_range;      /* Combat range - how the monster fights */
 
+	u32b flags0;			/* -KN- (SUB) added (sub-types) */
 	u32b flags1;			/* Flags 1 (general) */
 	u32b flags2;			/* Flags 2 (abilities) */
 	u32b flags3;			/* Flags 3 (race/resist) */
@@ -621,6 +622,7 @@ struct monster_lore
 
 	byte blows[MONSTER_BLOW_MAX];  /* Number of times each blow type was seen */
 
+	u32b flags0;			/* -KN- (SUB) added (sub-types) */
 	u32b flags1;				/* Observed racial flags */
 	u32b flags2;				/* Observed racial flags */
 	u32b flags3;				/* Observed racial flags */

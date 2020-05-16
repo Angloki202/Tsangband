@@ -1576,6 +1576,10 @@ cptr do_object(int mode, object_type *o_ptr)
 			{
 				obj_ident = TRUE;
 			}
+			
+			/* -KN- fun effect added */
+			cave_set_feat(py, px, FEAT_BONEPILE);
+			msg_print("Hole in the ground suddenly revealed grave filled with bones!");
 			break;
 		}
 
@@ -2176,6 +2180,15 @@ cptr do_object(int mode, object_type *o_ptr)
 			if (info) return ("");
 
 			(void)fire_star(GF_MAKE_LAVA, 0, 5, rand_range(5, 7));
+			obj_ident = TRUE;
+			break;
+		}
+		/* -KN- added scroll of webs */
+		case SV_SCROLL_WEBS:
+		{
+			if (info) return ("");
+
+			(void)fire_star(GF_MAKE_WEBS, 0, 5, rand_range(6, 8));
 			obj_ident = TRUE;
 			break;
 		}

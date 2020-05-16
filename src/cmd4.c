@@ -5988,7 +5988,7 @@ static mon_struct monster_group[] =
 	{ "b",  "bats" },
 	{ "B",  "birds" },
 	{ "C",  "canines" },
-	{ "c",  "centipedes" },
+	{ "c",  "crawlers" },			/* -KN- changed */
 	{ "&I", "demons" },
 	{ "Dd", "dragons" },
 	{ "E",  "elementals" },
@@ -6001,17 +6001,18 @@ static mon_struct monster_group[] =
 	{ "p",  "humans" },
 	{ "h",  "humanoids" },
 	{ "H",  "hybrids" },
-	{ "i",  "icky things" },
+	{ "i",  "icky insectoids" },
 	{ "j",  "jellies" },
 	{ "K",  "killer beetles" },
 	{ "k",  "kobolds" },
-	{ "l",  "lice" },
+	{ "l",  "larvae" },				/* -KN- changed */
 	{ "L",  "liches" },
 	{ "$!?=\"\'.`~^+<>()[]{}\\|/:", "mimics" },
 	{ "m",  "molds" },
 	{ "M",  "mummies" },
 	{ ",",  "mushroom patches" },
 	{ "n",  "nagas" },
+	{ "N",  "noos archetypes" },	/* -KN- added */
 	{ "@",  "non-player characters" },
 	{ "O",  "ogres" },
 	{ "o",  "orcs" },
@@ -6024,14 +6025,15 @@ static mon_struct monster_group[] =
 	{ "J",  "snakes" },
 	{ "S",  "spiders" },
 	{ "t",  "townspeople" },
+	{ "Uu", "ultro archetypes" },	/* -KN- added */
+	{ "Y",  "treefolk" },			/* -KN- changed */
 	{ "T",  "trolls" },
 	{ "V",  "vampires" },
 	{ "v*",  "vortexes and storms" },
 	{ "W",  "wights/wraiths" },
 	{ "w",  "worm masses" },
 	{ "X",  "xorns/xaren" },
-	{ "y",  "yeeks" },
-	{ "Y",  "yetis" },
+	{ "y",  "yeeks/oryapin" },		/* -KN- changed */
 	{ "Z",  "zephyr hounds" },
 	{ "z",  "zombies" },
 	{ NULL, NULL }

@@ -223,7 +223,9 @@ static void describe_monster_spells(int r_idx, const monster_lore *l_ptr)
 	if (l_ptr->flags4 & (RF4_SHRIEK))		vp[vn++] = "shriek for help";
 	if (l_ptr->flags4 & (RF4_LASH))
 	{
-		if (l_ptr->flags3 & (RF3_ANIMAL) || (r_ptr->blow[0].effect == RBE_ACID))
+		/* KN (hack) those with STING as their 1st attack use stinger */
+		if (r_ptr->blow[0].method == RBM_STING) vp[vn++] = "lash with a stinger at you from a distance";
+		else if (l_ptr->flags3 & (RF3_ANIMAL) || (r_ptr->blow[0].effect == RBE_ACID))
 			vp[vn++] = "spit at you from a distance";
 		else
 			vp[vn++] = "lash you if nearby";
@@ -261,6 +263,16 @@ static void describe_monster_spells(int r_idx, const monster_lore *l_ptr)
 	{
 		if (l_ptr->flags2 & (RF2_MORGUL_MAGIC)) vp[vn++] = "hurl black darts";
 		else vp[vn++] = "whip poisoned darts";
+	}
+	if (l_ptr->flags4 & (RF4_WEB1))
+	{
+		if (l_ptr->flags2 & (RF2_MORGUL_MAGIC)) vp[vn++] = "spawn vile webs";
+		else vp[vn++] = "spin webs";
+	}
+	if (l_ptr->flags4 & (RF4_WEB2))
+	{
+		if (l_ptr->flags2 & (RF2_MORGUL_MAGIC)) vp[vn++] = "spawn balls of terrible webs";
+		else vp[vn++] = "hurl ball of webs";
 	}
 
 	/* Describe innate attacks */
@@ -318,10 +330,9 @@ static void describe_monster_spells(int r_idx, const monster_lore *l_ptr)
 	if (l_ptr->flags4 & (RF4_BRTH_DISEN))      vp[vn++] = "disenchantment";
 	if (l_ptr->flags4 & (RF4_BRTH_TIME))       vp[vn++] = "time";
 	if (l_ptr->flags4 & (RF4_BRTH_MANA))       vp[vn++] = "mana";
-
-	if (l_ptr->flags4 & (RF4_XXX1))            vp[vn++] = "something";
-	if (l_ptr->flags4 & (RF4_XXX2))            vp[vn++] = "something";
+	
 	if (l_ptr->flags4 & (RF4_XXX3))            vp[vn++] = "something";
+	/* -KN- got rid of XXX1 and XXX2, now it's WEB1, WEB2 and it's not breaths */
 
 	/* Describe breaths */
 	if (vn)
@@ -593,7 +604,7 @@ static void describe_monster_spells(int r_idx, const monster_lore *l_ptr)
 		}
 		if (l_ptr->flags7 & (RF7_S_MONSTER))       vp[vn++] = "a monster";
 		if (l_ptr->flags7 & (RF7_S_MONSTERS))      vp[vn++] = "monsters";
-		if (l_ptr->flags7 & (RF7_S_BEETLE))        vp[vn++] = "a beetle";
+		if (l_ptr->flags7 & (RF7_S_BEETLE))        vp[vn++] = "a scuttler";
 		if (l_ptr->flags7 & (RF7_S_ANT))           vp[vn++] = "ants";
 		if (l_ptr->flags7 & (RF7_S_SPIDER))        vp[vn++] = "spiders";
 		if (l_ptr->flags7 & (RF7_S_HOUND))         vp[vn++] = "hounds";
@@ -884,7 +895,7 @@ static void describe_monster_attack(int r_idx, const monster_lore *l_ptr)
 			case RBM_BITE:          p = "bite"; break;
 			case RBM_PECK:          p = "peck"; break;
 			case RBM_STING:         p = "sting"; break;
-			case RBM_XXX1:          break;
+			case RBM_LUNGE:			p = "lunge forward"; break;	/* -KN- new method */
 			case RBM_BUTT:          p = "butt"; break;
 			case RBM_CRUSH:         p = "crush"; break;
 			case RBM_ENGULF:        p = "engulf"; break;
@@ -1106,6 +1117,11 @@ static void describe_monster_abilities(int r_idx, const monster_lore *l_ptr)
 	if (l_ptr->flags2 & (RF2_REGENERATE))
 	{
 		text_out(format("%^s regenerates quickly.  ", wd_he[msex]));
+	}
+	if (l_ptr->flags2 & (RF2_ABYSSAL))
+	{
+		/* -KN- new cavern-dwellers */
+		text_out(format("%^s dwells in caverns and pits.  ", wd_he[msex]));
 	}
 	if (l_ptr->flags2 & (RF2_CLOUD_SURROUND))
 	{
@@ -1408,6 +1424,12 @@ static void describe_monster_abilities(int r_idx, const monster_lore *l_ptr)
 		text_out(format("%^s usually appears in %sgroups.  ",
 			    wd_he[msex],
 			    ((l_ptr->flags1 & (RF1_FRIENDS)) ? "large " : "small ")));
+	}
+	
+	/* -KN- (SUB) added sub-types */
+	if (l_ptr->flags0 & (RF0_FROSTY))
+	{
+		text_out(format("%^s is a being of ice and frost.  ", wd_he[msex]));
 	}
 }
 

@@ -2025,20 +2025,21 @@ static cptr ident_info[] =
 	"H:Hybrid",
 	"I:Minor Demon",
 	"J:Snake",
-	"K:Killer Beetle",
+	"K:Killer Beetle/Scorpion",		/* -KN- moved scorpions here */
 	"L:Lich",
 	"M:Mummy",
-	/* "N:unused", */
+	"N:N['o]os archetype",	/* -KN- added */
 	"O:Ogre",
 	"P:Giant Humanoid",
 	"Q:Quylthulg (Pulsing Flesh Mound)",
 	"R:Reptile/Amphibian",
-	"S:Spider/Scorpion/Tick",
+	"S:Spider",				/* -KN- removed scorpions & ticks */
 	"T:Troll",
+	"U:Ultr[/o] major",		/* -KN- added */
 	"V:Vampire",
 	"W:Wight/Wraith/etc",
 	"X:Xorn/Xaren/etc",
-	"Y:Yeti",
+	"Y:Tree/Huorn",			/* -KN- changed, added */
 	"Z:Zephyr Hound",
 	"[:Hard armor",
 	"\\:A hafted (blunt) weapon",
@@ -2048,16 +2049,16 @@ static cptr ident_info[] =
 	"`:A tool or junk",
 	"a:Ant",
 	"b:Bat",
-	"c:Centipede",
+	"c:Centipede/Crawler",	/* -KN- modified */
 	"d:Dragon",
 	"e:Floating Eye",
 	"f:Feline",
 	"g:Golem",
 	"h:Hobbit/Elf/Dwarf",
-	"i:Icky Thing",
+	"i:Icky/Insectoid",		/* -KN- changed */
 	"j:Jelly",
 	"k:Kobold",
-	"l:Louse",
+	"l:Larvae",				/* -KN- changed, added */
 	"m:Mold",
 	"n:Naga",
 	"o:Orc",
@@ -2066,11 +2067,12 @@ static cptr ident_info[] =
 	"r:Rodent",
 	"s:Skeleton",
 	"t:Townsperson",
+	"u:Ultr[/o] minor",		/* -KN- added */
 	"v:Vortex",
 	"w:Worm/Worm-Mass",
 	/* "x:unused", */
-	"y:Yeek",
-	"z:Zombie/Mummy",
+	"y:Yeek/Oryapin",		/* -KN- modified; added badgerfolk */
+	"z:Zombie",				/* -KN- removed Mummy */
 	"{:A missile",
 	"|:An edged weapon",
 	"}:A missile launcher",

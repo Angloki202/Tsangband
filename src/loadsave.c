@@ -707,6 +707,7 @@ static void do_mon_lore(int r_idx)
 	do_byte(&l_ptr->blows[3]);
 
 	/* Memorize flags */
+	do_u32b(&l_ptr->flags0);	/* -KN- (SUB) added */
 	do_u32b(&l_ptr->flags1);
 	do_u32b(&l_ptr->flags2);
 	do_u32b(&l_ptr->flags3);
@@ -731,6 +732,7 @@ static void do_mon_lore(int r_idx)
 	if (load_file)
 	{
 		/* Repair the lore flags */
+		l_ptr->flags0 &= r_ptr->flags0;	/* -KN- (SUB) added */
 		l_ptr->flags1 &= r_ptr->flags1;
 		l_ptr->flags2 &= r_ptr->flags2;
 		l_ptr->flags3 &= r_ptr->flags3;

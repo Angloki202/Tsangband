@@ -291,7 +291,7 @@
 /*
  * Misc constants
  */
-#define TOWN_DAWN    10000  /* Number of turns from dawn to dawn XXX */
+#define TOWN_DAWN    10000  /* Number of turns from dawn to dawn (1t cca 8.7 sec) */
 #define BREAK_GLYPH    300  /* Rune of protection resistance */
 #define BTH_PLUS_ADJ     2  /* Value of each object plus to Skill */
 #define MON_MULT_ADJ     8  /* High value slows multiplication */
@@ -1107,6 +1107,8 @@
 #define GF_MAKE_WATER    110
 #define GF_MAKE_TREES    111
 #define GF_MAKE_LAVA     112
+/* -KN- added */
+#define GF_MAKE_WEBS     113
 
 
 #define GF_ENLIGHTENMENT 130	/* Special */
@@ -1185,9 +1187,15 @@
  * using "rval", "mval" pairs instead of indexes.
  */
 
+/* -KN- added 60, 126, 152, 306 for FUNKY_DEATH */
+
 #define MON_TOWN_THIEF         7
 #define MON_ANIM_TORCH        41
+#define MON_LOUSY_LARVA       60
+#define MON_BLOATED_LEMURE   126
+#define MON_PULSATING_LARVA  152
 #define MON_MAGIC_MUSHROOM   204
+#define MON_OSTIVORE_LARVA   306
 #define MON_MANA_FLY         352
 #define MON_CHAOS_TILE       426
 #define MON_TORNADO          527
@@ -1213,7 +1221,9 @@
 
 /* Dungeon features */
 #define FEAT_FLOOR         1
-
+/* -KN- added marble and grassy */
+#define FEAT_FLOOR2        2
+#define FEAT_FLOOR3        3
 #define FEAT_LESS2         4
 #define FEAT_MORE2         5
 #define FEAT_OPEN          6
@@ -1223,6 +1233,19 @@
 #define FEAT_LAVA          10
 #define FEAT_WATER         11
 #define FEAT_TREE          12
+/* -KN- added web */
+#define FEAT_WEB           13
+/* -KN- added pits & bones */
+#define FEAT_PIT0          14
+#define FEAT_PIT1          15
+#define FEAT_ABYSS         16
+#define FEAT_BONEPILE      17
+#define FEAT_FLOOR_B       18
+
+/* -KN- added deep floors */
+#define FEAT_FLOOR4        21
+#define FEAT_FLOOR5        22
+#define FEAT_FLOOR6        23
 
 /* Doors */
 #define FEAT_DOOR_HEAD     32
@@ -1931,8 +1954,10 @@
 
 /* The "sval" codes for TV_SLING, TV_BOW, and TV_CROSSBOW */
 #define SV_SLING                         2	/* (x2) */
+#define SV_GIANT_SLING                   3	/* (x2) -KN- */
 #define SV_SHORT_BOW                    12	/* (x2) */
 #define SV_LONG_BOW                     13	/* (x3) */
+#define SV_TRUE_BOW                     14	/* (x3) -KN- */
 #define SV_HAND_XBOW                    22	/* (x2) */
 #define SV_LIGHT_XBOW                   23	/* (x3) */
 #define SV_HEAVY_XBOW                   24	/* (x4) */
@@ -2322,9 +2347,11 @@
 #define SV_SCROLL_TREES                 51
 #define SV_SCROLL_WATER                 52
 #define SV_SCROLL_LAVA                  53
+/* -KN- added scroll of webs */
+#define SV_SCROLL_WEBS                  54
 
 /* Number of scroll titles.  Must be equal to maximum scroll index, plus one */
-#define MAX_SCROLL_IDX                  54
+#define MAX_SCROLL_IDX                  55
 
 
 /* The "sval" codes for TV_POTION */
@@ -3748,7 +3775,8 @@
 #define RBM_BITE          6
 #define RBM_STING         7
 #define RBM_PECK          8
-#define RBM_XXX1          9
+/* -KN- added LUNGE (was XXX1) */
+#define RBM_LUNGE         9
 #define RBM_BUTT         10
 #define RBM_CRUSH        11
 #define RBM_ENGULF       12
@@ -3835,6 +3863,44 @@
 
 
 /*
+ * -KN- (SUB) added sub-types flags
+ */
+#define RF0_FIERY          0x00000001  /* being of fire and flames */
+#define RF0_FROSTY         0x00000002  /* being of ice and frost */
+#define RF0_X03            0x00000004  /*  */
+#define RF0_X04            0x00000008  /*  */
+#define RF0_X05            0x00000010  /*  */
+#define RF0_X06            0x00000020  /*  */
+#define RF0_X07            0x00000040  /*  */
+#define RF0_X08            0x00000080  /*  */
+#define RF0_X09            0x00000100  /*  */
+#define RF0_X10            0x00000200  /*  */
+#define RF0_X11            0x00000400  /*  */
+#define RF0_X12            0x00000800  /*  */
+#define RF0_X13            0x00001000  /*  */
+#define RF0_X14            0x00002000  /*  */
+#define RF0_X15            0x00004000  /*  */
+#define RF0_X16            0x00008000  /*  */
+#define RF0_X17            0x00010000  /*  */
+#define RF0_X18            0x00020000  /*  */
+#define RF0_X19            0x00040000  /*  */
+#define RF0_HEAVY          0x00080000  /* being that is very heavy */
+#define RF0_X30            0x00100000  /*  */
+#define RF0_X40            0x00200000  /*  */
+#define RF0_X50            0x00400000  /*  */
+#define RF0_X60            0x00800000  /*  */
+#define RF0_X70            0x01000000  /*  */
+#define RF0_X80            0x02000000  /*  */
+#define RF0_X90            0x04000000  /*  */
+#define RF0_X100           0x08000000  /*  */
+#define RF0_X200           0x10000000  /*  */
+#define RF0_X300           0x20000000  /*  */
+#define RF0_X400           0x40000000  /*  */
+#define RF0_X500           0x80000000  /*  */
+
+
+
+/*
  * New monster race bit flags
  */
 #define RF1_UNIQUE         0x00000001  /* Unique Monster */
@@ -3875,7 +3941,7 @@
  */
 #define RF2_STUPID         0x00000001  /* Monster is stupid */
 #define RF2_SMART          0x00000002  /* Monster is smart */
-#define RF2_XXX1           0x00000004  /* (?) */
+#define RF2_ABYSSAL        0x00000004  /* -KN- cavern dweller - interaction with pits */
 #define RF2_PLAYER_GHOST   0x00000008  /* Monster is a player ghost */
 #define RF2_INVISIBLE      0x00000010  /* Monster avoids vision */
 #define RF2_COLD_BLOOD     0x00000020  /* Monster avoids infra */
@@ -3974,8 +4040,8 @@
 #define RF4_BRTH_DISEN     0x04000000  /* Breathe Disenchant */
 #define RF4_BRTH_TIME      0x08000000  /* Breathe Time */
 #define RF4_BRTH_MANA      0x10000000  /* Breathe Mana */
-#define RF4_XXX1           0x20000000  /*  */
-#define RF4_XXX2           0x40000000  /*  */
+#define RF4_WEB1           0x20000000  /* -KN- Web Beams */
+#define RF4_WEB2           0x40000000  /* -KN- Web Blasts */
 #define RF4_XXX3           0x80000000  /*  */
 
 /*
@@ -4123,7 +4189,8 @@
  * Need special treatment in movement AI.
  */
 #define RF4_ATTACK_MASK \
-        (RF4_BOULDER | RF4_SHOT | RF4_ARROW | RF4_BOLT | RF4_MISSL | RF4_PMISSL)
+        (RF4_BOULDER | RF4_SHOT | RF4_ARROW | RF4_BOLT | RF4_MISSL | RF4_PMISSL | RF4_WEB1)
+/* -KN- added WEB1 */
 
 #define RF5_ATTACK_MASK \
 	(RF5_BALL_ACID | RF5_BALL_ELEC | RF5_BALL_FIRE | RF5_BALL_COLD | RF5_BALL_POIS | RF5_BALL_LITE | RF5_BALL_DARK | RF5_BALL_CONFU | RF5_BALL_SOUND | RF5_BALL_SHARD | RF5_BALL_STORM | RF5_BALL_NETHR | RF5_BALL_CHAOS | RF5_BALL_MANA | RF5_BOLT_ACID | RF5_BOLT_ELEC | RF5_BOLT_FIRE | RF5_BOLT_COLD | RF5_BOLT_POIS | RF5_BOLT_PLAS | RF5_BOLT_ICE | RF5_BOLT_WATER | RF5_BOLT_NETHR | RF5_BOLT_MANA | RF5_BEAM_ELEC | RF5_BEAM_ICE | RF5_BEAM_NETHR | RF5_ARC__FORCE | RF5_ARC__HFIRE)
@@ -4139,7 +4206,8 @@
  * Ball spells
  */
 #define RF4_BALL_MASK \
-        (0L)
+	(RF4_WEB2)
+/* -KN- changed from (0L) */
 
 #define RF5_BALL_MASK \
 	(RF5_BALL_ACID | RF5_BALL_ELEC | RF5_BALL_FIRE | RF5_BALL_COLD | RF5_BALL_POIS | RF5_BALL_LITE | RF5_BALL_DARK | RF5_BALL_CONFU | RF5_BALL_SOUND | RF5_BALL_SHARD | RF5_BALL_STORM | RF5_BALL_NETHR | RF5_BALL_CHAOS | RF5_BALL_MANA)
@@ -4518,11 +4586,13 @@
  * not alive.  All other mimics are "mimics", living creatures that look
  * like something non-living.
  */
+ /* -KN- added archetypes as non-living */
+ 
 #define monster_nonliving(M) \
 	(((M)->flags3 & (RF3_DEMON))  || \
 	 ((M)->flags3 & (RF3_UNDEAD)) || \
+	 (strchr("NuU", (M)->d_char)) || \
 	 (strchr("Ev*g$+#|\\/][}{", (M)->d_char)))
-
 
 /*
  * Determine if a given monster is "immaterial".

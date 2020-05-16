@@ -4480,8 +4480,27 @@ static int target_set_interactive_aux(int y, int x, int mode, cptr info)
 
 								int cx, cy;
 
-								/* Print conjunction and monster name */
-								prt(format("%s%s%s%s ", s1, s2, s3, m_name), 0, 0);
+								/* -KN- ask whether standing on special terrain */
+								if (cave_feat[y][x] == FEAT_WEB)
+								{
+									/* -KN- (hack) special handling for webs and spiders */
+									if (strchr("S", r_ptr->d_char))
+									{
+										prt(format("%s%s%s%s (lurking) ", s1, s2, s3, m_name), 0, 0);
+									}
+									else prt(format("%s%s%s%s (trapped) ", s1, s2, s3, m_name), 0, 0);
+								}
+								else if ((cave_feat[y][x] == FEAT_PIT0) || (cave_feat[y][x] == FEAT_PIT1))
+								{
+									/* -KN- (hack) special call for pits (ICI) */
+									prt(format("%s%s%s%s (in a pit) ", s1, s2, s3, m_name), 0, 0);
+								}
+								else if (cave_feat[y][x] == FEAT_TREE)
+								{
+									/* -KN- (hack) special call for pits (ICI) */
+									prt(format("%s%s%s%s (behind a tree) ", s1, s2, s3, m_name), 0, 0);
+								}
+								else prt(format("%s%s%s%s ", s1, s2, s3, m_name), 0, 0);
 
 								/* Obtain the cursor */
 								(void)Term_locate(&cx, &cy);
@@ -4804,8 +4823,9 @@ static int target_set_interactive_aux(int y, int x, int mode, cptr info)
 			/* Pick proper indefinite article */
 			s3 = (my_is_vowel(name[0])) ? "an " : "a ";
 
-			/* Hack -- special treatment for certain terrain features. */
-			if ((feat == FEAT_WATER) || (feat == FEAT_LAVA) || (feat == FEAT_TREE))
+			/* Hack -- special treatment for certain terrain features. -KN- added web */
+			if ((feat == FEAT_WATER) || (feat == FEAT_LAVA) ||
+				(feat == FEAT_TREE) || (feat == FEAT_WEB) || (feat == FEAT_FLOOR_B))
 			{
 				s3 = "";
 			}

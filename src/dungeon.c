@@ -2431,6 +2431,8 @@ static void process_player_aux(void)
 {
 	static int old_monster_race_idx = 0;
 
+	/* -KN- (SUB) added */
+	static u32b	old_flags0 = 0L;
 	static u32b	old_flags1 = 0L;
 	static u32b	old_flags2 = 0L;
 	static u32b	old_flags3 = 0L;
@@ -2454,6 +2456,7 @@ static void process_player_aux(void)
 
 		/* Check for change of any kind */
 		if ((old_monster_race_idx != p_ptr->monster_race_idx) ||
+			(old_flags0 != l_ptr->flags0) ||	/* -KN- (SUB) */
 		    (old_flags1 != l_ptr->flags1) ||
 		    (old_flags2 != l_ptr->flags2) ||
 		    (old_flags3 != l_ptr->flags3) ||
@@ -2471,6 +2474,7 @@ static void process_player_aux(void)
 			old_monster_race_idx = p_ptr->monster_race_idx;
 
 			/* Memorize flags */
+			old_flags0 = l_ptr->flags0;		/* -KN- (SUB) */
 			old_flags1 = l_ptr->flags1;
 			old_flags2 = l_ptr->flags2;
 			old_flags3 = l_ptr->flags3;

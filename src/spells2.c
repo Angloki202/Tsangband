@@ -1057,8 +1057,15 @@ static void thrust_creature(int who, bool push, int t_y, int t_x, int grids_away
 			msg_print("You come to rest in some trees.");
 		if (cave_feat[y][x] == FEAT_RUBBLE)
 			msg_print("You come to rest in some rubble.");
+		if (cave_feat[y][x] == FEAT_BONEPILE)
+			msg_print("You find yourself on top of a pile of bones.");
 		if (cave_feat[y][x] == FEAT_WATER)
 			msg_print("You come to rest in a pool of water.");
+		if (cave_feat[y][x] == FEAT_WEB)
+			msg_print("You landed on some nasty webs.");
+		if ((cave_feat[y][x] == FEAT_PIT0) || (cave_feat[y][x] == FEAT_PIT1) ||
+			(cave_feat[y][x] == FEAT_ABYSS))
+			msg_print("You find yourself on the bottom of a pit.");
 		if (cave_feat[y][x] == FEAT_LAVA)
 		{
 			fire_dam(damroll(4, 100), 0, "You are thrown into molten lava!",
@@ -1244,6 +1251,11 @@ void teleport_player(int dist, bool safe, bool require_los)
 	/* Move player */
 	monster_swap(py, px, y, x);
 
+	/* -KN- (mega-hack) added torch update with analyze_weapons; ABYSS support */
+	p_ptr->drain_light = FALSE;
+	p_ptr->update |= (PU_BONUS);
+	p_ptr->update |= (PU_TORCH);
+	
 	/* Handle stuff (update display and such) */
 	handle_stuff();
 
@@ -1275,7 +1287,6 @@ void teleport_player(int dist, bool safe, bool require_los)
 		lite_spot(py, px);
 	}
 
-
 	/* Flying around the dungeon isn't always safe... */
 	if (!safe)
 	{
@@ -1292,6 +1303,14 @@ void teleport_player(int dist, bool safe, bool require_los)
 				"being slammed into rubble");
 			if (one_in_(3)) set_stun(p_ptr->stun + damroll(2, 14));
 			if (!one_in_(3)) set_cut(p_ptr->cut + damroll(2, 14) * 2);
+		}
+		else if ((cave_feat[y][x] == FEAT_PIT0) || (cave_feat[y][x] == FEAT_PIT1) ||
+				(cave_feat[y][x] == FEAT_ABYSS))
+		{
+			/* -KN- added landing on pits and abyss */
+			(void)take_hit(damroll(2, 14), 0, "You landed harshly on the bottom of a pit!",
+				"being thrown down a dark pit");
+			if (one_in_(3)) set_stun(p_ptr->stun + damroll(2, 14));
 		}
 		else if (cave_feat[y][x] == FEAT_LAVA)
 		{
@@ -1423,6 +1442,11 @@ void teleport_player_to(int ny, int nx, int dis, bool allow_vault, int mode)
 
 	/* Move player */
 	monster_swap(py, px, y, x);
+
+	/* -KN- (mega-hack) added torch update, analyze_weapons; ABYSS support */
+	p_ptr->drain_light = FALSE;
+	p_ptr->update |= (PU_BONUS);
+	p_ptr->update |= (PU_TORCH);
 
 	/* Handle stuff (update view, etc.) */
 	handle_stuff();

@@ -39,7 +39,7 @@ void search(void)
 	if (p_ptr->confused || p_ptr->image) chance = chance / 3;
 	if (p_ptr->berserk || p_ptr->necro_rage) chance = chance / 2;
 
-	/* Increase searching range sometimes */
+	/* Increase searching range sometimes */	
 	if (chance >= rand_range(40,  70)) range++;
 	if (chance >= rand_range(80, 140)) range++;
 
@@ -82,6 +82,19 @@ void search(void)
 
 					/* Pick a door */
 					place_closed_door(y, x);
+
+					/* Disturb */
+					disturb(0, 0);
+				}
+			}
+			
+			/* -KN- alert if a pit nearby is unexplored */
+			if (cave_feat[y][x] == FEAT_PIT1)
+			{
+				if (rand_int(100) < chance2)
+				{
+					/* Message */
+					msg_print("A pit nearby looks promising.");
 
 					/* Disturb */
 					disturb(0, 0);
@@ -285,6 +298,9 @@ void do_cmd_search(void)
 
 	/* Take a turn */
 	p_ptr->energy_use = 100;
+
+	/* -KN- mention that search is processing */
+	msg_print("Searching... ");
 
 	/* Search */
 	search();
@@ -1163,7 +1179,8 @@ static bool escape_pit(void)
 	/* Characters with feather fall always succeed */
 	if (p_ptr->ffall)
 	{
-		msg_print("You skip easily out of the pit.");
+		/* -KN- mention less often as there are far more pits now */
+		if (one_in_(4)) msg_print("You skip easily out of the pit.");
 		return (TRUE);
 	}
 
@@ -1182,6 +1199,17 @@ static bool escape_pit(void)
 	else msg_print("You leap out of the pit.");
 
 	/* We're free! */
+	
+	/* -KN- change trap into empty pit */
+	if (cave_pit_trap(p_ptr->py, p_ptr->px))
+	{
+		/* remove the pit-trap and redraw for visual clue */
+		remove_trap(p_ptr->py, p_ptr->px, -1);
+		lite_spot(p_ptr->py, p_ptr->px);
+		
+		/* we are assuming the trap was on a spot where a pit can be */
+		cave_feat[p_ptr->py][p_ptr->px] = FEAT_PIT0;
+	}
 	return (TRUE);
 }
 
@@ -1228,11 +1256,34 @@ void move_player(int dir, int do_pickup)
 	x = px + ddx[dir];
 
 
-	/* Character is stuck in a pit */
-	if (cave_pit_trap(py, px))
+	/* Character is stuck in a pit or ABYSS */
+	if ((cave_pit_trap(py, px)) || (cave_feat[py][px] == FEAT_PIT0) ||
+	(cave_feat[py][px] == FEAT_PIT1) || (cave_feat[py][px] == FEAT_ABYSS))
 	{
 		/* Lose turn unless we escape */
-		if (!escape_pit()) return;
+		if (!escape_pit())
+		{
+			/* -KN- (hack) if stuck, reduce light as if cleric wielding wrong weapon */
+			p_ptr->drain_light = TRUE;
+			p_ptr->update |= (PU_TORCH);
+			return;
+		}
+
+		/* -KN- entering new darkness */
+		if (cave_feat[y][x] == FEAT_ABYSS)
+		{
+			/* -KN- we escaped pit, but don't light up if entering new abyss */
+			p_ptr->drain_light = TRUE;
+		}
+		else
+		{
+			/* -KN- if non-move move (aka teleport) moves player, it should update the torch */
+			p_ptr->drain_light = FALSE;
+			
+			/* -KN- check for non-priest weapon to correct drain_light */
+			p_ptr->update |= (PU_BONUS);
+			p_ptr->update |= (PU_TORCH);
+		}
 	}
 
 	/* Hack -- attack monsters */
@@ -1435,6 +1486,40 @@ void move_player(int dir, int do_pickup)
 		/*** Handle traversable terrain.  ***/
 		switch (cave_feat[y][x])
 		{
+			/* -KN- added terrain */
+			case FEAT_BONEPILE:
+			{
+				/* Dark magic-users have no need to be careful. */
+				if ((p_ptr->realm == NECRO)) can_move = TRUE;
+
+				/* Characters in wraithform move easily through bonepile */
+				else if (p_ptr->wraithform) can_move = TRUE;
+
+				/* Require two turns to get through bonepile */
+				else if (p_ptr->crossing_moves)
+				{
+					can_move = TRUE;
+				}
+				else
+				{
+					if (p_ptr->crossing_dir == dir)
+					{
+						p_ptr->crossing_moves++;
+					}
+					else
+					{
+						p_ptr->crossing_dir = dir;
+						p_ptr->crossing_moves = 1;
+					}
+
+					/* Automate 2nd movement command, if not disturbed. */
+					p_ptr->command_cmd = ';';
+					p_ptr->command_rep = 1;
+					p_ptr->command_dir = dir;
+				}
+
+				break;
+			}
 			case FEAT_RUBBLE:
 			{
 				/* Characters in wraithform move easily through rubble. */
@@ -1465,6 +1550,166 @@ void move_player(int dir, int do_pickup)
 					p_ptr->command_dir = dir;
 				}
 
+				break;
+			}
+
+			/* -KN- added web terrain */
+			case FEAT_WEB:
+			{
+				/* Characters in wraithform move easily through webs. */
+				if (p_ptr->wraithform) can_move = TRUE;
+
+				/* Require two turns to get through webs */
+				else if (p_ptr->crossing_moves >= 1)
+				{
+					/* second move can make some web stick on you */
+					int ii = p_ptr->total_weight / adj_str_wgt[p_ptr->stat_ind[A_STR]];
+					/* cumulative chance to slow down encumbered player */
+					if (ii > 40)
+					{
+						if (one_in_(4)) (void)set_slow(p_ptr->slow + 3);
+					}
+					if (ii > 60)
+					{
+						if (one_in_(3)) (void)set_slow(p_ptr->slow + 6);
+					}
+					if (ii > 80)
+					{
+						if (one_in_(2)) (void)set_slow(p_ptr->slow + 9);
+					}
+
+					/* web breaks sometimes; 25% chance at l10, 16% at l20, 8% at l50 */
+					if (one_in_(2 + div_round(p_ptr->depth, 6)))
+					{
+						msg_print("You tore down the web.   ");
+						cave_set_feat(y, x, get_nearby_floor(y, x));
+					}
+					else
+					{
+						/* (ICI) can add summon spiders if lots of other webs nearby */
+						msg_print("This spot is covered in webs.");
+					}
+					can_move = TRUE;
+				}
+				else
+				{
+					cancel_running();
+
+					if (p_ptr->crossing_dir == dir)
+					{
+						p_ptr->crossing_moves++;
+					}
+					else
+					{
+						p_ptr->crossing_dir = dir;
+						p_ptr->crossing_moves = 1;
+					}
+
+					/* Automate follow-up movement commands, if not disturbed. */
+					p_ptr->command_cmd = ';';
+					p_ptr->command_rep = 1;
+					p_ptr->command_dir = dir;
+				}
+
+				break;
+			}
+
+			/* -KN- added pits terrains */
+			case FEAT_ABYSS:
+			case FEAT_PIT0:
+			case FEAT_PIT1:
+			{
+				/* Characters in wraithform move easily through / above pits  */
+				if (p_ptr->wraithform) can_move = TRUE;
+
+				/* Who is afraid won't enter the depths (or return to sprung pit-trap) */
+				else if (p_ptr->afraid)
+				{
+					can_move = FALSE;
+					msg_print("You dare not enter the darkness.");
+
+					/* Hack -- Use no energy */
+					p_ptr->energy_use = 0;
+
+					/* Stop any run. */
+					disturb(0, 0);
+				}
+				
+				/* feather fall lets you slide in easily */
+				else if (p_ptr->ffall) can_move = TRUE;
+
+				/* Require two turns to get into the pit */
+				else if (p_ptr->crossing_moves)
+				{
+					can_move = TRUE;
+				}
+				else
+				{
+					if (p_ptr->crossing_dir == dir)
+					{
+						p_ptr->crossing_moves++;
+					}
+					else
+					{
+						p_ptr->crossing_dir = dir;
+						p_ptr->crossing_moves = 1;
+					}
+
+					/* Automate 2nd movement command, if not disturbed. */
+					p_ptr->command_cmd = ';';
+					p_ptr->command_rep = 1;
+					p_ptr->command_dir = dir;
+				}
+
+				/* all the fun stuf that can happen when exploring some pits (ICI) */
+				/* make it even more interesting; separate summon and treaser... */
+				if ((cave_feat[y][x] == FEAT_PIT1) && (can_move == TRUE))
+				{						
+					if (one_in_(22 - (p_ptr->depth / 5)))
+					{
+						/* there was a demon! */
+						msg_print("You awoke a stirring demon in the pit!");
+						summon_specific(y, x, FALSE, (p_ptr->depth + 1), SUMMON_DEMON, 0);
+					}
+					else if (one_in_(10))
+					{
+						/* single ant and a stone */
+						msg_print("A harmless ant was burrowed in the pit.");
+						summon_specific(y, x, FALSE, (p_ptr->depth + 1), SUMMON_ANT, 0);
+						make_boulder(y, x, p_ptr->depth + 2);
+					}
+					else if (one_in_(9))
+					{
+						/* animal lair */
+						msg_print("This was a lair of sorts.");
+						summon_specific(y, x, FALSE, (p_ptr->depth + 1), SUMMON_ANIMAL, 0);
+					}
+					else if (one_in_(8))
+					{
+						/* beetle nest with some reward */
+						msg_print("This was a foul nest with some treasure.");
+						summon_specific(y, x, FALSE, (p_ptr->depth + 1), SUMMON_BEETLE, 0);
+						place_gold(y, x);
+					}
+					else if (one_in_(7))
+					{
+						/* treasure! */
+						msg_print("You found a hidden cache!");
+						place_object(y, x, FALSE, FALSE, FALSE);
+					}
+					else msg_print("This pit is empty.");
+					
+					/* and (always?) change into an empty pit */
+					cave_set_feat(y, x, FEAT_PIT0);
+				}
+				
+				/* -KN- experiment darkening; drain_light removed on escape_pit and teleports */
+				if (can_move == TRUE)
+				{					
+					p_ptr->drain_light = TRUE;
+					p_ptr->update |= (PU_TORCH);
+				}
+				
 				break;
 			}
 

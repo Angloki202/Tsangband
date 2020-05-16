@@ -251,6 +251,17 @@ static int terrain_ac_adjust(monster_race *r_ptr, int feat)
 		terrain_adjust = r_ptr->ac / 5 + 5;
 	}
 
+	/* Monsters in webs are often trapped */
+	if (feat == FEAT_WEB)
+	{
+		/* big bonus to ac if spider, otherwise reduce ac by 1/4 */
+		if (strchr("S", r_ptr->d_char))
+		{
+			terrain_adjust = r_ptr->ac / 3 + 3;
+		}
+		else terrain_adjust -= r_ptr->ac / 4;
+	}
+	
 	/*
 	 * Monsters in trees can take advantage of cover, but those skilled
 	 * in nature lore can hit them more easily.
@@ -261,10 +272,40 @@ static int terrain_ac_adjust(monster_race *r_ptr, int feat)
 		terrain_adjust -= get_skill(S_NATURE, 0, 20);
 	}
 
+	/* -KN-
+	 * Monsters in bonepiles have slight advantage to cover, but those
+	 * skilled in dark arts can hit them more easily.
+	 */
+	if (feat == FEAT_BONEPILE)
+	{
+		terrain_adjust = r_ptr->ac / 7 + 5;
+		terrain_adjust -= get_skill(S_DOMINION, 0, 20);
+	}
+
+	/* -KN- Monsters in pits and holes have some cover. */
+	if ((feat == FEAT_ABYSS) || (feat == FEAT_PIT0) || (feat == FEAT_PIT1))
+	{
+		terrain_adjust = r_ptr->ac / 8 + 2;
+		
+		/* cave-dwellers have twice that much bonus */
+		if (r_ptr->flags2 & (RF2_ABYSSAL))
+		{
+			terrain_adjust += (r_ptr->ac / 8 + 2);
+		}
+	}
+
 	/* Monsters in water are vulnerable. */
 	if (feat == FEAT_WATER)
 	{
-		terrain_adjust -= (r_ptr->ac / 5 + 3);
+		/* -KN- check if monster is water-based (ie. takes advantage of water) */
+		if (r_ptr->flags3 & (RF3_RES_WATER))
+		{
+			terrain_adjust += (r_ptr->ac / 5 + 1);
+		}
+		else
+		{
+			terrain_adjust -= (r_ptr->ac / 5 + 3);
+		}
 	}
 
 	return (terrain_adjust);
@@ -1434,7 +1475,8 @@ static bool contact_danger_check(monster_race *r_ptr)
 
 
 	/* Some monsters are almost always dangerous to touch. */
-	else if (strchr("Ev*mj,i", r_ptr->d_char))
+	/* -KN- removed insectoids */
+	else if (strchr("Ev*mj,", r_ptr->d_char))
 	{
 		for (i = 0; i < MONSTER_BLOW_MAX; i++)
 		{

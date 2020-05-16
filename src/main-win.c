@@ -99,7 +99,6 @@
 #include "angband.h"
 #include "intrface.h"
 
-
 #ifdef WINDOWS
 
 

@@ -2912,8 +2912,8 @@ byte mana_cost_RF4[32]=
 	0,      /* RF4_BRTH_DISEN */
 	0,      /* RF4_BRTH_TIME */
 	0,      /* RF4_BRTH_MANA */
-	0,      /* RF4_XXX3 */
-	0,      /* RF4_XXX4 */
+	0,      /* RF4_WEB1 -KN- added */
+	0,      /* RF4_WEB2 -KN- added */
 	0,      /* RF4_XXX5 */
 	0       /* RF4_XXX6 */
 };
@@ -3073,9 +3073,9 @@ byte spell_desire_RF4[32][8] =
 	{ 50,  0,   0,   5,     0,   0, LRN_CHAOS ,   90}, /* RF4_BRTH_CHAOS*/
 	{ 50,  0,   0,   5,     0,   0, LRN_DISEN ,   90}, /* RF4_BRTH_DISEN*/
 	{ 50,  0,   0,   5,     0,   0,    0      ,   90}, /* RF4_BRTH_TIME */
-	{ 0,   0,   0,   0,     0,   0,    0      ,  100}, /* RF4_XXX2 */
-	{ 0,   0,   0,   0,     0,   0,    0      ,  100}, /* RF4_XXX3 */
-	{ 0,   0,   0,   0,     0,   0,    0      ,  100}, /* RF4_XXX4 */
+	{ 50,  0,   0,   5,     0,   0,    0      ,   90}, /* RF4_BRTH_MANA should be mana */
+	{ 30,  0,   0,   5,     0,   0, LRN_NETHR ,   33}, /* RF4_WEB1 -KN- added */
+	{ 40,  0,   0,   5,     0,   0, LRN_NETHR ,   50}, /* RF4_WEB2 -KN- added */
 	{ 0,   0,   0,   0,     0,   0,    0      ,  100}, /* RF4_XXX5 */
 	{ 0,   0,   0,   0,     0,   0,    0      ,  100} /* RF4_XXX6 */
 };
@@ -3229,9 +3229,9 @@ byte spell_range_RF4[32] =
 	6,
 	6,
 	6,
-	0,
-	0,
-	0,
+	6,
+	4,
+	5,
 	0,
 	0
 };

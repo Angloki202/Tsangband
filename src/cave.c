@@ -248,8 +248,8 @@ static byte breath_to_attr[32][2] =
 	{  TERM_VIOLET,  TERM_PURPLE },     /* RF4_BRTH_DISEN */
 	{  TERM_L_BLUE,  TERM_DEEP_L_BLUE },/* RF4_BRTH_TIME */
 	{  TERM_PURPLE,  TERM_BLUE },       /* RF4_BRTH_MANA */
-	{  0,  0 },     /*  */
-	{  0,  0 },     /*  */
+	{  TERM_L_DARK,  TERM_PURPLE },     /* RF4_WEB1 */
+	{  TERM_L_DARK,  TERM_GREEN },      /* RF4_WEB2 */
 	{  0,  0 }      /*  */
 };
 
@@ -888,7 +888,25 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 				}
 
 				/* Normal attr */
-				a = object_attr(o_ptr);
+				/* -KN- display object depending on what special terrain they are */
+				if (cave_feat[y][x] == FEAT_WEB)
+				{
+					a = TERM_MUSTARD;
+				}
+				else if ((cave_feat[y][x] == FEAT_PIT0) ||
+				(cave_feat[y][x] == FEAT_PIT1) || (cave_feat[y][x] == FEAT_ABYSS))
+				{
+					a = TERM_L_DARK;
+				}
+				else if (cave_feat[y][x] == FEAT_TREE)
+				{
+					a = TERM_L_GREEN;
+				}
+				else if (cave_feat[y][x] == FEAT_WATER)
+				{
+					a = TERM_L_TEAL;
+				}
+				else a = object_attr(o_ptr);
 
 				/* Normal char */
 				c = object_char(o_ptr);
@@ -1002,6 +1020,25 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 				/* Normal char */
 				c = dc;
 			}
+
+			/* -KN- (hack) override color for monsters in webs and pits */
+			if (cave_feat[y][x] == FEAT_WEB)
+			{
+				a = TERM_MUSTARD;
+			}
+			if (cave_feat[y][x] == FEAT_TREE)
+			{
+				a = TERM_L_GREEN;
+			}
+			if (cave_feat[y][x] == FEAT_WATER)
+			{
+				a = TERM_L_TEAL;
+			}
+			else if ((cave_feat[y][x] == FEAT_PIT0) ||
+			(cave_feat[y][x] == FEAT_PIT1) || (cave_feat[y][x] == FEAT_ABYSS))
+			{
+				a = TERM_L_DARK;
+			}
 		}
 	}
 
@@ -1031,13 +1068,44 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 			if (warn > 6) warn = 6;
 			if (warn < 2) warn = 2;
 
+			/* -KN- hack? adjust color for webs and pit, incl. wounded players */
+			int zz = 0;
+			if (cave_feat[y][x] == FEAT_WEB) zz = 1;
+			else if ((cave_feat[y][x] == FEAT_PIT0) ||
+				(cave_feat[y][x] == FEAT_PIT1) || (cave_feat[y][x] == FEAT_ABYSS)) zz = 2;
+			else if (cave_feat[y][x] == FEAT_TREE) zz = 3;
+			else if (cave_feat[y][x] == FEAT_WATER) zz = 4;
+
+			if (zz == 1) a = TERM_MUSTARD;
+			else if (zz == 2) a = TERM_L_DARK;
+			else if (zz == 3) a = TERM_L_GREEN;
+			else if (zz == 4) a = TERM_L_TEAL;
+
 			/* Color the character according to damage and HP warning */
 			if (p_ptr->chp < p_ptr->mhp * (warn / 2) / 10)
+			{
 				a = TERM_L_RED;
+				if (zz == 1) a = TERM_PURPLE;
+				else if (zz == 2) a = TERM_RED;
+				else if (zz == 3) a = TERM_RED;
+				else if (zz == 4) a = TERM_L_PINK;
+			}
 			else if (p_ptr->chp < p_ptr->mhp * warn / 10)
+			{
 				a = TERM_ORANGE;
+				if (zz == 1) a = TERM_L_PURPLE;
+				else if (zz == 2) a = TERM_UMBER;
+				else if (zz == 3) a = TERM_MUD;
+				else if (zz == 4) a = TERM_SLATE;
+			}
 			else if (p_ptr->chp < p_ptr->mhp * (3 * warn / 2) / 10)
+			{
 				a = TERM_YELLOW;
+				if (zz == 1) a = TERM_MUD;
+				else if (zz == 2) a = TERM_L_UMBER;
+				else if (zz == 3) a = TERM_L_YELLOW;
+				else if (zz == 4) a = TERM_BLUE_SLATE;
+			}
 		}
 	}
 

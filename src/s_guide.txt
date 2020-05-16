@@ -376,3 +376,92 @@ z-virt.c
 # system-specific files except for "main.c" are not listed
 #
 
+
+
+
+# colors
+#define TERM_DARK        0	/* 'd' */
+#define TERM_WHITE       1	/* 'w' */
+#define TERM_SLATE       2	/* 's' */
+#define TERM_ORANGE      3	/* 'o' */
+#define TERM_RED         4	/* 'r' */
+#define TERM_GREEN       5	/* 'g' */
+#define TERM_BLUE        6	/* 'b' */
+#define TERM_UMBER       7	/* 'u' */
+#define TERM_L_DARK      8	/* 'D' */
+#define TERM_L_WHITE     9	/* 'W' */
+#define TERM_L_PURPLE   10	/* 'P' */
+#define TERM_YELLOW     11	/* 'y' */
+#define TERM_L_RED      12	/* 'R' */
+#define TERM_L_GREEN    13	/* 'G' */
+#define TERM_L_BLUE     14	/* 'B' */
+#define TERM_L_UMBER    15	/* 'U' */
+
+#define TERM_PURPLE     16	/* 'p' */
+#define TERM_VIOLET     17	/* 'v' */
+#define TERM_TEAL       18	/* 't' */
+#define TERM_MUD        19	/* 'm' */
+#define TERM_L_YELLOW   20	/* 'Y' */
+#define TERM_MAGENTA    21	/* 'M' */
+#define TERM_L_TEAL     22	/* 'T' */
+#define TERM_L_VIOLET   23	/* 'V' */
+#define TERM_L_PINK     24	/* 'I' */
+#define TERM_MUSTARD    25	/* 'i' */
+#define TERM_BLUE_SLATE 26	/* 'z' */
+#define TERM_DEEP_L_BLUE 27	/* 'Z' */
+
+	"A:angel",
+	"B:bird",
+	"C:canine",
+	"D:dragon",
+	"E:elemental",
+	"F:fly or dragon fly",
+	"G:ghost",
+	"H:hybrid",
+	"I:demon",
+	"J:snake",
+	"K:killer scuttler",	/* -KN- added scorpions */
+	"L:lich",
+	"M:mummy",
+	"O:ogre",
+	"P:giant",
+	"Q:quylthulg",
+	"R:reptile",
+	"S:spider",
+	"T:troll",
+	"V:vampire",
+	"W:wraith",
+	"Y:tree",		/* -KN- changed */
+	"Z:zephyr hound",
+	"a:ant",
+	"b:bat",
+	"c:centipede",
+	"d:dragon",
+	"e:floating eye",
+	"f:feline",
+	"g:golem",
+	"h:humanoid",
+	"i:insectoid",  /* -KN- changed */
+	"j:jelly",
+	"k:kobold",
+	"l:larva",		/* -KN- changed */
+	"m:mold",
+	"n:naga",
+	"o:orc",
+	"p:human",
+	"q:quadruped",
+	"r:rodent",
+	"s:skeleton",
+	"t:townsperson",
+	"v:vortex",
+	"w:worm",
+	"y:yeek",
+	"z:zombie",
+	",:mushroom patch",
+	"&:demon",
+	
+	
+						for (y = y1; y <= y2; y++)
+	{
+						for (x = x1; x <= x2; x++)
+		{

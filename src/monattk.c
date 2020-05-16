@@ -225,22 +225,32 @@ bool make_attack_normal(monster_type *m_ptr, int y, int x)
 	monster_desc(ddesc, m_ptr, 0x88);
 
 
-	/* Players in rubble can take advantage of cover. */
-	if (cave_feat[y][x] == FEAT_RUBBLE)
+	/* Players in rubble or inside a pit can take advantage of cover. */
+	if ((cave_feat[y][x] == FEAT_RUBBLE) || (cave_feat[y][x] == FEAT_PIT0) ||
+		(cave_feat[y][x] == FEAT_PIT1) || (cave_feat[y][x] == FEAT_ABYSS))
 	{
 		terrain_bonus = (ac / 8) + 5;
+	}
+	/* -KN- Players in piles of bones can take advantage of cover. */
+	if (cave_feat[y][x] == FEAT_BONEPILE)
+	{
+		terrain_bonus = (ac / 20) + get_skill(S_DOMINION, 0, 20);
 	}
 	/* Players in trees can take advantage of cover. */
 	if (cave_feat[y][x] == FEAT_TREE)
 	{
 		terrain_bonus = (ac / 20) + get_skill(S_NATURE, 0, 20);
 	}
-	/* Players in water are vulnerable. */
+	/* Players in water are quite vulnerable. */
 	if (cave_feat[y][x] == FEAT_WATER)
 	{
 		terrain_bonus = -(ac / 3);
 	}
-
+	/* Players in webs are a bit vulnerable. -KN- */
+	if (cave_feat[y][x] == FEAT_WEB)
+	{
+		terrain_bonus = -(ac / 4);
+	}
 
 	/* Assume no blink */
 	blinked = FALSE;
@@ -420,9 +430,10 @@ bool make_attack_normal(monster_type *m_ptr, int y, int x)
 				break;
 			}
 
-			case RBM_XXX1:
+			case RBM_LUNGE:
 			{
-				act = "XXX1's you";
+				/* -KN- added */
+				act = "lunges forward on you";
 				break;
 			}
 
@@ -491,8 +502,24 @@ bool make_attack_normal(monster_type *m_ptr, int y, int x)
 			case RBM_WAIL:
 			{
 				cannot_miss = TRUE;
-				act = "makes a horrible wail";
-				break;
+				if (r_ptr->flags3 & (RF3_UNDEAD))
+					{
+						/* -KN- ghosts and undead wail */
+						act = "makes a horrible wail";
+						break;
+					}
+				else if (strchr("cJnR", r_ptr->d_char))
+					{
+						/* -KN- rattle for reptiloids */
+						act = "rattles viciously";
+						break;
+					}
+				else
+					{
+						/* -KN- non-undead sounds differently */
+						act = "makes an intimidating sound";
+						break;
+					}
 			}
 
 			case RBM_SPORE:
@@ -1808,7 +1835,7 @@ bool make_attack_normal(monster_type *m_ptr, int y, int x)
 		/* Monster missed player */
 		else
 		{
-			/* Analyze failed attacks */
+			/* Analyze failed attacks (-KN- can be more interesting (ICI)) */
 			switch (method)
 			{
 				case RBM_HIT:
@@ -1819,7 +1846,7 @@ bool make_attack_normal(monster_type *m_ptr, int y, int x)
 				case RBM_BITE:
 				case RBM_PECK:
 				case RBM_STING:
-				case RBM_XXX1:
+				case RBM_LUNGE:		/* -KN- added */
 				case RBM_BUTT:
 				case RBM_CRUSH:
 				{
@@ -2394,7 +2421,7 @@ void mon_cloud(int m_idx, int typ, int dam, int rad)
 
 	u32b flg = PROJECT_BOOM | PROJECT_GRID | PROJECT_PLAY;
 
-	/* Hack -- unlight surrounding area */
+	/* Hack -- unlight surrounding area -KN- it previously didn't work probably (?) */
 	if (typ == GF_DARK_WEAK) flg |= (PROJECT_HIDE);
 
 	/* Surround the monster with a cloud (full damage at adjacent grids) */
@@ -2837,16 +2864,26 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 	switch (attack)
 	{
 		/* RF4_SHRIEK */
+		/* -KN- added visual sound-clues (ICI - could be expanded and randomised) */
 		case 96+0:
 		{
-			if (r_ptr->flags2 & (RF2_SMART))
+			if (r_ptr->flags3 & (RF3_ANIMAL))
+			{
+				/* -KN- animals make wild noise (not updated sound) */
+				msg_format("%^s howls ferociously.", m_name);
+				message(MSG_L_UMBER, 4, " 'Whaaoorr!'");
+				sound(MSG_SHRIEK);
+			}
+			else if (r_ptr->flags2 & (RF2_SMART))
 			{
 				msg_format("%^s shouts for help.", m_name);
+				message(MSG_L_UMBER, 4, " 'There!'");
 				sound(MSG_YELL_FOR_HELP);
 			}
 			else
 			{
 				msg_format("%^s makes a high pitched shriek.", m_name);
+				message(MSG_L_UMBER, 4, " 'Aouii, iee, iee!'");
 				sound(MSG_SHRIEK);
 			}
 			aggravate_monsters(m_idx, FALSE, NULL);
@@ -3009,8 +3046,19 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 				}
 			}
 
-			/* XXX -- Animals spit.   Acid-users spit. */
-			if ((r_ptr->flags3 & (RF3_ANIMAL)) || (typ == GF_ACID))
+			/* -KN- those who STING use tail stinger */
+			if (r_ptr->blow[0].method == RBM_STING)
+			{
+				typ = GF_WHIP;	/* visuals are neutral, but effects can vary */
+				add_of = " dripping with";
+				sound(MSG_WHIP);
+				if (blind) msg_print("You hear a swift swing.");
+				else msg_format("%^s swings at you with a stinger%s%s.",
+					m_name, add_of, desc);
+			}
+
+			/* XXX -- other animals spit.   Acid-users spit. */
+			else if ((r_ptr->flags3 & (RF3_ANIMAL)) || (typ == GF_ACID))
 			{
 				sound(MSG_SPIT);
 				if (blind) msg_print("You hear a soft sound.");
@@ -3411,15 +3459,42 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			break;
 		}
 
-		/* RF4_XXX8 */
+		/* RF4_WEB1 -KN- added */
+		/* similar to nether, but can spawn webs */
 		case 96+29:
 		{
+			if (blind) msg_print("You hear suspicious humming.");
+			else msg_format("%^s weaves and spins.", m_name);
+			int damage = damroll(r_ptr->blow[0].d_dice, r_ptr->blow[0].d_side);
+			mon_beam(m_idx, GF_MAKE_WEBS, damage, 5);
 			break;
 		}
 
-		/* RF4_XXX8 */
+		/* RF4_WEB2 -KN- added */
+		/* similar to nether, but can spawn webs */
 		case 96+30:
 		{
+			if (spower < 20)
+			{
+				if (blind) msg_print("You hear silent humming.");
+				else msg_format("%^s hurls ball of webs.", m_name);
+				rad = 1;
+			}
+			else if (spower < 60)
+			{
+				if (blind) msg_print("You hear humming and hissing.");
+				else msg_format("%^s spins a huge ball of webs.", m_name);
+				rad = 2;
+			}
+			else
+			{
+				if (blind) msg_print("You hear crescendo of humming!");
+				else msg_format("%^s conjures massive load of webs!", m_name);
+				rad = 3;
+			}
+			
+			if(r_ptr->flags2 & (RF2_MORGUL_MAGIC)) rad += 1;			
+			mon_ball(m_idx, GF_MAKE_WEBS, get_dam(3 * spower, 6), rad, TRUE);
 			break;
 		}
 
@@ -5085,13 +5160,25 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			/* Hack -- Set the letter of the monsters to summon */
 			summon_kin_type = r_ptr->d_char;
 
-			count += summon_specific(sy, sx, FALSE,
-				summon_lev, SUMMON_KIN, (rlev > 40 ? 4 : 3));
-
-			if (blind && count)
+			/* -KN- (hack) if abyssal, only summon one per summon */
+			/* the idea is to make continuous summoners possible */
+			if (r_ptr->flags2 & (RF2_ABYSSAL))
 			{
-				message(MSG_SUM_MONSTER, 250,
-					"You hear many things appear nearby.");
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_KIN, 0);
+				if (blind && count) message(MSG_SUM_MONSTER, 250,
+					"You hear a creature approaching from the depths.");
+			}
+			else
+			{
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_KIN, (rlev > 40 ? 4 : 3));
+				
+				if (blind && count)
+				{
+					message(MSG_SUM_MONSTER, 250,
+						"You hear many things appear nearby.");
+				}
 			}
 			break;
 		}
@@ -5140,15 +5227,16 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 		case 192 + 5:  break;
 		case 192 + 6:  break;
 
-		/* RF7_S_BEETLE */
+		/* RF7_S_BEETLE -KN- more general description */
 		case 192 + 7:
 		{
 			if (blind) msg_format("%^s mumbles.", m_name);
 			else message_format(MSG_SUM_MONSTER, 250,
-				"%^s magically summons a giant beetle.", m_name);
+				"%^s magically summons a hungry scuttler.", m_name);
 
+			/* -KN- always summon one scuttler */
 			count += summon_specific(sy, sx, FALSE,
-					summon_lev, SUMMON_BEETLE, 1);
+					summon_lev, SUMMON_BEETLE, 0);
 
 			if (blind && count)
 			{
@@ -5184,8 +5272,9 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			else message_format(MSG_SUM_SPIDER, 250,
 				"%^s magically summons spiders.", m_name);
 
+			/* -KN- level adjusted */
 			count += summon_specific(sy, sx, FALSE,
-				summon_lev, SUMMON_SPIDER, 3);
+				summon_lev, SUMMON_SPIDER, (1 + div_round(p_ptr->depth, 30)));
 
 			if (blind && count)
 			{
@@ -5202,8 +5291,19 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			else message_format(MSG_SUM_HOUND, 250,
 				"%^s magically summons hounds.", m_name);
 
-			count += summon_specific(sy, sx, FALSE,
-				summon_lev, SUMMON_HOUND, 2);
+			/* -KN- summon only two hounds on low levels */
+			if (p_ptr->depth < 20)
+			{
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_HOUND, 0);
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_HOUND, 0);
+			}
+			else
+			{
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_HOUND, 2);
+			}
 
 			if (blind && count)
 			{
@@ -5219,8 +5319,9 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			else message_format(MSG_SUM_ANIMAL, 250,
 				"%^s magically summons natural creatures.", m_name);
 
+			/* -KN- level adjusted */
 			count += summon_specific(sy, sx, FALSE,
-				summon_lev, SUMMON_ANIMAL, 4);
+				summon_lev, SUMMON_ANIMAL, (2 + div_round(p_ptr->depth, 30)));
 
 			if (blind && count)
 			{
@@ -5284,8 +5385,19 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 				"%^s howls for help.", m_name);
 
 			/* Orc appears, usually at some distance, rarely in a group */
-			count += summon_specific(sy, sx, FALSE,
-				summon_lev, SUMMON_ORC, 1);
+			/* -KN- summon only two orcs on low levels */
+			if (p_ptr->depth < 30)
+			{
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_ORC, 0);
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_ORC, 0);
+			}
+			else
+			{
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_ORC, 1);
+			}
 
 			/* Noise is generated */
 			add_wakeup_chance += 2500;
@@ -5618,11 +5730,53 @@ void cloud_surround(int r_idx, int *typ, int *dam, int *rad)
 		         (r_ptr->d_attr == TERM_L_UMBER)) *typ = GF_CONFUSION;
 	}
 
-
 	/* The Nazgul and some others darken everything nearby */
-	if ((!*typ) && (strchr("WjaS", r_ptr->d_char)))
+	if ((!*typ) && (strchr("WjaSR", r_ptr->d_char)))
 	{
 		*typ = GF_DARK_WEAK;
+	}
+
+	/* -KN- Ask for immunities to detect type for non-breathers and non-"WjaSR" */
+	/* this assumes specific order for monsters with multiple imm. */
+	/* (fail-ICI) not good, night lizard is now cold */
+	else if (!*typ)
+	{
+		if (r_ptr->flags3 & (RF3_IM_COLD))
+		{
+			*typ = GF_COLD;
+			*dam = 2 + rand_range(r_ptr->level / 4, r_ptr->level / 2);
+		}
+		else if (r_ptr->flags3 & (RF3_IM_ELEC))
+		{
+			*typ = GF_ELEC;
+			*dam = 2 + rand_range(r_ptr->level / 4, r_ptr->level / 2);
+		}
+		else if (r_ptr->flags3 & (RF3_IM_FIRE))
+		{
+			*typ = GF_FIRE;
+			*dam = 2 + rand_range(r_ptr->level / 4, r_ptr->level / 2);
+		}
+		else if (r_ptr->flags3 & (RF3_IM_POIS))
+		{
+			*typ = GF_POIS;
+			*dam = 2 + rand_range(r_ptr->level / 4, r_ptr->level / 2);
+		}
+		else if (r_ptr->flags3 & (RF3_IM_ACID))
+		{
+			*typ = GF_ACID;
+			*dam = 2 + rand_range(r_ptr->level / 4, r_ptr->level / 2);
+		}
+		else if (r_ptr->flags3 & (RF3_HURT_LITE))
+		{
+			*typ = GF_DARK_WEAK;
+			*dam = 2 + rand_range(r_ptr->level / 4, r_ptr->level / 2);
+		}
+		/* Paranoia */
+		else
+		{
+			*typ = GF_HURT;
+			printf ("NO TYPE OF CLOUD_SURROUND");
+		}
 	}
 
 	/* Leave the rest blank until we make monsters that need it. */

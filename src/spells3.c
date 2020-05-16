@@ -777,6 +777,14 @@ int scroll_read_effect(int who, int y, int x, object_type *o_ptr)
 			break;
 		}
 
+		/* -KN- added scroll of webs */
+		case SV_SCROLL_WEBS:
+		{
+			notice = project_star(who, rand_range(6, 8), fy, fx, fy, fx, 0,
+				GF_MAKE_WEBS, 0L);
+			break;
+		}
+		
 		default:
 		{
 			/* No effect */

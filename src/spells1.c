@@ -220,6 +220,16 @@ static byte mana_color(void)
 	return (TERM_PURPLE);
 }
 
+static byte webs_color(void)
+{
+	switch (rand_int(6))
+	{
+		case 0: case 1: case 2: return (TERM_PURPLE);
+		case 3: case 4: return (TERM_L_DARK);
+		case 5: return (TERM_GREEN);
+	}
+	return (TERM_PURPLE);
+}
 
 /*
  * Return a color to use for spells without user-specified colors.
@@ -295,6 +305,7 @@ byte spell_color(int type)
 		case GF_MAKE_WATER:   return (TERM_BLUE);
 		case GF_MAKE_TREES:   return (TERM_GREEN);
 		case GF_MAKE_LAVA:    return (TERM_RED);
+		case GF_MAKE_WEBS:    return (webs_color());	/* -KN- added */
 	}
 
 	/* Standard "color" */
@@ -391,6 +402,7 @@ static int death_count;
  * floor to lava and then getting the damage bonuses that accrue to fire
  * spells on lava.  We use "dist" to keep terrain alteration under control.
  */
+/* -KN- added support for webs */
 static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 {
 	bool obvious = FALSE;
@@ -406,6 +418,12 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 			{
 				cave_temp_mark(y, x, FALSE);
 			}
+
+			if ((one_in_(4)) && (cave_floor_bold(y,x)))
+			{
+				/* -KN- melt the ground a bit */
+				cave_set_feat(y, x, FEAT_FLOOR4);
+			}
 			break;
 		}
 
@@ -416,6 +434,12 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 			/* Mark the lava grid for (possible) later alteration. */
 			if ((cave_feat[y][x] == FEAT_LAVA) && (dist <= 1))
 				cave_temp_mark(y, x, FALSE);
+
+			if ((one_in_(4)) && (cave_floor_bold(y,x)))
+			{
+				/* -KN- chill the ground a bit */
+				cave_set_feat(y, x, FEAT_FLOOR5);
+			}
 			break;
 		}
 
@@ -429,6 +453,13 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 				/* Mark the grid for (possible) later alteration. */
 				cave_temp_mark(y, x, FALSE);
 			}
+
+			if ((one_in_(4)) && (cave_floor_bold(y,x)))
+			{
+				/* -KN- burn the ground a bit */
+				cave_set_feat(y, x, FEAT_FLOOR6);
+			}
+
 			break;
 		}
 
@@ -478,6 +509,13 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 				p_ptr->update |= (PU_FORGET_VIEW | PU_UPDATE_VIEW | PU_MONSTERS);
 			}
 
+			/* -KN- deeper darkness can spawn webs */
+			if ((one_in_(22 - div_round(p_ptr->depth, 5))) &&
+				(cave_floor_bold(y,x)) && (typ != GF_DARK_WEAK))
+			{
+				if (typ == GF_MORGUL_DARK) cave_set_feat(y, x, FEAT_WEB);
+				else if ((typ == GF_DARK) && (one_in_(3))) cave_set_feat(y, x, FEAT_WEB);
+			}
 			break;
 		}
 
@@ -494,6 +532,13 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 					cave_temp_mark(y, x, FALSE);
 				}
 			}
+
+			if ((one_in_(6)) && (cave_floor_bold(y,x)))
+			{
+				/* -KN- chill the ground or spill some water */
+				if (one_in_(6)) cave_set_feat(y, x, FEAT_WATER);
+				else cave_set_feat(y, x, FEAT_FLOOR5);
+			}
 			break;
 		}
 
@@ -506,6 +551,19 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 			{
 				/* Mark the grid for later summoning. */
 				cave_temp_mark(y, x, FALSE);
+			}
+
+			/* -KN- change floor chaotically */
+			if (cave_floor_bold(y,x))
+			{
+				int choice = rand_int(100);
+				if (choice < 5) cave_set_feat(y, x, FEAT_WATER);
+				else if (choice < 15) cave_set_feat(y, x, FEAT_FLOOR2);
+				else if (choice < 23) cave_set_feat(y, x, FEAT_FLOOR3);
+				else if (choice < 31) cave_set_feat(y, x, FEAT_FLOOR4);
+				else if (choice < 38) cave_set_feat(y, x, FEAT_FLOOR5);
+				else if (choice < 45) cave_set_feat(y, x, FEAT_FLOOR6);
+				else if (choice < 50) cave_set_feat(y, x, FEAT_WEB);
 			}
 			break;
 		}
@@ -885,8 +943,9 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 				/* Forget the wall */
 				cave_info[y][x] &= ~(CAVE_MARK);
 
-				/* Destroy the wall */
-				cave_set_feat(y, x, get_nearby_floor(y, x));
+				/* Destroy the wall -KN- sometimes replace with an empty pit */
+				if(one_in_(12)) cave_set_feat(y, x, FEAT_PIT0);
+				else cave_set_feat(y, x, get_nearby_floor(y, x));
 			}
 
 			/* Update the visuals */
@@ -1048,6 +1107,61 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 			/* Change to lava */
 			cave_set_feat(y, x, FEAT_LAVA);
 			obvious = TRUE;
+
+			break;
+		}
+
+		/* -KN- Make webs, but not always */
+		case GF_MAKE_WEBS:
+		{
+			/* Do not alter stairs in town  XXX */
+			if ((cave_feat[y][x] == FEAT_MORE) && (p_ptr->depth == 0))
+				break;
+
+			/* Ignore permanent terrain */
+			if (cave_perma_bold(y, x)) break;
+
+			/* Affect only floor */
+			if (cave_floor_bold(y,x))
+			{
+				/* Change to web at 33% chance */
+				if (one_in_(3))
+				{
+					printf("The web is created on y=%d and x=%d \n", y, x);
+					cave_set_feat(y, x, FEAT_WEB);
+
+					/* inform player if now standing in the web */
+					if ((y == p_ptr->py) && (x == p_ptr->px))
+					{
+						printf("The web is created on you.\n");
+						message(MSG_SLATE, 40, "You are trapped in webs!");
+					}
+					
+					printf("Player standing at on y=%d and x=%d \n", p_ptr->py, p_ptr->px);
+					
+					/* refresh the spot to show new color */
+					lite_spot(y,x);
+					obvious = TRUE;
+				}
+			}
+
+			/* and sometimes water */
+			else if (cave_feat[y][x] == FEAT_WATER)
+			{
+				/* Change to web at 1/8 chance */
+				if (one_in_(8))
+				{
+					cave_set_feat(y, x, FEAT_WEB);
+
+					/* inform player if now standing in the web */
+					if ((p_ptr->py == y) && (p_ptr->px == x))
+					{
+						message(TERM_MUSTARD, 40, "You are trapped in webs above the water!");
+					}
+					lite_spot(y,x);
+					obvious = TRUE;
+				}
+			}
 
 			break;
 		}
@@ -3852,6 +3966,33 @@ static bool project_m(int who, int y, int x, int dam, int typ, u32b flg)
 			break;
 		}
 
+		/* -KN- added web effect */
+		case GF_MAKE_WEBS:
+		{
+			/* Slightly affected by terrain. */
+			dam += terrain_adjustment / 2;
+
+			if (seen) obvious = TRUE;
+
+			/* Spiders are immune */
+			if (strchr("S", r_ptr->d_char))
+			{
+				/* State the obvious */
+				if (one_in_(3)) strcpy(note, " is immune.");
+				dam = 0;
+			}
+			else if ((r_ptr->flags3 & (RF3_RES_NETHR)) ||
+			         (r_ptr->flags3 & (RF3_HURT_LITE)) ||
+					 (r_ptr->flags4 & (RF4_BRTH_NETHR))
+					 )
+			{
+				/* State sometimes resistant */
+				if (one_in_(3)) strcpy(note, " resists.");
+				dam = div_round(dam, 6);
+			}
+			break;
+		}
+
 		/* Default */
 		default:
 		{
@@ -4277,6 +4418,19 @@ static bool project_p(int who, int y, int x, int dam, int typ)
 	/* Determine if terrain is capable of adjusting physical damage. */
 	switch (cave_feat[y][x])
 	{
+		/* A player inside a pit takes less damage. Not in abyss. */
+		case FEAT_PIT0:
+		case FEAT_PIT1:
+		{
+			if (one_in_(5))
+			{
+				msg_print("You were safe in the pit.");
+				return (FALSE);
+			}
+			else terrain_adjustment -= dam / 8;
+			break;
+		}
+
 		/* A player behind rubble takes less damage. */
 		case FEAT_RUBBLE:
 		{
@@ -4658,6 +4812,7 @@ static bool project_p(int who, int y, int x, int dam, int typ)
 				if (fuzzy) msg_print("You have been spat upon.");
 
 				/* Ordinary spit doesn't do any damage. */
+				/* -KN- (note) GF_WHIP is produced only for HURT effect of 1st method */
 				dam = 0;
 			}
 			else
@@ -5919,6 +6074,32 @@ static bool project_p(int who, int y, int x, int dam, int typ)
 			break;
 		}
 
+		/* -KN- added web effects, which can slow */
+		case GF_MAKE_WEBS:
+		{
+			/* Slightly affected by terrain. */
+			dam += terrain_adjustment / 2;
+
+			/* Handle vulnerability the same way as if nether */
+			if (p_ptr->vuln_nethr) dam += dam / 2;
+
+			if (fuzzy) msg_print("You are caught in webs!");
+			if (p_ptr->resist_nethr)
+			{
+				dam = div_round(dam, 2);
+			}
+			else
+			{
+				/* if susceptible, might be slowed */
+				if      ((dam > 50) && (one_in_(3))) (void)set_slow(p_ptr->slow + 10);
+				else if ((dam > 20) && (one_in_(6))) (void)set_slow(p_ptr->slow + 5);
+			}
+
+			/* and take some damage */
+			(void)take_hit(dam, 0, NULL, killer);
+			break;
+		}
+
 		/* Default */
 		default:
 		{
@@ -6065,6 +6246,14 @@ static bool project_t(int who, int y, int x, int dam, int typ, u32b flg)
 					if (cave_m_idx[y][x] < 0)
 						msg_print("The rubble you are standing on dissolves!");
 				}
+				
+				/* Bone pile becomes floor with bones */
+				else if (cave_feat[y][x] == FEAT_BONEPILE)
+				{
+					cave_set_feat(y, x, FEAT_FLOOR_B);
+					if (cave_m_idx[y][x] < 0)
+						msg_print("The pile of bones you are standing on has melted away.");
+				}
 			}
 			break;
 		}
@@ -6093,6 +6282,7 @@ static bool project_t(int who, int y, int x, int dam, int typ, u32b flg)
 		}
 
 		/* Fire and plasma can create lava, evaporate water, and burn trees. */
+		/* -KN- and easily get rid of webs */
 		case GF_FIRE:
 		case GF_HELLFIRE:
 		case GF_PLASMA:
@@ -6160,7 +6350,33 @@ static bool project_t(int who, int y, int x, int dam, int typ, u32b flg)
 				if (cave_m_idx[y][x] < 0)
 					msg_print("The trees around you explode in fire!");
 			}
+			
+			/* -KN- Can burn away bone piles if strong. */
+			if ((cave_feat[y][x] == FEAT_BONEPILE) && (dam > rand_range(200, 600)))
+			{
+				/* Forget the pile */
+				cave_info[y][x] &= ~(CAVE_MARK);
 
+				/* Destroy the pile */
+				cave_set_feat(y, x, FEAT_FLOOR_B);
+
+				if (cave_m_idx[y][x] < 0)
+					msg_print("The pile of bones you are standing on burned away!");
+			}
+
+			/* -KN- Can quite often burn webs. Deeper webs need more force. */
+			if ((cave_feat[y][x] == FEAT_WEB) &&
+				(dam > (rand_range(10, 50) + (p_ptr->depth / 2))))
+			{
+				/* Forget the web */
+				cave_info[y][x] &= ~(CAVE_MARK);
+
+				/* Destroy the web */
+				cave_set_feat(y, x, get_nearby_floor(y, x));
+
+				if (cave_m_idx[y][x] < 0)
+					msg_print("The webs around you burn away!");
+			}
 			break;
 		}
 
@@ -6230,6 +6446,19 @@ static bool project_t(int who, int y, int x, int dam, int typ, u32b flg)
 				}
 			}
 
+			/* -KN- force can smash webs */
+			if ((cave_feat[y][x] == FEAT_WEB) &&
+				(dam > (rand_range(20, 60) + (p_ptr->depth))))
+			{
+				/* Forget the web */
+				cave_info[y][x] &= ~(CAVE_MARK);
+
+				/* Destroy the web */
+				cave_set_feat(y, x, get_nearby_floor(y, x));
+
+				if (cave_m_idx[y][x] < 0)
+					msg_print("The webs around disperse away!");
+			}
 			break;
 		}
 

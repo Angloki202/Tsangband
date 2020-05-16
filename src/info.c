@@ -1583,7 +1583,7 @@ void self_knowledge(bool full)
 	}
 	if (p_ptr->drain_light)
 	{
-		roff("You are draining away light.", sk_get_col(), 0);
+		roff("You are draining away light.", sk_get_col(), 0);	/* -KN- use for ABYSS reduction? */
 	}
 	if (p_ptr->nomagic)
 	{

@@ -2124,6 +2124,46 @@ static bool do_cmd_tunnel_aux(int y, int x)
 			more = TRUE;
 		}
 	}
+	
+	/* -KN- added bonepile */
+	else if (cave_feat[y][x] == FEAT_BONEPILE)
+	{
+		/* Remove the pile */
+		if ((p_ptr->skill_dig > rand_int(200)) && twall(y, x))
+		{
+			/* Message */
+			msg_print("You have cleared the pile of bones.");
+
+			/* There is a complete skeleton */
+			if (one_in_(6))
+			{
+				/* Create a skeleton */
+				make_skeleton(y, x, 0);
+
+				/* Observe new object */
+				if ((cave_o_idx[y][x] != 0) && (player_can_see_or_infra_bold(y, x)))
+				{
+					msg_print("You have found some intact bones.");
+				}
+			}
+			else if (one_in_(16 - div_round(p_ptr->depth, 8)))
+			{
+				/* sometimes you have disturbed the dead */
+				summon_specific(y, x, FALSE, p_ptr->depth + 2, SUMMON_UNDEAD, 0);
+				msg_print("You have disturbed an undead!");
+			}
+
+			/* floor has some scattered bones now */
+			cave_set_feat(y, x, FEAT_FLOOR_B);
+		}
+
+		else
+		{
+			/* Message, keep digging */
+			msg_print("You are clearing the pile of bones.");
+			more = TRUE;
+		}
+	}
 
 	/* Secret doors */
 	else if (cave_feat[y][x] >= FEAT_SECRET)
@@ -3030,6 +3070,36 @@ void do_cmd_alter(bool deliberate)
 	{
 		/* Close */
 		more = do_cmd_close_aux(y, x);
+	}
+
+	/* -KN- hack away the webs */
+	else if (feat == FEAT_WEB)
+	{
+		/* check for slashing weapon for better results */
+		if ((inventory[24].tval == TV_SWORD) || (inventory[24].tval == TV_POLEARM))
+		{
+			if (one_in_(1 + div_round(p_ptr->depth, 25)))
+			{
+				msg_print("You hacked and slashed the webs away.");
+				cave_set_feat(y, x, get_nearby_floor(y, x));
+			}
+			else
+			{
+				msg_print("You hack the webs with some progress.");
+			}
+		}
+		else
+		{
+			if (one_in_(2 + div_round(p_ptr->depth, 10)))
+			{
+				msg_print("You cleaned the webs ahead.");
+				cave_set_feat(y, x, get_nearby_floor(y, x));
+			}
+			else
+			{
+				msg_print("You try to sweep the webs, but with little progress.");
+			}
+		}
 	}
 
 	/* If a burglar, set a trap.  -LM- */

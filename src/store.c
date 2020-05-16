@@ -2686,7 +2686,6 @@ static int buy_and_sell(object_type *o_ptr, s32b *price, bool buying,
 
 	bool final  = FALSE;
 
-
     /* For some, the stores don't want your items */
 	if (birth_stores_only_sell && buying)
 	{
@@ -2702,6 +2701,13 @@ static int buy_and_sell(object_type *o_ptr, s32b *price, bool buying,
 	cur_price   = price_item(o_ptr, ot_ptr->max_inflate, buying, markup);
 	final_price = price_item(o_ptr, ot_ptr->min_inflate, buying, 0);
 
+    /* -KN- global reduction of profit from sold items by 2/3
+		(stores_only_sell is too extreme) */
+	if (buying)
+	{		
+		cur_price = div_round(cur_price, 3);
+		final_price = div_round(final_price, 3);
+	}
 
 	/* Get the owner's payout limit */
 	purse = (s32b) (ot_ptr->max_cost);

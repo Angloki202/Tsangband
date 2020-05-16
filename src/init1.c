@@ -104,7 +104,7 @@ static cptr r_info_blow_method[] =
 	"BITE",
 	"STING",
 	"PECK",
-	"XXX1",
+	"LUNGE",	/* -KN- added */
 	"BUTT",
 	"CRUSH",
 	"ENGULF",
@@ -175,6 +175,46 @@ static cptr r_info_blow_effect[] =
 	NULL
 };
 
+/* -KN- (SUB) added
+ * subtype race flags
+ * primarily to identify monster's main element/type
+ * rather than using colors or breath types
+ */
+static cptr r_info_flags0[] =
+{
+	"FIERY",
+	"FROSTY",
+	"X03",
+	"X04",
+	"X05",
+	"X06",
+	"X07",
+	"X08",
+	"X09",
+	"X10",
+	"X11",
+	"X12",
+	"X13",
+	"X14",
+	"X15",
+	"X16",
+	"X17",
+	"X18",
+	"X19",
+	"HEAVY",
+	"X30",
+	"X40",
+	"X50",
+	"X60",
+	"X70",
+	"X80",
+	"X90",
+	"X100",
+	"X200",
+	"X300",
+	"X400",
+	"X500"
+};
 
 /*
  * Monster race flags
@@ -222,7 +262,7 @@ static cptr r_info_flags2[] =
 {
 	"STUPID",
 	"SMART",
-	"XXX1X2",
+	"ABYSSAL",			/* -KN- changed from XXX1X2) */
 	"PLAYER_GHOST",
 	"INVISIBLE",
 	"COLD_BLOOD",
@@ -327,8 +367,8 @@ static cptr r_info_flags4[] =
 	"BRTH_DISEN",
 	"BRTH_TIME",
 	"BRTH_MANA",
-	"XXX41",
-	"XXX42",
+	"WEB1",				/* -KN- changed from xxx41 */
+	"WEB2",				/* -KN- changed from xxx42 */
 	"XXX43",
 };
 
@@ -2443,6 +2483,10 @@ errr parse_e_info(char *buf, header *head)
  */
 static errr grab_one_basic_flag(monster_race *r_ptr, cptr what)
 {
+	/* -KN- (SUB) added subtypes */
+	if (grab_one_flag(&r_ptr->flags0, r_info_flags0, what) == 0)
+		return (0);
+
 	if (grab_one_flag(&r_ptr->flags1, r_info_flags1, what) == 0)
 		return (0);
 
