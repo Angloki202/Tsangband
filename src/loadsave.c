@@ -1431,6 +1431,12 @@ static errr do_character(void)
 	do_s16b(&p_ptr->csp);
 	do_u16b(&p_ptr->csp_frac);
 
+	/* -KN- (STA) prepared for stamina */
+	do_s16b(&p_ptr->mstam);
+	do_s16b(&p_ptr->cstam);
+	do_s16b(&p_ptr->restam);
+	do_s16b(&p_ptr->ixstam);
+	
 
 	do_s16b(&p_ptr->max_depth);
 

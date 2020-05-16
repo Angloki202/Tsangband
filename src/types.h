@@ -1086,12 +1086,12 @@ struct player_type
 	s16b stat_cur[A_MAX];    /* Current intrinsic stats */
 
 	byte power;					/* Character power (current) */
-	s32b final_score;       /* Final score */
+	s32b final_score;  		    /* Final score */
 
 	s32b au;					/* Current Gold */
-	s16b au_birth;			/* Starting Gold */
+	s16b au_birth;				/* Starting Gold */
 
-	s16b max_depth;			/* Max depth */
+	s16b max_depth;				/* Max depth */
 	s16b depth;					/* Cur depth */
 
 	s32b exp;					/* Cur experience */
@@ -1101,11 +1101,17 @@ struct player_type
 	s16b chp;					/* Cur hit pts */
 	u16b chp_frac;				/* Cur hit frac (in 1/10000ths of a hit point) */
 
+/* -KN- (STA) preparing concept of stamina */
+	s16b mstam;					/* Max stamina */
+	s16b cstam;					/* Cur stamina */
+	s16b restam;				/* stamina regeneration */
+	s16b ixstam;				/* a helper (?) */
+
 	s16b msp;					/* Max mana pts */
 	s16b csp;					/* Cur mana pts */
 	u16b csp_frac;				/* Cur mana frac (in 1/10000ths of a mana point) */
 
-	s32b total_kills;       /* Total number of kills */
+	s32b total_kills;     		/* Total number of kills */
 
 	s16b unsanctified;          /* Cursed by the Divine */
 	s16b luck;					/* Luck */
@@ -1128,30 +1134,30 @@ struct player_type
 	s16b berserk;				/* Timed -- Berserkergang */
 	s16b necro_rage;			/* Timed -- Necromantic rage */
 	s16b shield;				/* Timed -- Shield Spell */
-	s16b steelskin;			/* Timed -- Armored skin (same as shield) */
+	s16b steelskin;				/* Timed -- Armored skin (same as shield) */
 	s16b blessed;				/* Timed -- Blessed */
 	s16b holy;					/* Timed -- Holy Aura */
-	s16b tim_invis;			/* Timed -- Invisibility */
+	s16b tim_invis;				/* Timed -- Invisibility */
 	s16b tim_inv_pow;			/* Power of timed invisibility */
-	s16b tim_infra;			/* Timed -- Infra Vision */
+	s16b tim_infra;				/* Timed -- Infra Vision */
 	s16b detect_inv;			/* Timed -- See Invisible */
 	s16b esp_evil;				/* Awareness of evil creatures */
 	s16b tim_esp;				/* Timed -- full ESP */
 	s16b regen_hp;				/* Timed -- Regenerate HP */
 	s16b regen_mana;			/* Timed -- Regenerate Mana */
-	s16b vitality;			/* Timed -- Extra recovery */
-	s16b mania;				/* Timed -- Manic-depressive fits */
+	s16b vitality;				/* Timed -- Extra recovery */
+	s16b mania;					/* Timed -- Manic-depressive fits */
 	s16b res_dam;				/* Timed -- Resistance to damage */
 	s16b self_knowledge;		/* Timed -- Self Knowledge */
 
-	s16b forbid_summoning;  /* Forbid most summoning */
+	s16b forbid_summoning; 		/* Forbid most summoning */
 
 	s16b oppose_acid;			/* Timed -- oppose acid */
 	s16b oppose_elec;			/* Timed -- oppose lightning */
 	s16b oppose_fire;			/* Timed -- oppose heat */
 	s16b oppose_cold;			/* Timed -- oppose cold */
 	s16b oppose_pois;			/* Timed -- oppose poison */
-	s16b oppose_ethereal;   /* Timed -- oppose ethereal */
+	s16b oppose_ethereal;  		/* Timed -- oppose ethereal */
 	s16b word_recall;			/* Word of recall counter */
 
 	s16b wraithform;           /* Can go through walls */
@@ -1161,7 +1167,7 @@ struct player_type
 	bool dancing_feet_safe;    /* Are these blinks safe or unsafe? */
 	s16b phasing_foes;         /* Opponents blink during their turns */
 
-	s16b blink_away;         	/* Try to blink away if hit */
+	s16b blink_away;           /* Try to blink away if hit */
 	s16b evasion;              /* Your dodging skill increases greatly */
 
 	s16b aura_cold;            /* Frosty aura */
@@ -1197,7 +1203,7 @@ struct player_type
 	byte schange_min_skill; /* The minimum skill required to use the skill */
 
 	s16b soul_reserve;		/* Xp your weapon has stored */
-	bool feed_weapon;			/* We can feed our weapon */
+	bool feed_weapon;		/* We can feed our weapon */
 
 	u16b special_attack;			/* Special attack flags */
 

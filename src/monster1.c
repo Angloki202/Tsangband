@@ -1897,6 +1897,9 @@ void describe_monster(int r_idx, bool spoilers)
 	{
 		/* Know "race" flags */
 		lore.flags3 |= (r_ptr->flags3 & RF3_RACE_MASK);
+		
+		/* -KN- (SUB) also know "sub-type" flags */
+		lore.flags0 |= (r_ptr->flags0 & RF0_SUBTYPE_MASK);
 
 		/* Know "forced" flags */
 		lore.flags1 |= (r_ptr->flags1 & (RF1_FORCE_DEPTH | RF1_FIXED_HPS));

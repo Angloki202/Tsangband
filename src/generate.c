@@ -8357,7 +8357,7 @@ static void cave_gen(void)
 		if (p_ptr->depth > 60)
 		{
 			alloc_object(ALLOC_SET_BOTH, ALLOC_TYP_PIT, rand_range(6, 12));
-			alloc_object(ALLOC_SET_BOTH, ALLOC_TYP_ABYSS, rand_range(4, 8));
+			alloc_object(ALLOC_SET_BOTH, ALLOC_TYP_ABYSS, rand_range(12, p_ptr->depth));
 		}
 		else if (p_ptr->depth > 30)
 		{

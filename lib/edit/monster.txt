@@ -453,11 +453,11 @@ D:Hideous green blobs:  crawling, oozing, and breeding.
 N:37:Kobold Caveman
 G:k:u
 I:110:8:20:9:30:1
-W:2:4:12:5
+W:2:4:11:5
 B:HIT:HURT:1d4
 F:OPEN_DOOR | BASH_DOOR | DROP_60 | DROP_60 | 
-F:EVIL | IM_POIS | ABYSSAL
-S:1_IN_15 | POW_1 | 
+F:EVIL | IM_POIS | ABYSSAL | SUMMON_ONE
+S:1_IN_12 | POW_1 | 
 S:S_KIN
 D:A ugly and scaly kobold - beware, he has bigger friends around!
 
@@ -725,7 +725,7 @@ B:TOUCH:EAT_LITE:1d3
 F:CLOUD_SURROUND | EMPTY_MIND | IS_LIT | 
 F:NEVER_MOVE | HURT_LITE | IM_POIS | 
 F:NO_FEAR | NO_CONF | NO_SLEEP | 
-F:STUPID
+F:STUPID | UMBRAL
 S:1_IN_16 | POW_0 | 
 S:DRAIN_MANA
 D:A large pile of silver flesh that sucks all light from its surroundings.
@@ -1050,6 +1050,7 @@ F:NO_FEAR | NO_CONF | NO_SLEEP | REGENERATE |
 F:STUPID | FRIEND
 D:A strange growth on the dungeon ceiling.
 
+# experimental
 N:96:Night lizard
 G:R:D
 I:110:25:14:16:20:1
@@ -1057,7 +1058,7 @@ W:6:2:14:9
 B:BITE:COLD:2d7
 F:WEIRD_MIND | ANIMAL | HURT_LITE | 
 F:BASH_DOOR | RAND_25 | CLOUD_SURROUND | 
-F:IM_COLD
+F:IM_COLD | UMBRAL | FUNKY_DEATH
 S:1_IN_5 | 
 S:DARKNESS
 D:A black lizard with overlapping scales and a powerful jaw.  Its bite is 
@@ -1475,10 +1476,10 @@ D:scales a dull black.
 N:138:Orcish wolf
 G:C:u
 I:120:16:30:15:20:1
-W:9:2:0:12
+W:9:2:9:12
 B:BITE:HURT:1d5
 F:WEIRD_MIND | FRIENDS | RAND_25 | BASH_DOOR | 
-F:ANIMAL
+F:ANIMAL | SUMMON_ONE
 S:1_IN_36 | POW_0 | 
 S:S_HOUND | SHRIEK
 D:It howls and snaps at you.  It is well-adjusted for the dungeon environment.

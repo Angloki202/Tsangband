@@ -3996,16 +3996,30 @@ void mon_death_effect(int m_idx)
 		drop_near(i_ptr, 0, fy, fx, 0x00);
 	}
 
-	/* Error */
+	/* -KN- (was Error) now we have a default effect defined by sub-types */
 	else
 	{
 		char m_name[DESC_LEN];
 
+		/* Get the monster name "the kobold" */
+		monster_desc(m_name, m_ptr, 0x44);
+
+		if (r_ptr->flags0 & (RF0_UMBRAL))
+		{
+			/* Explode with shadows */
+			(void)mon_explode(m_idx, 3, fy, fx, 5, GF_DARK_WEAK);
+			
+			/* inform player */
+			if (player_can_see_bold(fy, fx)) msg_format("%^s exploded with darkness!", m_name);
+		}
+		
+		//char m_name[DESC_LEN];
+
 		/* Get the monster name */
-		monster_desc(m_name, m_ptr, 0);
+		//monster_desc(m_name, m_ptr, 0);
 
 		/* Message */
-		msg_format("%^s is marked as having a special death effect, but no code exists for it.", m_name);
+		//msg_format("%^s is marked as having a special death effect, but no code exists for it.", m_name);
 	}
 }
 

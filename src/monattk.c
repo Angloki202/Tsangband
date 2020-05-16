@@ -5160,9 +5160,8 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			/* Hack -- Set the letter of the monsters to summon */
 			summon_kin_type = r_ptr->d_char;
 
-			/* -KN- (hack) if abyssal, only summon one per summon */
-			/* the idea is to make continuous summoners possible */
-			if (r_ptr->flags2 & (RF2_ABYSSAL))
+			/* -KN- only summon one per summon */
+			if (r_ptr->flags0 & (RF0_SUMMON_ONE))
 			{
 				count += summon_specific(sy, sx, FALSE,
 					summon_lev, SUMMON_KIN, 0);
@@ -5730,8 +5729,16 @@ void cloud_surround(int r_idx, int *typ, int *dam, int *rad)
 		         (r_ptr->d_attr == TERM_L_UMBER)) *typ = GF_CONFUSION;
 	}
 
+	/* -KN- reading sub-types */
+	/* this could be written as to alter between multiple types (ICI) */
+	if (r_ptr->flags0 & (RF0_UMBRAL))
+	{
+		*typ = GF_DARK_WEAK;
+		printf ("UMBRAL detected");
+	}
+
 	/* The Nazgul and some others darken everything nearby */
-	if ((!*typ) && (strchr("WjaSR", r_ptr->d_char)))
+	if ((!*typ) && (strchr("WjaS", r_ptr->d_char)))
 	{
 		*typ = GF_DARK_WEAK;
 	}

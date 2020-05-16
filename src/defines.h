@@ -3865,15 +3865,17 @@
 /*
  * -KN- (SUB) added sub-types flags
  */
+ 
+/* thorns and CLOUD_SURROUND */
 #define RF0_FIERY          0x00000001  /* being of fire and flames */
 #define RF0_FROSTY         0x00000002  /* being of ice and frost */
-#define RF0_X03            0x00000004  /*  */
-#define RF0_X04            0x00000008  /*  */
-#define RF0_X05            0x00000010  /*  */
-#define RF0_X06            0x00000020  /*  */
-#define RF0_X07            0x00000040  /*  */
-#define RF0_X08            0x00000080  /*  */
-#define RF0_X09            0x00000100  /*  */
+#define RF0_CAUSTIC        0x00000004  /* highly acidic */
+#define RF0_CHARGED        0x00000008  /* strongly electric */
+#define RF0_VENOMOUS       0x00000010  /* highly venomous */
+#define RF0_UMBRAL         0x00000020  /* cloaked in darkness (IS_LIT is for light) */
+#define RF0_THUNDERING     0x00000040  /* super loud and booming */
+#define RF0_JAGGED         0x00000080  /* thorny with shrapnels */
+#define RF0_WHIRLING       0x00000100  /* force and winds (+ inertia and gravity?) */
 #define RF0_X10            0x00000200  /*  */
 #define RF0_X11            0x00000400  /*  */
 #define RF0_X12            0x00000800  /*  */
@@ -3883,14 +3885,16 @@
 #define RF0_X16            0x00008000  /*  */
 #define RF0_X17            0x00010000  /*  */
 #define RF0_X18            0x00020000  /*  */
-#define RF0_X19            0x00040000  /*  */
-#define RF0_HEAVY          0x00080000  /* being that is very heavy */
-#define RF0_X30            0x00100000  /*  */
-#define RF0_X40            0x00200000  /*  */
-#define RF0_X50            0x00400000  /*  */
+/* size and physical clues (weight can be multiplied by size) */
+#define RF0_LIGHT          0x00040000  /* lighter than a small child */
+#define RF0_HEAVY          0x00080000  /* heavier than a horse ( > 500 kg ) */
+#define RF0_TINY           0x00100000  /* smaller than a larger dog (jackal is TINY) */
+#define RF0_LARGE          0x00200000  /* bigger than a large horse (ogre is LARGE) */
+#define RF0_COLOSSAL       0x00400000  /* huge, almost doesn't fit the tile */
 #define RF0_X60            0x00800000  /*  */
 #define RF0_X70            0x01000000  /*  */
-#define RF0_X80            0x02000000  /*  */
+/* behaviour */
+#define RF0_SUMMON_ONE     0x02000000  /* summoning spells conjure only 1 ally */
 #define RF0_X90            0x04000000  /*  */
 #define RF0_X100           0x08000000  /*  */
 #define RF0_X200           0x10000000  /*  */
@@ -4152,6 +4156,16 @@
 #define RF7_S_HI_UNDEAD    0x20000000  /* Summon Greater Undead */
 #define RF7_S_WRAITH       0x40000000  /* Summon Unique Wraith */
 #define RF7_S_UNIQUE       0x80000000  /* Summon Unique Monster */
+
+
+/* -KN- (SUB) added
+ * sub-type mask known after a kill (as with races)
+ */
+#define RF0_SUBTYPE_MASK \
+	(RF0_FIERY | RF0_FROSTY | RF0_CAUSTIC | RF0_CHARGED | \
+	 RF0_VENOMOUS | RF0_UMBRAL | RF0_THUNDERING | RF0_JAGGED | \
+	 RF0_WHIRLING | RF0_LIGHT | RF0_HEAVY | RF0_TINY | RF0_LARGE | \
+	 RF0_COLOSSAL | RF0_SUMMON_ONE)
 
 
 /*
