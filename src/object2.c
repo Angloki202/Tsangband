@@ -5431,6 +5431,9 @@ void make_boulder(int y, int x, int level)
 	object_type *i_ptr;
 	object_type object_type_body;
 
+	/* -KN- Require space to hold the object */
+	if (!cave_allow_object_bold(y, x)) return;
+
 	/* Get local object */
 	i_ptr = &object_type_body;
 
@@ -5452,6 +5455,9 @@ void make_food(int y, int x)
 {
 	object_type *i_ptr;
 	object_type object_type_body;
+
+	/* -KN- Require space to hold the object */
+	if (!cave_allow_object_bold(y, x)) return;
 
 	/* Get local object */
 	i_ptr = &object_type_body;
@@ -5489,6 +5495,9 @@ void make_skeleton(int y, int x, int value)
 	object_type *i_ptr;
 	object_type object_type_body;
 
+	/* -KN- Require space to hold the object */
+	if (!cave_allow_object_bold(y, x)) return;
+	
 	/* value (ICI) to make some treasure at some point at deeper levels */
 	if (value > 0) printf("No treasure yet.");
 

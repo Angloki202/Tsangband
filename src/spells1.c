@@ -7287,7 +7287,7 @@ bool project(int who, int rad, int y0, int x0, int y1, int x1, int dam,
 					
 					/* -KN- (experimental) always affect the last grid terrain feature */
 					/* CAULDRON_X support */
-					printf("adding PROJECT_GRID\n");					
+					//printf("adding PROJECT_GRID\n");					
 					flg |= (PROJECT_GRID);
 				}
 			}

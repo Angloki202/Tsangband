@@ -104,6 +104,8 @@
 #define WALL_MAX             40
 #define TUNN_MAX            300
 #define STAIR_MAX            30
+/* -KN- minor room max details */
+#define MINOR_MAX            15
 
 /*
  * Simple structure to hold a map location
@@ -116,6 +118,22 @@ struct coord
 	byte y;
 	byte x;
 };
+
+
+/*
+ * -KN- storage for minor rooms details
+ */
+
+typedef struct minor minor;
+
+struct minor
+{
+	byte y;
+	byte x;
+	byte zz;
+	byte size;
+};
+
 
 /*
  * Structure to hold all dungeon generation data
@@ -147,6 +165,10 @@ struct dun_data
 	/* Array of good potential stair grids */
 	s16b stair_n;
 	coord stair[STAIR_MAX];
+
+	/* -KN- minor room data */
+	s16b minor_n;				// number of all saved minor rooms with details
+	minor minors[MINOR_MAX];	// dun->minors[i].y = y;
 
 	/* Number of blocks along each axis */
 	s16b row_rooms;
@@ -2498,9 +2520,22 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 			{
 				printf("=%d x%d/y%d  laboratory room - ", zz, x1, y1);
 			}
-			
+
+			/* save first 15 minor rooms */
+			if((dun->minor_n) < MINOR_MAX)
+			{
+				dun->minors[dun->minor_n].y = y1 + (y2 - y1) / 2;
+				dun->minors[dun->minor_n].x = x1 + (x2 - x1) / 2;
+				dun->minors[dun->minor_n].zz = zz;
+				/* get size in number of blocks 3x3 */
+				dun->minors[dun->minor_n].size = ((y2 - y1) * (x2 - x1)) / 9;
+				dun->minor_n++;
+			}
+
 			/* note if more interesting */
 			if (zz % 2 == 1) printf("-better- ");
+			if (dun->minors[dun->minor_n - 1].size > 1)
+				printf("(size =%d)", dun->minors[dun->minor_n - 1].size);
 			if (advanced == TRUE) printf("--- advanced! \n"); else printf(" \n");
 		}
 	}
@@ -3147,7 +3182,8 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					{
 						/* caves ... more webs and possible bonepile */
 						if (one_in_(60)) feat = FEAT_BONEPILE;
-						else if (rr % 60 == 0) feat = FEAT_WEB;
+						else if (rr % 50 == 0) feat = FEAT_WEB;
+						else if (rr % 35 == 0) feat = FEAT_FLOOR2;
 						else if ((zz == 15) && ((x % (5 + dd) == 0) || (y % (5 + dd) == 0)))
 						{
 							/* each odd room have a pattern of bones with some cauldron */
@@ -3160,7 +3196,8 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					{
 						/* dungeon ... some bonepiles and webs */
 						if (one_in_(70)) feat = FEAT_BONEPILE;
-						else if ((one_in_(50)) &&
+						else if (one_in_(30)) feat = FEAT_FLOOR2;
+						else if ((one_in_(40)) &&
 						((x == x2) || (x == x1) || (y == y2) || (y == y1))) feat = FEAT_WEB;
 					}
 
@@ -3176,7 +3213,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 							if (one_in_(2)) feat = FEAT_CAULDRON;
 							else feat = FEAT_CAULDRON_X;
 						}
-						
+
 						/* second line of cauldrons */
 						if (((x == (x1 + 1)) && (y == (y1 + 1))) ||
 							((x == (x2 - 1)) && (y == (y1 + 1))) ||
@@ -3199,7 +3236,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						{
 							if (!one_in_(4)) feat = FEAT_CAULDRON;
 							else feat = FEAT_CAULDRON_X;
-							
+
 							/* sometimes no cauldron in the corner */
 							if (rr % 4 == 0)
 							{
@@ -8196,6 +8233,8 @@ static void cave_gen(void)
 {
 	int i, j, y, x, y1, x1;
 	int by, bx;
+	/* -KN- */
+	int mm;
 
 	int num_to_build;
 	int room_type;
@@ -8212,6 +8251,7 @@ static void cave_gen(void)
 	dun_data dun_body;
 
 	/* -KN- for reference */
+	printf("\n");
 	printf("Dungeon %d level: \n", p_ptr->depth);
 	printf("--- divided by 2, 5, 10, 16 = %d;%d;%d;%d \n", div_round(p_ptr->depth, 2),
 		div_round(p_ptr->depth, 5), div_round(p_ptr->depth, 10), div_round(p_ptr->depth, 16));
@@ -8248,6 +8288,9 @@ static void cave_gen(void)
 
 	/* No stair locations yet */
 	dun->stair_n = 0;
+
+	/* -KN- no minor rooms on start */
+	dun->minor_n = 0;
 
 	/* Initialize the room table */
 	for (by = 0; by < dun->row_rooms; by++)
@@ -8535,7 +8578,6 @@ static void cave_gen(void)
 	/* Determine the character location */
 	new_player_spot();
 
-
 	/* Pick a base number of monsters (MIN_M_ALLOC_LEVEL = 30) */
 	i = MIN_M_ALLOC_LEVEL * (p_ptr->depth + 200);
 
@@ -8568,6 +8610,370 @@ static void cave_gen(void)
 		/* Rein in monster groups and escorts a little. */
 		if (m_max - start_mon_num > i * 2) break;
 	}
+
+	/* -KN- minor room extras */
+	for (mm = 0; mm < (dun->minor_n); mm++)
+	{
+		/* at L1 and sometimes deeper, skip the extras */
+		if ((one_in_(3)) || (p_ptr->depth < 2))
+		{
+			printf("room %d extras skipped...\n", dun->minors[mm].zz);
+			continue;
+		}
+
+		/* get some variation from the center of rooms */
+		x = rand_spread(dun->minors[mm].x, 3);
+		y = rand_spread(dun->minors[mm].y, 3);
+		bx = rand_spread(dun->minors[mm].x, 2);
+		by = rand_spread(dun->minors[mm].y, 2);
+		x1 = rand_spread(dun->minors[mm].x, 1);
+		y1 = rand_spread(dun->minors[mm].y, 1);
+
+		/* this is the size in 3x3 blocks */
+		j = dun->minors[mm].size;
+
+		switch (dun->minors[mm].zz)
+		{
+			case 2:
+			case 3:
+			{
+				/* ---- CAVERNOUS room ---- */
+				printf("[y%d/x%d] ...troglodytes... ", y1, x1);
+
+				if ((p_ptr->depth > 45) && (one_in_(3)))
+				{
+					spread_monsters('%', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("war troupe.. ");
+				}	
+				else if ((p_ptr->depth > 25) && (one_in_(4)))
+				{
+					spread_monsters('U', (p_ptr->depth - 1), 3, by, bx, j, j);
+					printf("horde.. ");
+				}				
+				else if ((p_ptr->depth > 10) && (one_in_(3)))
+				{
+					spread_monsters('U', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("several.. ");
+				}
+				else if ((p_ptr->depth > 3) && (one_in_(2)))
+				{
+					spread_monsters('U', (p_ptr->depth - 1), 1, by, bx, j, j);
+					printf("solitary.. ");
+				}
+				else printf("(empty).. ");
+				
+				/* various object that fit caverns */
+				if (one_in_(4))
+				{
+					/* -- treasures --*/
+					printf("and treasures \n");
+					fetch_items(y, x, 3, 4, 1, 0);
+				}
+				else if (one_in_(3))
+				{
+					/* -- treasures --*/
+					printf("and some coins \n");
+					fetch_items(y, x, 1, 2, 1, 0);
+				}
+				else if (one_in_(3))
+				{
+					/* -- treasures --*/
+					printf("and rocks \n");
+					fetch_items(y, x, 2, 3, 2, 0);
+				}
+				else printf(" \n");
+				break;
+			}
+			case 4:
+			case 5:
+			{
+				/* ---- BROKEN WALLS room ---- */
+				printf("[y%d/x%d] ...monsters of rubble... ", y1, x1);
+
+				if ((p_ptr->depth > 45) && (one_in_(3)))
+				{
+					spread_monsters('1', (p_ptr->depth - 1), 3, by, bx, j, j);
+					printf("a colony.. ");
+				}	
+				else if ((p_ptr->depth > 25) && (one_in_(4)))
+				{
+					spread_monsters('1', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("a hive.. ");
+				}				
+				else if ((p_ptr->depth > 10) && (one_in_(3)))
+				{
+					spread_monsters('3', (p_ptr->depth - 1), 3, by, bx, j, j);
+					printf("gelatinous.. ");
+				}
+				else if ((p_ptr->depth > 2) && (one_in_(2)))
+				{
+					spread_monsters('3', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("moldy.. ");
+				}
+				else printf("(empty).. ");
+				
+				/* various object that fit rubbles */
+				if (one_in_(4))
+				{
+					printf("and treasures \n");
+					fetch_items(y, x, 1, 2, 1, 0);
+				}
+				else if (one_in_(3))
+				{
+					printf("and some more rocks \n");
+					fetch_items(y, x, 3, 5, 2, 2);
+				}
+				else if (one_in_(3))
+				{
+					printf("and rocks \n");
+					fetch_items(y, x, 2, 4, 2, 0);
+				}
+				else printf(" \n");
+				break;
+			}
+			case 6:
+			case 7:
+			{
+				/* ---- WILD room ---- */
+				printf("[y%d/x%d] ...wildlife... ", y1, x1);
+
+				if ((p_ptr->depth > 45) && (one_in_(3)))
+				{
+					spread_monsters('0', (p_ptr->depth - 1), 3, by, bx, j, j);
+					printf("a large herd.. ");
+				}	
+				else if ((p_ptr->depth > 25) && (one_in_(4)))
+				{
+					spread_monsters('6', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("waterborne.. ");
+				}				
+				else if ((p_ptr->depth > 10) && (one_in_(3)))
+				{
+					spread_monsters('2', (p_ptr->depth - 1), 3, by, bx, j, j);
+					printf("reptilians.. ");
+				}
+				else if ((p_ptr->depth > 2) && (one_in_(2)))
+				{
+					spread_monsters('1', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("insectoids.. ");
+				}
+				else printf("(empty).. ");
+				
+				/* various object that fit green */
+				if (one_in_(4))
+				{
+					printf("and snacks \n");
+					fetch_items(y, x, 2, 2, 4, 0);
+				}
+				else if (one_in_(3))
+				{
+					printf("and some rocks \n");
+					fetch_items(y, x, 1, 2, 2, 0);
+				}
+				else if (one_in_(3))
+				{
+					printf("and bones \n");
+					fetch_items(y, x, 2, 1, 3, 0);
+				}
+				else printf(" \n");
+				break;
+			}
+			case 8:
+			case 9:
+			{
+				/* ---- GUARD room ---- */
+				printf("[y%d/x%d] ...denizens of deep... ", y1, x1);
+
+				if ((p_ptr->depth > 45) && (one_in_(3)))
+				{
+					spread_monsters('%', (p_ptr->depth - 1), 3, by, bx, j, j);
+					printf("an terror camp.. ");
+				}	
+				else if ((p_ptr->depth > 25) && (one_in_(4)))
+				{
+					spread_monsters('o', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("an orc band.. ");
+				}				
+				else if ((p_ptr->depth > 10) && (one_in_(3)))
+				{
+					spread_monsters('o', (p_ptr->depth - 1), 1, by, bx, j, j);
+					printf("an orc patrol.. ");
+				}
+				else if ((p_ptr->depth > 3) && (one_in_(3)))
+				{
+					spread_monsters('p', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("a camp.. ");
+				}
+				else printf("(empty).. ");
+				
+				/* various object that fit guardroom */
+				if (one_in_(4))
+				{
+					printf("and treasures \n");
+					fetch_items(y, x, 2, 2, 1, 0);
+				}
+				else if (one_in_(3))
+				{
+					printf("and some useful gear \n");
+					fetch_items(y, x, 3, 3, 7, 0);
+				}
+				else if (one_in_(3))
+				{
+					printf("and munitions \n");
+					fetch_items(y, x, 2, 3, 11, 0);
+				}
+				else printf(" \n");
+				break;
+			}
+			case 10:
+			case 11:
+			{
+				/* ---- BONEYARD room ---- */
+				printf("[y%d/x%d] ...skulls and bones... ", y1, x1);
+
+				if ((p_ptr->depth > 45) && (one_in_(3)))
+				{
+					spread_monsters('N', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("group of unliving.. ");
+				}	
+				else if ((p_ptr->depth > 25) && (one_in_(4)))
+				{
+					spread_monsters('z', (p_ptr->depth - 1), 3, by, bx, j, j);
+					printf("army of dead.. ");
+				}				
+				else if ((p_ptr->depth > 10) && (one_in_(3)))
+				{
+					spread_monsters('s', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("skeleton team.. ");
+				}
+				else if ((p_ptr->depth > 4) && (one_in_(3)))
+				{
+					spread_monsters('z', (p_ptr->depth - 1), 1, by, bx, j, j);
+					printf("walking dead.. ");
+				}
+				else printf("(empty).. ");
+				
+				/* various object that fit graves */
+				if (one_in_(4))
+				{
+					printf("and bones \n");
+					fetch_items(y, x, 2, 3, 3, 0);
+				}
+				else if (one_in_(3))
+				{
+					printf("and treasures \n");
+					fetch_items(y, x, 2, 4, 1, -2);
+				}
+				else if (one_in_(3))
+				{
+					printf("and boulders \n");
+					fetch_items(y, x, 1, 2, 2, 0);
+				}
+				else printf(" \n");
+				break;
+			}
+			case 12:
+			case 13:
+			{
+				/* ---- COBWEB room ---- */
+				printf("[y%d/x%d] ...place for an ambush... ", y1, x1);
+
+				if ((p_ptr->depth > 45) && (one_in_(3)))
+				{
+					spread_monsters('b', (p_ptr->depth - 1), 4, by, bx, j, j);
+					printf("a bat cave.. ");
+				}	
+				else if ((p_ptr->depth > 25) && (one_in_(4)))
+				{
+					spread_monsters('3', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("venomous growth.. ");
+				}				
+				else if ((p_ptr->depth > 6) && (one_in_(3)))
+				{
+					spread_monsters('S', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("arachnids.. ");
+				}
+				else if ((p_ptr->depth > 3) && (one_in_(3)))
+				{
+					spread_monsters('1', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("nest of scuttlers.. ");
+				}
+				else printf("(empty).. ");
+				
+				/* various object that fit cobwebs */
+				if (one_in_(4))
+				{
+					printf("and treasures \n");
+					fetch_items(y, x, 2, 2, 1, 0);
+				}
+				else if (one_in_(3))
+				{
+					printf("and rocks \n");
+					fetch_items(y, x, 1, 2, 2, 0);
+				}
+				else printf(" \n");
+				break;
+			}
+			case 14:
+			case 15:
+			{
+				/* ---- LABORATORY room ---- */
+				printf("[y%d/x%d] ...alchemy lab critters... ", y1, x1);
+
+				if ((p_ptr->depth > 40) && (one_in_(3)))
+				{
+					spread_monsters('N', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("undead experiment.. ");
+				}	
+				else if ((p_ptr->depth > 20) && (one_in_(3)))
+				{
+					spread_monsters('I', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("demonoids.. ");
+				}				
+				else if ((p_ptr->depth > 8) && (one_in_(4)))
+				{
+					spread_monsters('e', (p_ptr->depth - 1), 3, by, bx, j, j);
+					printf("dangerous watchers.. ");
+				}
+				else if ((p_ptr->depth > 2) && (one_in_(3)))
+				{
+					spread_monsters('w', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("worm infestation.. ");
+				}
+				else printf("(empty).. ");
+				
+				/* various object that fit laboratory */
+				if (one_in_(4))
+				{
+					printf("and scrolls \n");
+					fetch_items(y, x, 3, 2, 6, -1);
+				}
+				else if (one_in_(3))
+				{
+					printf("and potions \n");
+					fetch_items(y, x, 2, 2, 5, -1);
+				}
+				else if (one_in_(3))
+				{
+					printf("and many potions \n");
+					fetch_items(y, x, 2, 3, 5, -2);
+				}
+				else printf(" \n");
+				break;
+			}
+			default :
+			{
+				/* error */
+				printf("I don't know room %d (yet)! \n", dun->minors[mm].zz);
+				break;
+			}
+		}
+	}
+
+	/* -KN- know location */
+	printf(" and player is at x%d/y%d.\n\n", p_ptr->px, p_ptr->py);
+	
+	
 
 	/* Special quest */
 	if (p_ptr->special_quest) monster_level = p_ptr->depth;
@@ -9510,6 +9916,172 @@ static void spurious_gen_precog_msg(void)
 	if ((num > rand_int(100)) && (one_in_(3 + precog - base)))
 		precog_msg(PRECOG_GEN_VERY_DANGEROUS);
 }
+
+
+/* -KN- easy & quick item-placement */
+/* we are not sad, if we don't succeed */
+void fetch_items(int y, int x, int d, int num, int typ, int lvl)
+{
+	int i;
+	int k;
+	int rr;
+	
+	bool looking = TRUE;
+
+	/* We always look for the same level */
+	object_level = p_ptr->depth + lvl;
+
+	/* Place one or multiple objects */
+	for (k = 0; k < num; k++)
+	{
+		i = 0;
+		
+		/* Pick a "legal" spot */
+		while (looking == TRUE)
+		{
+			/* count for limited time
+			/* with d=0 it tries once to allocate to x/y */
+			/* with d=1 it tries on 4 spaces around x/y */
+			i++;
+
+			/* fail the allocation */
+			if (i > ((d + 1) * (d + 1))) looking = FALSE;
+			
+			/* new location */
+			x = rand_spread(x, d);
+			y = rand_spread(y, d);
+
+			/* Grid must be able to hold objects */
+			if (!cave_allow_object_bold(y, x)) continue;
+
+			/* Accept it */
+			break;
+		}
+		
+		/* Go to next object if we failed */
+		if (looking == FALSE) continue;
+		
+		/* randomizer */
+		rr = rand_int(100);
+		
+		/* What objects? */
+		switch (typ)
+		{
+			case 1:
+			{
+				/* ---- GOLD ---- */
+				place_gold(y, x);
+				break;
+			}
+			case 2:
+			{
+				/* ---- BOULDERS ---- */
+				make_boulder(y, x, lvl);
+				break;
+			}
+			case 3:
+			{
+				/* ---- SKELETON ---- */
+				make_skeleton(y, x, 0);
+				break;
+			}
+			case 4:
+			{
+				/* ---- FOOD ---- */
+				make_food(y, x);
+				break;
+			}
+			case 5:
+			{
+				/* ---- POTIONS ---- */
+				if (one_in_(3)) required_tval = TV_POTION;
+				else required_tval = TV_BOTTLE;
+				place_object(y, x, FALSE, FALSE, TRUE);
+				break;
+			}
+			case 6:
+			{
+				/* ---- SCROLLS ---- */
+				if (one_in_(3)) required_tval = TV_SCROLL;
+				else required_tval = TV_PARCHMENT;
+				place_object(y, x, FALSE, FALSE, TRUE);
+				break;
+			}
+			case 7:
+			{
+				/* ---- WORKSHOP ---- */
+				if      (rr > 85) required_tval = TV_LITE;
+				else if (rr > 75) required_tval = TV_FLASK;
+				else if (rr > 45) required_tval = TV_DIGGING;
+				else 			  required_tval = TV_COMPONENT;
+				place_object(y, x, FALSE, FALSE, TRUE);
+				break;
+			}
+			case 8:
+			{
+				/* ---- LIGHT ARMOURY ---- */
+				if      (rr > 80) required_tval = TV_CLOAK;
+				else if (rr > 60) required_tval = TV_GLOVES;
+				else if (rr > 40) required_tval = TV_HELM;
+				else if (rr > 20) required_tval = TV_BOOTS;
+				else 			  required_tval = TV_SOFT_ARMOR;
+				place_object(y, x, FALSE, FALSE, TRUE);
+				break;
+			}
+			case 9:
+			{
+				/* ---- HEAVY ARMOURY ---- */
+				if      (rr > 90) required_tval = TV_BOOTS;
+				else if (rr > 80) required_tval = TV_GLOVES;
+				else if (rr > 65) required_tval = TV_HELM;
+				else if (rr > 50) required_tval = TV_SHIELD;
+				else if (rr > 40) required_tval = TV_SOFT_ARMOR;
+				else 			  required_tval = TV_HARD_ARMOR;
+				place_object(y, x, FALSE, FALSE, TRUE);
+				break;
+			}
+			case 10:
+			{
+				/* ---- WEAPONSMITH ---- */
+				if      (rr > 60) required_tval = TV_SWORD;
+				else if (rr > 30) required_tval = TV_POLEARM;
+				else			  required_tval = TV_HAFTED;
+				break;
+			}
+			case 11:
+			{
+				/* ---- RANGED ---- */
+				if      (rr > 85) required_tval = TV_SHOT;
+				else if (rr > 70) required_tval = TV_ARROW;
+				else if (rr > 55) required_tval = TV_BOLT;
+				else if (rr > 35) required_tval = TV_BOW;
+				else if (rr > 15) required_tval = TV_CROSSBOW;
+				else 			  required_tval = TV_SLING;
+				break;
+			}
+			case 12:
+			{
+				/* ---- TREASURE ---- */
+				if      (rr > 95) required_tval = TV_CHEST;
+				else if (rr > 85) required_tval = TV_CROWN;
+				else if (rr > 70) required_tval = TV_AMULET;
+				else if (rr > 50) required_tval = TV_RING;
+				else if (rr > 35) required_tval = TV_STAFF;
+				else if (rr > 20) required_tval = TV_WAND;
+				else if (rr > 10) required_tval = TV_ROD;
+				else if (rr > 5)  required_tval = TV_SCROLL;
+				else 			  required_tval = TV_POTION;
+				break;
+			}
+		}
+	}
+
+	/* reset the fetch */
+	object_level = p_ptr->depth;
+	required_tval = 0;
+}
+
+
 
 
 /*

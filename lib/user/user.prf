@@ -2149,7 +2149,7 @@ H:2
 a:0:0
 
 # Screen  (zero, more_tall_display, map_display_precise_fit, y-margin, x-margin)
-t:0:1:1:13:4
+t:0:1:1:13:23
 
 
 # If marked, changes above will be deleted and replaced automatically.

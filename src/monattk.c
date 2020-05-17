@@ -5734,7 +5734,6 @@ void cloud_surround(int r_idx, int *typ, int *dam, int *rad)
 	if (r_ptr->flags0 & (RF0_UMBRAL))
 	{
 		*typ = GF_DARK_WEAK;
-		printf ("UMBRAL detected");
 	}
 
 	/* The Nazgul and some others darken everything nearby */

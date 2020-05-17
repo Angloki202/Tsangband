@@ -617,7 +617,7 @@ W:2:2:15:2
 F:FORCE_SLEEP | EMPTY_MIND | NEVER_MOVE | NEVER_BLOW | 
 F:IM_POIS | NO_FEAR | NO_CONF | NO_SLEEP | 
 F:STUPID | REGENERATE | FRIEND
-S:1_IN_7 | POW_1 | 
+S:1_IN_8 | POW_1 | 
 S:HUNGER
 D:This grass doesn't look dangerous; it doesn't even 
 D:bite.  But it can starve you to death and then use 

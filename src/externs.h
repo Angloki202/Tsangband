@@ -702,6 +702,7 @@ extern void apply_random_qualities(object_type *o_ptr);
 extern void apply_magic(object_type *o_ptr, int lev, int okay, bool good, bool great);
 extern bool make_object(object_type *j_ptr, bool good, bool great, bool exact_kind);
 extern void make_specific_tval(int tval, int lev, bool in_pack);
+extern void fetch_items(int y, int x, int d, int num, int typ, int lvl);  // -KN- added foo for quick items
 extern bool make_gold(object_type *o_ptr);
 extern bool make_special_gold(object_type *o_ptr);
 extern int breakage_chance(object_type *o_ptr);

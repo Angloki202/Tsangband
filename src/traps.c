@@ -2851,6 +2851,9 @@ static bool hit_trap_aux(int who, int y, int x, int t_idx)
 					Rand_quick = TRUE;
 				}
 			}
+			
+			/* -KN- redraw to see the player in the pit */
+			lite_spot(y, x);
 
 			break;
 		}
