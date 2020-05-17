@@ -1941,6 +1941,12 @@ F:64:s:-89:w:-89:W:-89
 # pillar of gold
 F:65:o:-89:y:-89:o:-89
 
+# cauldron
+F:66:D:-26:s:-26:D:-26
+
+# full cauldron
+F:67:t:-26:g:-26:t:-26
+
 # the General Store
 F:84:U:49:U:49:U:49
 
@@ -2134,7 +2140,7 @@ W:5:0:1
 W:6:1:1
 
 # Delay
-D:6
+D:7
 
 # Hitpoint warning (x10%)
 H:2

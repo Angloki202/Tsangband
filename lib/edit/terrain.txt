@@ -414,6 +414,20 @@ G:#:o
 C:10
 F:TF_WALL | TF_ROCK | TF_INTERESTING | TF_NO_SCENT
 
+# added empty cauldron
+N:66:cauldron
+G:*:s
+C:10
+F:TF_INTERESTING | TF_NO_SCENT | TF_LOS
+D:A very large cauldron is blocking the way.
+
+# added full cauldron (explodes with depth-driven variation)
+N:67:full cauldron
+G:*:g
+C:15
+F:TF_INTERESTING | TF_NO_SCENT | TF_LOS
+D:A very large cauldron is blocking the way.  Is it full?
+
 #
 #
 # space for more terrain here

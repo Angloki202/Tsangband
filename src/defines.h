@@ -1242,6 +1242,7 @@
 #define FEAT_BONEPILE      17
 #define FEAT_FLOOR_B       18
 
+
 /* -KN- added deep floors */
 #define FEAT_FLOOR4        21
 #define FEAT_FLOOR5        22
@@ -1274,6 +1275,9 @@
 #define FEAT_PERM_SOLID    63
 #define FEAT_PILLAR        64
 #define FEAT_PILLAR_GOLD   65
+/* -KN- added cauldrons */
+#define FEAT_CAULDRON      66
+#define FEAT_CAULDRON_X    67
 
 /* Shops */
 #define FEAT_SHOP_HEAD     84

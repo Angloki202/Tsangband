@@ -1659,9 +1659,15 @@ static cptr likert(int x, int y)
 		{
 			likert_color = TERM_YELLOW;
 			if (p_ptr->image) return ("Cool");
-			else              return ("Good");
+			else              return ("Better");	/* was Good */
 		}
 		case 6:
+		{
+			/* -KN- added */
+			likert_color = TERM_YELLOW;
+			if (p_ptr->image) return ("Too Cool");
+			else              return ("Good");
+		}
 		case 7:
 		{
 			likert_color = TERM_YELLOW;
@@ -1669,29 +1675,71 @@ static cptr likert(int x, int y)
 			else              return ("Very Good");
 		}
 		case 8:
+		{
+			/* -KN- added */
+			likert_color = TERM_YELLOW;
+			if (p_ptr->image) return ("Plussy");
+			else              return ("Good");
+		}
 		case 9:
+		{
+			/* -KN- added */
+			likert_color = TERM_L_GREEN;
+			if (p_ptr->image) return ("Marvelous");
+			else              return ("Expert");
+		}
 		case 10:
 		{
 			likert_color = TERM_L_GREEN;
 			if (p_ptr->image) return ("Froody");
-			else              return ("Excellent");
+			else              return ("Expert II");	/* was Excellent */
 		}
 		case 11:
+		{
+			/* -KN- added */
+			likert_color = TERM_L_GREEN;
+			if (p_ptr->image) return ("Virtuous");
+			else              return ("Excellent");
+		}
 		case 12:
+		{
+			/* -KN- added */
+			likert_color = TERM_L_GREEN;
+			if (p_ptr->image) return ("Top Notch");
+			else              return ("Superb");
+		}
 		case 13:
 		{
 			likert_color = TERM_L_GREEN;
 			if (p_ptr->image) return ("Radical");
-			else              return ("Superb");
+			else              return ("Master"); 	/* was Superb */
 		}
 		case 14:
+		{
+			/* -KN- added */
+			likert_color = TERM_L_GREEN;
+			if (p_ptr->image) return ("Bombastic");
+			else              return ("Master II");
+		}
 		case 15:
+		{
+			/* -KN- added */
+			likert_color = TERM_BLUE;
+			if (p_ptr->image) return ("Amazing");
+			else              return ("Champion");
+		}
 		case 16:
+		{
+			/* -KN- added */
+			likert_color = TERM_BLUE;
+			if (p_ptr->image) return ("Far Out");
+			else              return ("Heroic");
+		}
 		case 17:
 		{
 			likert_color = TERM_BLUE;
 			if (p_ptr->image) return ("Bodacious");
-			else              return ("Heroic");
+			else              return ("Heroic II");	/* was Heroic */
 		}
 		default:
 		{

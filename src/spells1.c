@@ -407,6 +407,33 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 {
 	bool obvious = FALSE;
 
+	/* -KN- Cauldrons explode separately */
+	if (cave_feat[y][x] == FEAT_CAULDRON_X)
+	{
+		if ((typ == GF_ACID) || (typ == GF_COLD) || (typ == GF_ICE) ||
+			(typ == GF_FIRE) || (typ == GF_HELLFIRE) || (typ == GF_PLASMA) ||
+			(typ == GF_FORCE) || (typ == GF_CHAOS) || (typ == GF_ELEC) ||
+			(typ == GF_ROCK) || (typ == GF_SHOT) || (typ == GF_ARROW) ||
+			(typ == GF_MISSILE) || (typ == GF_DISINTEGRATE) || (typ == GF_SHARD) ||
+			(typ == GF_METEOR) || (typ == GF_MANA))
+		{
+		
+			/* (testing) was rand_range(20,80) */
+			if (dam > rand_range(2, 4))
+			{
+				printf("bam! \n");
+				
+				/* forget the cauldron */
+				if (one_in_(4)) cave_set_feat(y, x, FEAT_RUBBLE);
+				else cave_set_feat(y, x, FEAT_FLOOR4);
+				
+				/* explode from there (ICI) add variations */
+				explosion(0, 2, y, x, 15, GF_FIRE);
+			}
+			else printf("no bam! \n");
+		}
+	}
+
 	/* Analyze the type */
 	switch (typ)
 	{
@@ -7257,6 +7284,11 @@ bool project(int who, int rad, int y0, int x0, int y1, int x1, int dam,
 					gy[grids] = y;
 					gx[grids] = x;
 					gd[grids++] = 0;
+					
+					/* -KN- (experimental) always affect the last grid terrain feature */
+					/* CAULDRON_X support */
+					printf("adding PROJECT_GRID\n");					
+					flg |= (PROJECT_GRID);
 				}
 			}
 
