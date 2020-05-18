@@ -407,8 +407,8 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 {
 	bool obvious = FALSE;
 
-	/* -KN- Cauldrons explode separately */
-	if (cave_feat[y][x] == FEAT_CAULDRON_X)
+	/* -KN- detonables explode separately */
+	if (cave_detonate_bold(y, x))
 	{
 		if ((typ == GF_ACID) || (typ == GF_COLD) || (typ == GF_ICE) ||
 			(typ == GF_FIRE) || (typ == GF_HELLFIRE) || (typ == GF_PLASMA) ||
@@ -419,7 +419,7 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 		{
 		
 			/* (testing) was rand_range(20,80) */
-			if (dam > rand_range(2, 6))
+			if ((cave_feat[y][x] == FEAT_CAULDRON_X) && (dam > rand_range(3, 6)))
 			{
 				printf("bam! \n");
 				
@@ -428,9 +428,10 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 				else cave_set_feat(y, x, FEAT_FLOOR4);
 				
 				/* explode from there (ICI) add variations */
-				explosion(0, 2, y, x, 15, GF_FIRE);
+				if (one_in_(3)) explosion(0, 2, y, x, 15, GF_FIRE);
+				else explosion(0, 3, y, x, 10, GF_POIS);
 				
-				/* make some big noise (thrice of a tunneling) */
+				/* make some big noise (thrice of tunnel noise) */
 				add_wakeup_chance += 3000;
 			}
 			else printf("no bam!  only %d \n", dam);

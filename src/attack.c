@@ -3052,12 +3052,12 @@ void do_cmd_fire(void)
 		{
 			hit_wall = TRUE;
 			
-			/* -KN- experimental CAULDRON_X activation (not working) */
-			//if (cave_feat[ny][nx].flags & (TF_DETONATE))
+			/* -KN- experimental CAULDRON_X activation (working) */
 			if(cave_detonate_bold(ny, nx))
 			{
 				printf("... shooting at cauldron ...\n");
-				//project_f(0, ny, nx, 0, damroll(p_ptr->ammo_mult * i_ptr->dd, i_ptr->ds), GF_SHOT);
+				project(0, 0, ny, nx, ny, nx, damroll(p_ptr->ammo_mult * i_ptr->dd, i_ptr->ds),
+				GF_SHOT, PROJECT_GRID, 0, 0);
 			}
 			break;
 		}
@@ -3560,6 +3560,14 @@ void do_cmd_throw(void)
 		if (!cave_project_bold(ny, nx))
 		{
 			hit_wall = TRUE;
+			
+			/* -KN- experimental CAULDRON_X activation (working) */
+			if(cave_detonate_bold(ny, nx))
+			{
+				printf("... aiming at cauldron ...\n");
+				project(0, 0, ny, nx, ny, nx, damroll(p_ptr->ammo_mult * i_ptr->dd, i_ptr->ds),
+				GF_ROCK, PROJECT_GRID, 0, 0);
+			}
 			break;
 		}
 

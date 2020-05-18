@@ -5691,10 +5691,9 @@ void cloud_surround(int r_idx, int *typ, int *dam, int *rad)
 	int multi = 0;
 
 	/*** Determine the kind of cloud we're supposed to be giving off ***/
-
-	/* Molds release spores */
 	if (r_ptr->d_char == 'm')
 	{
+		/* special case for molds */
 		*typ = GF_SPORE;
 		*dam = 2 + rand_range(r_ptr->level / 2, r_ptr->level);
 	}
@@ -5726,20 +5725,20 @@ void cloud_surround(int r_idx, int *typ, int *dam, int *rad)
 	}
 
 	/* The Nazgul and some others darken everything nearby */
-	if ((!*typ) && (strchr("WjaS", r_ptr->d_char)))
+	if ((*typ == 0) && (strchr("WjaS", r_ptr->d_char)))
 	{
 		*typ = GF_DARK_WEAK;
 	}
 
 	/* -KN- new sub-types can define multiple alternating clouds */
 	/*		as this is checked every turn; not the best solution, but pretty good */
-	else if (!*typ)
+	else if (*typ == 0)
 	{
 		/* ask for each sub-type individually */
 		if (r_ptr->flags0 & (RF0_FIERY))
 		{
 			multi++;
-			*typ = GF_FIRE;
+			if (one_in_(multi)) *typ = GF_FIRE;
 		}
 		if (r_ptr->flags0 & (RF0_FROSTY))
 		{
@@ -5792,9 +5791,10 @@ void cloud_surround(int r_idx, int *typ, int *dam, int *rad)
 			}
 		}
 	}
-	else
+	
+	if (*typ == 0)
 	{
-		/* Paranoia */
+		/* if still nothing gets selected, we might have a problem */
 		*typ = GF_HURT;
 		printf ("!!!!     NO TYPE OF CLOUD_SURROUND     !!!! \n");
 	}
