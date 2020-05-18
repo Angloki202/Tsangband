@@ -3051,6 +3051,14 @@ void do_cmd_fire(void)
 		if (!cave_project_bold(ny, nx))
 		{
 			hit_wall = TRUE;
+			
+			/* -KN- experimental CAULDRON_X activation (not working) */
+			//if (cave_feat[ny][nx].flags & (TF_DETONATE))
+			if(cave_detonate_bold(ny, nx))
+			{
+				printf("... shooting at cauldron ...\n");
+				//project_f(0, ny, nx, 0, damroll(p_ptr->ammo_mult * i_ptr->dd, i_ptr->ds), GF_SHOT);
+			}
 			break;
 		}
 

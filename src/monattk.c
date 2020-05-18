@@ -3061,6 +3061,7 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			else if ((r_ptr->flags3 & (RF3_ANIMAL)) || (typ == GF_ACID))
 			{
 				sound(MSG_SPIT);
+				if (typ != GF_ACID) typ = GF_WHIP;	/* correction for spitters */
 				if (blind) msg_print("You hear a soft sound.");
 				else msg_format("%^s spits%s at you.",
 					m_name, desc);
@@ -5686,13 +5687,8 @@ void cloud_surround(int r_idx, int *typ, int *dam, int *rad)
 	*typ = 0;
 	*dam = 2 + rand_range(r_ptr->level / 5, r_ptr->level / 3);
 	*rad = 2;
-
-	/* Unique monsters have especially strong effects */
-	if (r_ptr->flags1 & (RF1_UNIQUE))
-	{
-		*rad += 1;
-		*dam *= 2;
-	}
+	
+	int multi = 0;
 
 	/*** Determine the kind of cloud we're supposed to be giving off ***/
 
@@ -5729,61 +5725,90 @@ void cloud_surround(int r_idx, int *typ, int *dam, int *rad)
 		         (r_ptr->d_attr == TERM_L_UMBER)) *typ = GF_CONFUSION;
 	}
 
-	/* -KN- reading sub-types */
-	/* this could be written as to alter between multiple types (ICI) */
-	if (r_ptr->flags0 & (RF0_UMBRAL))
-	{
-		*typ = GF_DARK_WEAK;
-	}
-
 	/* The Nazgul and some others darken everything nearby */
 	if ((!*typ) && (strchr("WjaS", r_ptr->d_char)))
 	{
 		*typ = GF_DARK_WEAK;
 	}
 
-	/* -KN- Ask for immunities to detect type for non-breathers and non-"WjaSR" */
-	/* this assumes specific order for monsters with multiple imm. */
-	/* (fail-ICI) not good, night lizard is now cold */
+	/* -KN- new sub-types can define multiple alternating clouds */
+	/*		as this is checked every turn; not the best solution, but pretty good */
 	else if (!*typ)
 	{
-		if (r_ptr->flags3 & (RF3_IM_COLD))
+		/* ask for each sub-type individually */
+		if (r_ptr->flags0 & (RF0_FIERY))
 		{
-			*typ = GF_COLD;
-			*dam = 2 + rand_range(r_ptr->level / 4, r_ptr->level / 2);
-		}
-		else if (r_ptr->flags3 & (RF3_IM_ELEC))
-		{
-			*typ = GF_ELEC;
-			*dam = 2 + rand_range(r_ptr->level / 4, r_ptr->level / 2);
-		}
-		else if (r_ptr->flags3 & (RF3_IM_FIRE))
-		{
+			multi++;
 			*typ = GF_FIRE;
-			*dam = 2 + rand_range(r_ptr->level / 4, r_ptr->level / 2);
 		}
-		else if (r_ptr->flags3 & (RF3_IM_POIS))
+		if (r_ptr->flags0 & (RF0_FROSTY))
 		{
-			*typ = GF_POIS;
-			*dam = 2 + rand_range(r_ptr->level / 4, r_ptr->level / 2);
+			multi++;
+			if (one_in_(multi)) *typ = GF_COLD;
 		}
-		else if (r_ptr->flags3 & (RF3_IM_ACID))
+		if (r_ptr->flags0 & (RF0_CAUSTIC))
 		{
-			*typ = GF_ACID;
-			*dam = 2 + rand_range(r_ptr->level / 4, r_ptr->level / 2);
+			multi++;
+			if (one_in_(multi)) *typ = GF_ACID;
 		}
-		else if (r_ptr->flags3 & (RF3_HURT_LITE))
+		if (r_ptr->flags0 & (RF0_CHARGED))
 		{
-			*typ = GF_DARK_WEAK;
-			*dam = 2 + rand_range(r_ptr->level / 4, r_ptr->level / 2);
+			multi++;
+			if (one_in_(multi)) *typ = GF_ELEC;
 		}
-		/* Paranoia */
-		else
+		if (r_ptr->flags0 & (RF0_VENOMOUS))
 		{
-			*typ = GF_HURT;
-			printf ("NO TYPE OF CLOUD_SURROUND");
+			multi++;
+			if (one_in_(multi)) *typ = GF_POIS;
+		}
+		if (r_ptr->flags0 & (RF0_UMBRAL))
+		{
+			multi++;
+			if (one_in_(multi)) *typ = GF_DARK_WEAK;
+		}
+		if (r_ptr->flags0 & (RF0_THUNDERING))
+		{
+			multi++;
+			if (one_in_(multi)) *typ = GF_SOUND;
+		}
+		if (r_ptr->flags0 & (RF0_JAGGED))
+		{
+			multi++;
+			if (one_in_(multi)) *typ = GF_SHARD;
+		}
+		if (r_ptr->flags0 & (RF0_WHIRLING))
+		{
+			multi++;
+			if (one_in_(multi)) *typ = GF_FORCE;
+		}
+		if (r_ptr->flags2 & (RF2_IS_LIT))
+		{
+			/* special case for blinding light */
+			multi++;
+			if (one_in_(multi))
+			{	
+				*typ = GF_LITE;
+				*rad += 1;
+			}
 		}
 	}
-
-	/* Leave the rest blank until we make monsters that need it. */
+	else
+	{
+		/* Paranoia */
+		*typ = GF_HURT;
+		printf ("!!!!     NO TYPE OF CLOUD_SURROUND     !!!! \n");
+	}
+	
+	/* Unique monsters have especially strong effects */
+	if (r_ptr->flags1 & (RF1_UNIQUE))
+	{
+		*rad += 1;
+		*dam *= 2;
+	}
+	
+	/* Large monsters have even larger effect */
+	if ((r_ptr->flags0 & (RF0_LARGE)) || (r_ptr->flags0 & (RF0_COLOSSAL)))
+	{
+		*rad += 1;
+	}
 }

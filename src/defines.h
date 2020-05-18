@@ -3220,7 +3220,7 @@
 #define TF_DOOR_CLOSED  0x00200000L  /* Is a closed door */
 #define TF_SHOP         0x00400000L  /* Is a shop */
 /* xxx (many) */
-
+#define TF_DETONATE     0x00800000L  /* Can be blown up */
 
 
 
@@ -4948,6 +4948,11 @@
 #define cave_los_bold(Y,X) \
 	(cave_info[Y][X] & (CAVE_LOS))
 
+/*
+ * -KN- detonable terrain
+ */
+#define cave_detonate_bold(Y,X) \
+	(f_info[cave_feat[Y][X]].flags & (TF_DETONATE))
 
 /*
  * Determine if grid allows projections to pass through it.

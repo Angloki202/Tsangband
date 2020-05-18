@@ -9942,7 +9942,8 @@ void fetch_items(int y, int x, int d, int num, int typ, int lvl)
 			/* count for limited time
 			/* with d=0 it tries once to allocate to x/y */
 			/* with d=1 it tries on 4 spaces around x/y */
-			i++;
+			//i++;
+			++i;
 
 			/* fail the allocation */
 			if (i > ((d + 1) * (d + 1))) looking = FALSE;

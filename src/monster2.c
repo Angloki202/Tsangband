@@ -3840,6 +3840,9 @@ void mon_death_effect(int m_idx)
 	object_type object_type_body;
 
 	int i;
+	/* -KN- for multiple default funky_death */
+	int multi = 0;
+	int typ = 0;
 
 	/* Get the monster's location */
 	int fy = m_ptr->fy;
@@ -3953,13 +3956,16 @@ void mon_death_effect(int m_idx)
 	/* Living tornado */
 	else if (m_ptr->r_idx == MON_TORNADO)
 	{
-		int num = randint(7);
+		int num = randint(7) + 1;
 
+		/* -KN- use fetch_items code */
+		fetch_items(fy, fx, 1, num, 2, rand_range(r_ptr->level / 2, r_ptr->level));
+		
 		/* Drop lots of boulders */
-		for (i = 0; i < num; i++)
-		{
-			make_boulder(fy, fx, rand_range(r_ptr->level / 2, r_ptr->level));
-		}
+		//for (i = 0; i < num; i++)
+		//{
+		//	make_boulder(fy, fx, rand_range(r_ptr->level / 2, r_ptr->level));
+		//}
 	}
 
 	/* Morgoth, Lord of Darkness */
@@ -3996,7 +4002,7 @@ void mon_death_effect(int m_idx)
 		drop_near(i_ptr, 0, fy, fx, 0x00);
 	}
 
-	/* -KN- (was Error) now we have a default effect defined by sub-types */
+	/* -KN- now we have a default effect defined by sub-types */
 	else
 	{
 		char m_name[DESC_LEN];
@@ -4004,19 +4010,77 @@ void mon_death_effect(int m_idx)
 		/* Get the monster name "the kobold" */
 		monster_desc(m_name, m_ptr, 0x44);
 
+		/* ask for each sub-type individually, similar with CLOUD_SURROUND */
+		if (r_ptr->flags0 & (RF0_FIERY))
+		{
+			multi++;
+			typ = GF_FIRE;
+		}
+		if (r_ptr->flags0 & (RF0_FROSTY))
+		{
+			multi++;
+			if (one_in_(multi)) typ = GF_COLD;
+		}
+		if (r_ptr->flags0 & (RF0_CAUSTIC))
+		{
+			multi++;
+			if (one_in_(multi)) typ = GF_ACID;
+		}
+		if (r_ptr->flags0 & (RF0_CHARGED))
+		{
+			multi++;
+			if (one_in_(multi)) typ = GF_ELEC;
+		}
+		if (r_ptr->flags0 & (RF0_VENOMOUS))
+		{
+			multi++;
+			if (one_in_(multi)) typ = GF_POIS;
+		}
 		if (r_ptr->flags0 & (RF0_UMBRAL))
 		{
-			/* Explode with shadows, not strong, but far-reaching */
-			(void)mon_explode(m_idx, 4, fy, fx, 5, GF_DARK_WEAK);
+			multi++;
+			if (one_in_(multi)) typ = GF_DARK_WEAK;
+		}
+		if (r_ptr->flags0 & (RF0_THUNDERING))
+		{
+			multi++;
+			if (one_in_(multi)) typ = GF_SOUND;
+		}
+		if (r_ptr->flags0 & (RF0_JAGGED))
+		{
+			multi++;
+			if (one_in_(multi)) typ = GF_SHARD;
+		}
+		if (r_ptr->flags0 & (RF0_WHIRLING))
+		{
+			multi++;
+			if (one_in_(multi)) typ = GF_FORCE;
+		}
+
+		/* call the explosion if at least one type is selected */
+		if (multi > 0)
+		{
+			/* Explode with last chosen effect, stronger for multiple given choices */
+			(void)mon_explode(m_idx, (multi + 1), fy, fx, ((multi + 2) * 5), typ);
 			
 			/* inform player */
-			if (player_can_see_bold(fy, fx)) msg_format("%^s exploded with darkness!", m_name);
+			if (player_can_see_bold(fy, fx))
+			{
+				if (typ == GF_FIRE) msg_format("%^s exploded in flames!", m_name);
+				if (typ == GF_COLD) msg_format("%^s exploded with cold and ice!", m_name);
+				if (typ == GF_ACID) msg_format("%^s exploded in a splash of acid!", m_name);
+				if (typ == GF_ELEC) msg_format("%^s exploded with a crackling blast!", m_name);
+				if (typ == GF_POIS) msg_format("%^s exploded in venomous cloud!", m_name);
+				if (typ == GF_DARK_WEAK) msg_format("%^s exploded with blackness!", m_name);
+				if (typ == GF_SOUND) msg_format("%^s exploded in deafening boom!", m_name);
+				if (typ == GF_SHARD) msg_format("%^s exploded with shrapnels!", m_name);
+				if (typ == GF_FORCE) msg_format("%^s exploded with a blast of force!", m_name);
+			}
 		}
-		
 		else
 		{
-			/* Message */
-			msg_format("%^s is marked as having a special death effect, but no code exists for it.", m_name);
+			/* error message */
+			msg_format("%^s should have exploded, but no sub-type was detected.", m_name);
 		}
 	}
 }

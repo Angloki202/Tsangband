@@ -419,7 +419,7 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 		{
 		
 			/* (testing) was rand_range(20,80) */
-			if (dam > rand_range(2, 4))
+			if (dam > rand_range(2, 6))
 			{
 				printf("bam! \n");
 				
@@ -429,8 +429,11 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 				
 				/* explode from there (ICI) add variations */
 				explosion(0, 2, y, x, 15, GF_FIRE);
+				
+				/* make some big noise (thrice of a tunneling) */
+				add_wakeup_chance += 3000;
 			}
-			else printf("no bam! \n");
+			else printf("no bam!  only %d \n", dam);
 		}
 	}
 

@@ -425,7 +425,7 @@ D:A very large cauldron is blocking the way.
 N:67:full cauldron
 G:*:g
 C:15
-F:TF_INTERESTING | TF_NO_SCENT | TF_LOS
+F:TF_INTERESTING | TF_NO_SCENT | TF_LOS | TF_TORCH_ONLY | TF_DETONATE
 D:A very large cauldron is blocking the way.  Is it full?
 
 #

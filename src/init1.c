@@ -64,7 +64,7 @@ static cptr f_info_flags[] =
 	"TF_NO_SCENT",
 	"TF_OBJECT",
 	"TF_TRAP",
-	"XXX9",
+	"TF_TORCH_ONLY",		/* -KN- added (as it should be) */
 	"XX10",
 	"XX11",
 	"XX12",
@@ -79,7 +79,7 @@ static cptr f_info_flags[] =
 	"TF_DOOR_ANY",
 	"TF_DOOR_CLOSED",
 	"TF_SHOP",
-	"XX24",
+	"TF_DETONATE",			/* -KN- added */
 	"XX25",
 	"XX26",
 	"XX27",
