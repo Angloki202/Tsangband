@@ -1672,6 +1672,27 @@ static void process_world(void)
 		}
 	}
 
+	/* -KN- (STA) regain fraction of lost stamina */
+	p_ptr->ixstam += 1;
+	
+	/* and loose focus */
+	p_ptr->special_attack &= ~(ATTACK_FOCUS);
+	
+	/* when fully exhausted, you will probably wait longer */
+	if ((p_ptr->cstam == 0) && (one_in_(4))) p_ptr->ixstam -= 1;
+	
+	if ((p_ptr->ixstam >= p_ptr->restam) && (p_ptr->cstam < p_ptr->mstam))
+	{
+		/* regain one point if you reach restam (reg.value is lower for fighters) */
+		p_ptr->cstam += 1;
+		
+		/* reset the counter and redraw */
+		p_ptr->ixstam = 0;
+		left_panel_display(DISPLAY_STAMINA, 0);
+	}
+	p_ptr->cstam == 2;
+
+
 	/* Update time display */
 	left_panel_display(DISPLAY_TIME, 0);
 }
@@ -3926,6 +3947,13 @@ void play_game(bool new_game)
 				/* Restore spell points */
 				p_ptr->csp = p_ptr->msp;
 				p_ptr->csp_frac = 0;
+				
+				/* -KN- (STAMINA) */
+				/* Restore stamina */
+				p_ptr->mstam = 3;
+				p_ptr->cstam = 3;
+				p_ptr->restam = 10;
+				p_ptr->ixstam = 1;
 
 				/* Hack -- Healing */
 				(void)set_blind(0, NULL);

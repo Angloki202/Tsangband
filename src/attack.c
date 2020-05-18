@@ -2525,6 +2525,14 @@ bool py_attack(int y, int x)
 				thrust_away(-1, m_ptr->fy, m_ptr->fx, MIN(3, 1 + k / 15));
 			}
 		}
+		else if (p_ptr->special_attack & (ATTACK_FOCUS))
+		{
+			/* -KN- if not forcing, focus can shove the monster a bit */
+			/* 		more rules should apply (testing) (STAMINA) */
+			thrust_away(-1, m_ptr->fy, m_ptr->fx, rand_range(1, 2));
+			message_format(MSG_SLATE, 0, "%^s is shoved back!", m_name);
+			mon_adjust_energy(m_ptr, -100);
+		}
 
 
 		/* Hack -- delayed fear messages */

@@ -37,10 +37,10 @@
 #define VERSION_NAME    "Sangband"
 
 
-/*
+/* -KN- orig was "1.0.2b4"
  * Current version string
  */
-#define VERSION_STRING   "1.0.2b4"
+#define VERSION_STRING   "1.0.3a1"
 
 /*
  * Current (Sangband) version numbers
@@ -3096,7 +3096,7 @@
 #define DISPLAY_QUEST              9   /* quest status */
 #define DISPLAY_TARGET            10   /* current target */
 #define DISPLAY_REALM_COND        11   /* realm-specific conditions */
-/* xxx */
+#define	DISPLAY_STAMINA		      12   /* -KN- added stamina bar */
 /* xxx */
 #define DISPLAY_SPECIAL_ATTACK    14   /* p_ptr->special_attack */
 #define DISPLAY_OPPOSE            15   /* p_ptr->oppose_xxx */
@@ -3165,7 +3165,8 @@
 #define ATTACK_CONFUSE     0x0001
 #define ATTACK_BLKBRTH     0x0002
 #define ATTACK_FLEE        0x0004
-#define ATTACK_XX01        0x0008
+/* -KN- (STA) added focus */
+#define ATTACK_FOCUS       0x0008
 #define ATTACK_XX02        0x0010
 #define ATTACK_HOLY        0x0020
 #define ATTACK_VORPAL      0x0040

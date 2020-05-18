@@ -3001,6 +3001,20 @@ void do_cmd_alter(bool deliberate)
 		}
 		else
 		{
+			/* -KN- (STA) */
+			if (p_ptr->cstam > 0)
+			{
+				msg_print("You are focused on your attack.");
+			
+				/* deplete one point and reset the counter */
+				if (p_ptr->mstam == p_ptr->cstam) p_ptr->ixstam = 0;
+				p_ptr->cstam -= 1;
+				
+				/* set the focus flag and redraw */
+				p_ptr->special_attack |= (ATTACK_FOCUS);
+				(void)left_panel_display(DISPLAY_STAMINA, 0);
+			}
+			else msg_print("You are out of breath at the moment.");
 			(void)py_attack(y, x);
 		}
 	}

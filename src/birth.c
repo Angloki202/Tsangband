@@ -2038,9 +2038,14 @@ static void init_stomach(void)
 	p_ptr->food_fainting = (!large ? PY_FOOD_FAINT  : PY_FOOD_FAINT  * 2);
 	p_ptr->food_starving = (!large ? PY_FOOD_STARVE : PY_FOOD_STARVE * 2);
 
-
 	/* Hack -- Well fed player */
 	p_ptr->food = p_ptr->food_full - 1;
+	
+	/* -KN- (STA) set starting stamina (same for all atp) */
+	p_ptr->mstam = 3;
+	p_ptr->cstam = 3;
+	p_ptr->restam = 10;
+	p_ptr->ixstam = 1;
 }
 
 /*

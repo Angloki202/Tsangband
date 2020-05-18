@@ -2558,6 +2558,56 @@ static void left_panel_display_aux(byte item, byte row, int tmp)
 			prt_invisible(13);
 			break;
 		}
+		case DISPLAY_STAMINA:
+		{
+			/* -KN- Stamina bar for later use */
+			/* mstam; cstam; restam; ixstam */
+
+			c_put_str(TERM_SLATE, "sta:", row, 0);
+			//					  "*****[*****]"
+			if (p_ptr->mstam == 3)
+			{
+				c_put_str(TERM_TEAL, format("[   ]"), row, 5);
+				(void)Term_gotoxy(6, row);
+				(void)Term_addch(TERM_GREEN, 42);
+				(void)Term_gotoxy(7, row);
+				(void)Term_addch(TERM_L_GREEN, 42);
+				(void)Term_gotoxy(8, row);
+				(void)Term_addch(TERM_L_GREEN, 42);
+				
+				if (p_ptr->cstam == 2)
+				{
+					(void)Term_gotoxy(6, row);
+					(void)Term_addch(TERM_GREEN, 42);
+					(void)Term_gotoxy(7, row);
+					(void)Term_addch(TERM_L_GREEN, 42);
+					(void)Term_gotoxy(8, row);
+					(void)Term_addch(TERM_SLATE, 46);
+				}
+				else if (p_ptr->cstam == 1)
+				{
+					(void)Term_gotoxy(6, row);
+					(void)Term_addch(TERM_YELLOW, 42);
+					(void)Term_gotoxy(7, row);
+					(void)Term_addch(TERM_SLATE, 46);
+					(void)Term_gotoxy(8, row);
+					(void)Term_addch(TERM_SLATE, 46);
+				}
+				else if (p_ptr->cstam == 0)
+				{
+					(void)Term_gotoxy(6, row);
+					(void)Term_addch(TERM_L_DARK, 33);
+					(void)Term_gotoxy(7, row);
+					(void)Term_addch(TERM_L_DARK, 33);
+					(void)Term_gotoxy(8, row);
+					(void)Term_addch(TERM_L_DARK, 33);
+				}
+			}
+
+
+			
+			break;
+		}
 
 		default:
 		{

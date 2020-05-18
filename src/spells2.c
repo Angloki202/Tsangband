@@ -60,8 +60,8 @@ bool project_bolt(int who, int rad, int y0, int x0, int y1, int x1, int dam,
 bool project_beam(int who, int rad, int y0, int x0, int y1, int x1, int dam,
                   int typ, u32b flg)
 {
-	/* Add the beam bitflags */
-	flg |= PROJECT_BEAM | PROJECT_KILL | PROJECT_THRU;
+	/* Add the beam bitflags -KN- added GRID */
+	flg |= PROJECT_BEAM | PROJECT_KILL | PROJECT_THRU | PROJECT_GRID;
 
 	/* Hurt the character unless he controls the spell */
 	if (who != -1) flg |= (PROJECT_PLAY);

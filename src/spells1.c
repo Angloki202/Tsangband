@@ -4838,13 +4838,29 @@ static bool project_p(int who, int y, int x, int dam, int typ)
 			/* Affected by terrain. */
 			dam += terrain_adjustment;
 
+			/* -KN- animals spit and swing with venom */
 			if (r_ptr->flags3 & (RF3_ANIMAL))
 			{
-				if (fuzzy) msg_print("You have been spat upon.");
+				/* adjusted message */
+				if (fuzzy) msg_print("There was something swinging your way.");
+				
+				/* less effective venom from distance */
+				if (p_ptr->resist_pois) dam = div_round(dam, 4);
+				if (p_ptr->oppose_pois) dam = div_round(dam, 4);
 
-				/* Ordinary spit doesn't do any damage. */
-				/* -KN- (note) GF_WHIP is produced only for HURT effect of 1st method */
-				dam = 0;
+				/* Handle vulnerability */
+				if (p_ptr->vuln_pois) dam += dam / 2;
+
+				/* Take damage */
+				if (take_hit(dam, 0, NULL, killer)) break;
+				
+				/* Poison the player */
+				if (!(p_ptr->resist_pois || p_ptr->oppose_pois))
+				{
+					power = (p_ptr->poisoned ?
+							 rand_int(dam / 2) : 5 + rand_range(dam / 3, dam));
+					(void)set_poisoned(p_ptr->poisoned + power);
+				}
 			}
 			else
 			{
@@ -7291,7 +7307,6 @@ bool project(int who, int rad, int y0, int x0, int y1, int x1, int dam,
 					
 					/* -KN- (experimental) always affect the last grid terrain feature */
 					/* CAULDRON_X support */
-					//printf("adding PROJECT_GRID\n");					
 					flg |= (PROJECT_GRID);
 				}
 			}

@@ -2843,7 +2843,7 @@ cptr custom_display_text[DISPLAY_MAX] =
 	"Quest status",
 	"Active Target",
 	"Realm-specific conditions",
-	"",
+	"Stamina bar",
 	"",
 	"Attack Modifiers",
 	"Oppositions (elements, etc.)",
