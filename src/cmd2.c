@@ -326,7 +326,7 @@ static void chest_death(bool scattered, int y, int x, object_type *o_ptr)
 	/* Determine how much to drop. */
 	if (o_ptr->sval >= SV_CHEST_MIN_LARGE) number = rand_range(5, 6);
 	else number = rand_range(3, 4);
-
+	
 	/* Zero pval means empty chest */
 	if (!o_ptr->pval) number = 0;
 
@@ -335,6 +335,14 @@ static void chest_death(bool scattered, int y, int x, object_type *o_ptr)
 
 	/* Select an item type that the chest will disperse. */
 	required_tval = get_choice(object_level);
+	
+
+	/* -KN- experimental quest chest (ICI) */
+	if (o_ptr->sval == 9)
+	{
+		number = rand_range(2, 3);
+		required_tval = TV_POTION;
+	}
 
 	/* Drop some objects */
 	for (i = 0; i < number; i++)
@@ -3001,18 +3009,20 @@ void do_cmd_alter(bool deliberate)
 		}
 		else
 		{
-			/* -KN- (STA) */
+			/* -KN- (STA); burglary should check for sleeping */
 			if (p_ptr->cstam > 0)
 			{
-				msg_print("You are focused on your attack.");
+				msg_print("You focus on your attack.");
 			
 				/* deplete one point and reset the counter */
 				if (p_ptr->mstam == p_ptr->cstam) p_ptr->ixstam = 0;
 				p_ptr->cstam -= 1;
 				
 				/* set the focus flag and redraw */
+				/* one more slot for special flag, hybrid char support */
 				p_ptr->special_attack |= (ATTACK_FOCUS);
-				(void)left_panel_display(DISPLAY_STAMINA, 0);
+				//(void)left_panel_display(DISPLAY_STAMINA, 0);
+				p_ptr->redraw |= (PR_ARMOR);
 			}
 			else msg_print("You are out of breath at the moment.");
 			(void)py_attack(y, x);
@@ -3514,6 +3524,17 @@ static void do_cmd_hold_or_stay(int pickup)
 			search_essence(FALSE);
 		}
 	}
+
+	/* -KN- mention that standing still is processing */
+	if (p_ptr->cstam < p_ptr->mstam)
+	{
+		/* with some additional chance to replenish stamina (STA) */
+		if (one_in_(3)) p_ptr->ixstam += 1;
+		msg_print("Catching breath... ");
+		
+		/* (probably add foo that manages regenerating STA with some limits) */
+	}
+	else msg_print("Just standing... ");
 
 	/* Notice unseen objects */
 	notice_unseen_objects();

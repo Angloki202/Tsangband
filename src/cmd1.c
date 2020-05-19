@@ -39,7 +39,7 @@ void search(void)
 	if (p_ptr->confused || p_ptr->image) chance = chance / 3;
 	if (p_ptr->berserk || p_ptr->necro_rage) chance = chance / 2;
 
-	/* Increase searching range sometimes */	
+	/* Increase searching range sometimes */
 	if (chance >= rand_range(40,  70)) range++;
 	if (chance >= rand_range(80, 140)) range++;
 
@@ -87,7 +87,7 @@ void search(void)
 					disturb(0, 0);
 				}
 			}
-			
+
 			/* -KN- alert if a pit nearby is unexplored */
 			if (cave_feat[y][x] == FEAT_PIT1)
 			{
@@ -301,6 +301,29 @@ void do_cmd_search(void)
 
 	/* -KN- mention that search is processing */
 	msg_print("Searching... ");
+
+	/* (testing) something interesting (lab & boneyard) */
+	if ((cave_info[p_ptr->py][p_ptr->px] & (CAVE_TYP0)) ||
+		(cave_info[p_ptr->py][p_ptr->px] & (CAVE_TYP1)))
+	{
+		//if (cave_info[p_ptr->py][p_ptr->px] & (CAVE_TYP0)) fetch_items(p_ptr->py, p_ptr->px, 2, 3, 1, 0);
+		//else fetch_items(p_ptr->py, p_ptr->px, 0, 2, 5, 0);
+
+		/* -KN- random quote (ICI) */
+		static char search_message[DESC_LEN];
+		(void)get_rnd_line("descriptive.txt", search_message);
+		msg_format("There is %s.", search_message);
+		
+		/* (IDEA) new foo for better control over txt output, 1st letter could determine special */
+		/* example: quest to find foul ingredients */
+		/* each cauldron in laboratory could have CAVE_TYP0, after wrecking it, you would search */
+		/* the rubble and sometimes you would find the igredient (ingredient++) and monsters could */
+		/* appear.. */
+		
+		/* remove the interesting type */
+		cave_info[p_ptr->py][p_ptr->px] &= ~(CAVE_TYP0);
+		cave_info[p_ptr->py][p_ptr->px] &= ~(CAVE_TYP1);
+	}
 
 	/* Search */
 	search();
@@ -1199,14 +1222,14 @@ static bool escape_pit(void)
 	else msg_print("You leap out of the pit.");
 
 	/* We're free! */
-	
+
 	/* -KN- change trap into empty pit */
 	if (cave_pit_trap(p_ptr->py, p_ptr->px))
 	{
 		/* remove the pit-trap and redraw for visual clue */
 		remove_trap(p_ptr->py, p_ptr->px, -1);
 		lite_spot(p_ptr->py, p_ptr->px);
-		
+
 		/* we are assuming the trap was on a spot where a pit can be */
 		cave_feat[p_ptr->py][p_ptr->px] = FEAT_PIT0;
 	}
@@ -1279,7 +1302,7 @@ void move_player(int dir, int do_pickup)
 		{
 			/* -KN- if non-move move (aka teleport) moves player, it should update the torch */
 			p_ptr->drain_light = FALSE;
-			
+
 			/* -KN- check for non-priest weapon to correct drain_light */
 			p_ptr->update |= (PU_BONUS);
 			p_ptr->update |= (PU_TORCH);
@@ -1634,7 +1657,7 @@ void move_player(int dir, int do_pickup)
 					/* Stop any run. */
 					disturb(0, 0);
 				}
-				
+
 				/* feather fall lets you slide in easily */
 				else if (p_ptr->ffall) can_move = TRUE;
 
@@ -1664,7 +1687,7 @@ void move_player(int dir, int do_pickup)
 				/* all the fun stuf that can happen when exploring some pits (ICI) */
 				/* make it even more interesting; separate summon and treaser... */
 				if ((cave_feat[y][x] == FEAT_PIT1) && (can_move == TRUE))
-				{						
+				{
 					if (one_in_(22 - (p_ptr->depth / 5)))
 					{
 						/* there was a demon! */
@@ -1698,18 +1721,18 @@ void move_player(int dir, int do_pickup)
 						place_object(y, x, FALSE, FALSE, FALSE);
 					}
 					else msg_print("This pit is empty.");
-					
+
 					/* and (always?) change into an empty pit */
 					cave_set_feat(y, x, FEAT_PIT0);
 				}
-				
+
 				/* -KN- experiment darkening; drain_light removed on escape_pit and teleports */
 				if (can_move == TRUE)
-				{					
+				{
 					p_ptr->drain_light = TRUE;
 					p_ptr->update |= (PU_TORCH);
 				}
-				
+
 				break;
 			}
 
@@ -1850,7 +1873,8 @@ void move_player(int dir, int do_pickup)
 		}
 	}
 
-	/* Redraw the state */
+	/* Redraw the state -KN- including changes to ac */
+	p_ptr->redraw |= (PR_ARMOR);
 	p_ptr->redraw |= (PR_STATE);
 
 	/* If the player can move, handle various things. */

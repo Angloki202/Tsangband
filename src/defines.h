@@ -1929,7 +1929,7 @@
 /* Tvals after this point should not belong to items that go in the backpack */
 
 #define TV_ESSENCE                 98	/* Essences (for infusing objects) */
-#define TV_POUCH                   99  /* Pouch to hold essences -- Hack! */
+#define TV_POUCH                   99   /* Pouch to hold essences -- Hack! */
 #define TV_GOLD                   100	/* Treasure */
 
 #define TV_MAX                    101  /* The maximum allowable tval */
@@ -1949,7 +1949,8 @@
 #define SV_LI_CHEST                      6	/*  Large iron chest. */
 #define SV_LS_CHEST                      7	/*  Large steel chest. */
 #define SV_LJ_CHEST                      8	/*  Large jeweled chest. */
-
+/* -KN- added quest box */
+#define SV_QUESTBOX                      9	/*	to start or finish a quest */
 
 /* The "sval" codes for TV_SHOT/TV_ARROW/TV_BOLT */
 #define SV_AMMO_LIGHT                    1	/* cheap shots, arrows, bolts */
@@ -3245,17 +3246,15 @@
 #define CAVE_LITE         0x0400  /* Temporary light (light source) */
 #define CAVE_TRAP         0x0800  /* Has at least one trap */
 #define CAVE_INFR         0x1000  /* Actually seeable by character by infravision */
-#define CAVE_XX13         0x2000  /*  */
-#define CAVE_XX14         0x4000  /*  */
+#define CAVE_TYP0         0x2000  /* -KN- added for interesting purposes */
+#define CAVE_TYP1         0x4000  /* -KN- added for interesting purposes */
 #define CAVE_XX15         0x8000  /*  */
 
 /*
  * Cave grid flags that get saved in the savefile
  */
-#define SAVE_CAVE_FLAGS (CAVE_MARK | CAVE_GLOW | CAVE_ICKY | CAVE_ROOM | CAVE_LOS | CAVE_EFFT | CAVE_TRAP)
-
-
-
+#define SAVE_CAVE_FLAGS (CAVE_MARK | CAVE_GLOW | CAVE_ICKY | CAVE_TYP0 | CAVE_TYP1 | \
+						 CAVE_ROOM | CAVE_LOS | CAVE_EFFT | CAVE_TRAP)
 
 
 /*** Trap defines ***/

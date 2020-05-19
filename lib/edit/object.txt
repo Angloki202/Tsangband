@@ -4535,7 +4535,14 @@ A:90/8
 C:0:2d6:0:0:0
 D:A magnificent chest, with room for several items.
 
-## XXX 624 XXX ##
+## XXX added quest chest XXX ##
+N:624:& Ornate box~
+G:~:G
+I:10:9:0
+W:10:0:100:500
+A:10/5:80/10
+C:0:2d2:0:0:0
+D:A peculiar small box with hidden purpose.
 
 ## XXX 625 XXX ##
 

@@ -1464,20 +1464,100 @@ static void prt_shape(void)
 
 
 
-/*
+/* -KN- redrawn for STAMINA
  * Prints current AC
  */
 static void prt_ac(void)
 {
 	char tmp[32];
 
-	put_str("Cur AC ", ROW_AC, COL_AC);
-	(void)strnfmt(tmp, sizeof(tmp), "%5d", p_ptr->dis_ac + p_ptr->dis_to_a);
-	c_put_str(TERM_L_GREEN, tmp, ROW_AC, COL_AC + 7);
+	/* variables for ac adjustment */
+	int temp_ac;
+	int x = p_ptr->px;
+	int y = p_ptr->py;
+	int col_ac = TERM_L_GREEN;
+	int ac = (p_ptr->dis_ac + p_ptr->dis_to_a);
+
+	/* new format with stamina; assuming AC < 999*/
+	put_str("AC:", ROW_AC, COL_AC);
+
+	/* terrain ac adjustment for close combat */
+	if ((cave_feat[y][x] == FEAT_RUBBLE) || (cave_feat[y][x] == FEAT_PIT0) ||
+		(cave_feat[y][x] == FEAT_PIT1) || (cave_feat[y][x] == FEAT_ABYSS))
+	{
+		temp_ac = (ac / 8) + 5;
+		col_ac = TERM_L_DARK;
+		if (cave_feat[y][x] == FEAT_RUBBLE) col_ac = TERM_SLATE;
+	}
+	else if (cave_feat[y][x] == FEAT_BONEPILE)
+	{
+		temp_ac = (ac / 20) + get_skill(S_DOMINION, 0, 20);
+		col_ac = TERM_L_DARK;
+	}
+	else if (cave_feat[y][x] == FEAT_TREE)
+	{
+		temp_ac = (ac / 20) + get_skill(S_NATURE, 0, 20);
+		col_ac = TERM_GREEN;
+	}
+	else if (cave_feat[y][x] == FEAT_WATER)
+	{
+		temp_ac = -(ac / 3);
+		col_ac = TERM_TEAL;
+	}
+	else if (cave_feat[y][x] == FEAT_WEB)
+	{
+ 		temp_ac = -(ac / 4);
+		col_ac = TERM_MUSTARD;
+	}
+
+	/* and print with temp adjustment */
+	(void)strnfmt(tmp, sizeof(tmp), "%3d", ac + temp_ac);
+	c_put_str(col_ac, tmp, ROW_AC, COL_AC + 3);
+
+	/* hold the stamina */
+	c_put_str(TERM_TEAL, format("(   )"), ROW_AC, COL_AC + 7);
+
+	if (p_ptr->mstam == 3)
+	{
+		(void)Term_gotoxy(8, ROW_AC);
+		(void)Term_addch(TERM_GREEN, 10);
+		(void)Term_gotoxy(9, ROW_AC);
+		(void)Term_addch(TERM_GREEN, 10);
+		(void)Term_gotoxy(10, ROW_AC);
+		(void)Term_addch(TERM_GREEN, 10);
+
+		if (p_ptr->cstam == 2)
+		{
+			(void)Term_gotoxy(8, ROW_AC);
+			(void)Term_addch(TERM_GREEN, 10);
+			(void)Term_gotoxy(9, ROW_AC);
+			(void)Term_addch(TERM_GREEN, 10);
+			(void)Term_gotoxy(10, ROW_AC);
+			(void)Term_addch(TERM_SLATE, 111);
+		}
+		else if (p_ptr->cstam == 1)
+		{
+			(void)Term_gotoxy(8, ROW_AC);
+			(void)Term_addch(TERM_YELLOW, 10);
+			(void)Term_gotoxy(9, ROW_AC);
+			(void)Term_addch(TERM_SLATE, 111);
+			(void)Term_gotoxy(10, ROW_AC);
+			(void)Term_addch(TERM_SLATE, 111);
+		}
+		else if (p_ptr->cstam == 0)
+		{
+			(void)Term_gotoxy(8, ROW_AC);
+			(void)Term_addch(TERM_L_DARK, 111);
+			(void)Term_gotoxy(9, ROW_AC);
+			(void)Term_addch(TERM_L_DARK, 111);
+			(void)Term_gotoxy(10, ROW_AC);
+			(void)Term_addch(TERM_L_DARK, 111);
+		}
+	}
 }
 
 
-/*
+/* -KN- redrawn
  * Print character's max/cur hitpoints
  */
 static void prt_hp(void)
@@ -1488,29 +1568,54 @@ static void prt_hp(void)
 	int warn = op_ptr->hitpoint_warn;
 
 	/* Display title */
-	put_str("HP ", ROW_HP, COL_HP);
+	put_str("HP:", ROW_HP, COL_HP);
 
 	/* Color the current hitpoints according to damage and HP warning */
-	if (p_ptr->chp < p_ptr->mhp * (warn / 2) / 10) a = TERM_L_RED;
-	else if (p_ptr->chp < p_ptr->mhp * warn / 10)  a = TERM_ORANGE;
-	else if (p_ptr->chp < p_ptr->mhp)              a = TERM_YELLOW;
-	else if (p_ptr->chp == p_ptr->mhp)             a = TERM_L_GREEN;
-	else                                           a = TERM_GREEN;
+	if (p_ptr->chp < p_ptr->mhp * (warn / 2) / 10)
+	{
+		(void)Term_gotoxy(COL_HP + 11, ROW_HP);
+		(void)Term_addch(TERM_GREEN, 5);
+		a = TERM_L_RED;
+	}
+	else if (p_ptr->chp < p_ptr->mhp * warn / 10)
+	{
+		(void)Term_gotoxy(COL_HP + 11, ROW_HP);
+		(void)Term_addch(TERM_GREEN, 4);
+		a = TERM_ORANGE;
+	}
+	else if (p_ptr->chp < p_ptr->mhp)
+	{
+		(void)Term_gotoxy(COL_HP + 11, ROW_HP);
+		(void)Term_addch(TERM_GREEN, 3);
+		a = TERM_YELLOW;
+	}
+	else if (p_ptr->chp == p_ptr->mhp)
+	{
+		(void)Term_gotoxy(COL_HP + 11, ROW_HP);
+		(void)Term_addch(TERM_GREEN, 2);
+		a = TERM_L_GREEN;
+	}
+	else
+	{
+		(void)Term_gotoxy(COL_HP + 11, ROW_HP);
+		(void)Term_addch(TERM_GREEN, 1);
+		a = TERM_GREEN;
+	}
 
-	/* Display current hitpoints */
-	(void)strnfmt(tmp, sizeof(tmp), "%4d", p_ptr->chp);
+	/* Display current hitpoints (hp < 999) */
+	(void)strnfmt(tmp, sizeof(tmp), "%3d", p_ptr->chp);
 	c_put_str(a, tmp, ROW_HP, COL_HP + 3);
 
 	/* Divider */
-	put_str("/", ROW_HP, COL_HP + 7);
+	put_str("/", ROW_HP, COL_HP + 6);
 
 	/* Format and display maximum hitpoints */
-	(void)strnfmt(tmp, sizeof(tmp), "%4d", p_ptr->mhp);
-	c_put_str(TERM_L_GREEN, tmp, ROW_HP, COL_HP + 8);
+	(void)strnfmt(tmp, sizeof(tmp), "%3d", p_ptr->mhp);
+	c_put_str(TERM_L_GREEN, tmp, ROW_HP, COL_HP + 7);
 }
 
 
-/*
+/* -KN- redrawn
  * Print character's max/cur spell points
  */
 static void prt_sp(void)
@@ -1520,31 +1625,60 @@ static void prt_sp(void)
 
 	int warn = op_ptr->hitpoint_warn;
 
-
 	/* Do not show mana unless it matters */
 	if (!p_ptr->msp && !mp_ptr->spell_book) return;
 
-
 	/* Display title */
-	put_str("SP ", ROW_SP, COL_SP);
+	put_str("SP:", ROW_SP, COL_SP);
 
-	/* Color the current spell points according to damage and HP warning */
-	if (p_ptr->csp < p_ptr->msp * (warn / 2) / 10) a = TERM_L_RED;
-	else if (p_ptr->csp < p_ptr->msp * warn / 10)  a = TERM_ORANGE;
-	else if (p_ptr->csp < p_ptr->msp)              a = TERM_YELLOW;
-	else if (p_ptr->csp == p_ptr->msp)             a = TERM_L_GREEN;
-	else                                           a = TERM_GREEN;
+	/* Color the current spell points according to emptiness and warning */
+	if (p_ptr->csp == 0)
+	{
+		(void)Term_gotoxy(COL_SP + 11, ROW_SP);
+		(void)Term_addch(TERM_BLUE, 6);
+		a = TERM_RED;
+	}
+	else if (p_ptr->csp < p_ptr->msp * (warn / 2) / 10)
+	{
+		(void)Term_gotoxy(COL_SP + 11, ROW_SP);
+		(void)Term_addch(TERM_BLUE, 5);
+		a = TERM_L_RED;
+	}
+	else if (p_ptr->csp < p_ptr->msp * warn / 10)
+	{
+		(void)Term_gotoxy(COL_SP + 11, ROW_SP);
+		(void)Term_addch(TERM_BLUE, 4);
+		a = TERM_ORANGE;
+	}
+	else if (p_ptr->csp < p_ptr->msp)
+	{
+		(void)Term_gotoxy(COL_SP + 11, ROW_SP);
+		(void)Term_addch(TERM_BLUE, 3);
+		a = TERM_YELLOW;
+	}
+	else if (p_ptr->csp == p_ptr->msp)
+	{
+		(void)Term_gotoxy(COL_SP + 11, ROW_SP);
+		(void)Term_addch(TERM_BLUE, 2);
+		a = TERM_L_GREEN;
+	}
+	else
+	{
+		(void)Term_gotoxy(COL_SP + 11, ROW_SP);
+		(void)Term_addch(TERM_BLUE, 1);
+		a = TERM_GREEN;
+	}
 
 	/* Display current spell points */
-	(void)strnfmt(tmp, sizeof(tmp), "%4d", p_ptr->csp);
+	(void)strnfmt(tmp, sizeof(tmp), "%3d", p_ptr->csp);
 	c_put_str(a, tmp, ROW_SP, COL_SP + 3);
 
 	/* Divider */
-	put_str("/", ROW_SP, COL_SP + 7);
+	put_str("/", ROW_SP, COL_SP + 6);
 
 	/* Format and display maximum spell points */
-	(void)strnfmt(tmp, sizeof(tmp), "%4d", p_ptr->msp);
-	c_put_str(TERM_L_GREEN, tmp, ROW_SP, COL_SP + 8);
+	(void)strnfmt(tmp, sizeof(tmp), "%3d", p_ptr->msp);
+	c_put_str(TERM_L_GREEN, tmp, ROW_SP, COL_SP + 7);
 }
 
 
@@ -2563,6 +2697,8 @@ static void left_panel_display_aux(byte item, byte row, int tmp)
 			/* -KN- Stamina bar for later use */
 			/* mstam; cstam; restam; ixstam */
 
+			/* (REMOVE) deprecated; moved to AC row */
+
 			c_put_str(TERM_SLATE, "sta:", row, 0);
 			//					  "*****[*****]"
 			if (p_ptr->mstam == 3)
@@ -2574,7 +2710,7 @@ static void left_panel_display_aux(byte item, byte row, int tmp)
 				(void)Term_addch(TERM_L_GREEN, 42);
 				(void)Term_gotoxy(8, row);
 				(void)Term_addch(TERM_L_GREEN, 42);
-				
+
 				if (p_ptr->cstam == 2)
 				{
 					(void)Term_gotoxy(6, row);
@@ -2605,7 +2741,7 @@ static void left_panel_display_aux(byte item, byte row, int tmp)
 			}
 
 
-			
+
 			break;
 		}
 
@@ -5482,6 +5618,7 @@ static void analyze_weapons(void)
 		p_ptr->icky_wield = TRUE;
 
 		/* Less light */
+		/* -KN- (hack) also used in pits/abyss and checked/removed upon t-port or move out */
 		p_ptr->drain_light = TRUE;
 	}
 

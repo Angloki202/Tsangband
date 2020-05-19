@@ -1672,13 +1672,21 @@ static void process_world(void)
 		}
 	}
 
-	/* -KN- (STA) regain fraction of lost stamina */
-	p_ptr->ixstam += 1;
-	
-	/* and loose focus */
+	/* loose any focus */
 	p_ptr->special_attack &= ~(ATTACK_FOCUS);
+
+	/* -KN- (STA) regain fraction of lost stamina */
+	if (p_ptr->cstam < p_ptr->mstam) p_ptr->ixstam += 1;
+	
+	/* paranoia; before I put a better global function in place */
+	if (p_ptr->ixstam > 99)
+	{
+		p_ptr->ixstam = 0;
+		msg_print("You somehow focused too much.. (ERROR)");
+	}
 	
 	/* when fully exhausted, you will probably wait longer */
+	/* when better AC display, add some penalty associated with exhaust */
 	if ((p_ptr->cstam == 0) && (one_in_(4))) p_ptr->ixstam -= 1;
 	
 	if ((p_ptr->ixstam >= p_ptr->restam) && (p_ptr->cstam < p_ptr->mstam))
@@ -1688,7 +1696,8 @@ static void process_world(void)
 		
 		/* reset the counter and redraw */
 		p_ptr->ixstam = 0;
-		left_panel_display(DISPLAY_STAMINA, 0);
+		//left_panel_display(DISPLAY_STAMINA, 0);
+		p_ptr->redraw |= (PR_ARMOR);
 	}
 	p_ptr->cstam == 2;
 
@@ -3919,7 +3928,9 @@ void play_game(bool new_game)
 		if (p_ptr->playing && p_ptr->is_dead)
 		{
 			/* Mega-Hack -- Allow player to cheat death */
-			if ((p_ptr->wizard || (p_ptr->character_type == PCHAR_BEGINNER)) && !get_check("Die?"))
+			if ((p_ptr->wizard || (p_ptr->character_type == PCHAR_BEGINNER)) &&
+			//	!get_check("Die?"))		-KN- default is not to die (fix)
+				!aux_get_check("Die?", 3))
 			{
 				/* Increase deaths */
 				p_ptr->deaths++;

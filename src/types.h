@@ -1339,7 +1339,7 @@ struct player_type
 	bool cumber_glove;			/* Mana draining gloves */
 	bool heavy_wield;			/* Heavy weapon */
 	bool heavy_shoot;			/* Heavy shooter */
-	bool icky_wield;			/* Icky weapon */
+	bool icky_wield;			/* Icky weapon (priest wielding wrong weapon) */
 	bool shield_on_back;	/* Player carrying a shield on his back. -LM- */
 	bool suppress_bottle;  /* Stop saving bottles and parchments */
 

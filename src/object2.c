@@ -5449,6 +5449,28 @@ void make_boulder(int y, int x, int level)
 
 
 /*
+ * Make a quest chest and place it
+ */
+void make_box(int y, int x)
+{
+	object_type *i_ptr;
+	object_type object_type_body;
+
+	/* -KN- Require space to hold the object */
+	if (!cave_allow_object_bold(y, x)) return;
+
+	/* Get local object */
+	i_ptr = &object_type_body;
+
+	/* Make a quest box (by default with potions) */
+	object_prep(i_ptr, lookup_kind(TV_CHEST, SV_QUESTBOX));
+
+	/* Give it to the floor */
+	(void)floor_carry(y, x, i_ptr);
+}
+
+
+/*
  * Make some food, place it at given location
  */
 void make_food(int y, int x)

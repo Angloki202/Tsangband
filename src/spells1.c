@@ -4854,11 +4854,11 @@ static bool project_p(int who, int y, int x, int dam, int typ)
 				/* Take damage */
 				if (take_hit(dam, 0, NULL, killer)) break;
 				
-				/* Poison the player */
+				/* Poison the player, but at reduced potency */
 				if (!(p_ptr->resist_pois || p_ptr->oppose_pois))
 				{
 					power = (p_ptr->poisoned ?
-							 rand_int(dam / 2) : 5 + rand_range(dam / 3, dam));
+							 rand_int(dam / 3) : 2 + rand_range(dam / 4, dam / 2));
 					(void)set_poisoned(p_ptr->poisoned + power);
 				}
 			}

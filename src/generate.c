@@ -2950,6 +2950,10 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					else if (rr > 130) feat = floor;
 					else feat = FEAT_FLOOR;
 
+					/* (experimental) */
+					/* add interesting type (search-activated) */
+					if (one_in_(5)) cave_info[y][x] |= (CAVE_TYP0);
+
 					if (p_ptr->depth > 45)
 					{
 						/* deep halls and deeper ... add some bones */
@@ -3145,6 +3149,10 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					else if (rr > 188) feat = floor_plus;
 					else if (rr > 130) feat = floor;
 					else feat = FEAT_FLOOR;
+
+					/* (experimental) */
+					/* add interesting type B (search-activated) */
+					if (one_in_(5)) cave_info[y][x] |= (CAVE_TYP1);
 
 					if (p_ptr->depth > 60)
 					{
@@ -8255,7 +8263,7 @@ static void cave_gen(void)
 	printf("Dungeon %d level: \n", p_ptr->depth);
 	printf("--- divided by 2, 5, 10, 16 = %d;%d;%d;%d \n", div_round(p_ptr->depth, 2),
 		div_round(p_ptr->depth, 5), div_round(p_ptr->depth, 10), div_round(p_ptr->depth, 16));
-
+		
 	/* Global data */
 	dun = &dun_body;
 
@@ -8821,6 +8829,11 @@ static void cave_gen(void)
 				{
 					printf("and munitions \n");
 					fetch_items(y, x, 2, 3, 11, 0);
+				}
+				else if (one_in_(3))
+				{
+					printf("and a strange box! \n");
+					fetch_items(y, x, 1, 1, 13, 0);
 				}
 				else printf(" \n");
 				break;
@@ -10047,6 +10060,7 @@ void fetch_items(int y, int x, int d, int num, int typ, int lvl)
 				if      (rr > 60) required_tval = TV_SWORD;
 				else if (rr > 30) required_tval = TV_POLEARM;
 				else			  required_tval = TV_HAFTED;
+				place_object(y, x, FALSE, FALSE, TRUE);
 				break;
 			}
 			case 11:
@@ -10058,6 +10072,7 @@ void fetch_items(int y, int x, int d, int num, int typ, int lvl)
 				else if (rr > 35) required_tval = TV_BOW;
 				else if (rr > 15) required_tval = TV_CROSSBOW;
 				else 			  required_tval = TV_SLING;
+				place_object(y, x, FALSE, FALSE, TRUE);
 				break;
 			}
 			case 12:
@@ -10072,6 +10087,13 @@ void fetch_items(int y, int x, int d, int num, int typ, int lvl)
 				else if (rr > 10) required_tval = TV_ROD;
 				else if (rr > 5)  required_tval = TV_SCROLL;
 				else 			  required_tval = TV_POTION;
+				place_object(y, x, FALSE, FALSE, TRUE);
+				break;
+			}
+			case 13:
+			{
+				/* ---- QUEST BOX ---- */
+				make_box(y, x);
 				break;
 			}
 		}
