@@ -5451,22 +5451,63 @@ void make_boulder(int y, int x, int level)
 /*
  * Make a quest chest and place it
  */
-void make_box(int y, int x)
+bool make_box(int y, int x, bool questbox)
 {
 	object_type *i_ptr;
 	object_type object_type_body;
 
-	/* -KN- Require space to hold the object */
-	if (!cave_allow_object_bold(y, x)) return;
+	int chest;
+
+	/* Require space to hold the object */
+    if (!cave_allow_object_bold(y, x)) return (FALSE);
+
+	/* make regular chest of appropriate level */
+	if (!questbox)
+	{
+		if (p_ptr->depth > 85)
+		{
+			if (!one_in_(6)) chest = SV_SS_CHEST;		// 16,6%
+			if (one_in_(3)) chest = SV_LJ_CHEST;		// 27,8%
+			else chest = SV_SJ_CHEST;					// 55,6%
+		}
+		else if (p_ptr->depth > 70)
+		{
+			if (!one_in_(6)) chest = SV_SI_CHEST;
+			if (one_in_(3)) chest = SV_LS_CHEST;
+			else chest = SV_SS_CHEST;
+		}
+		else if (p_ptr->depth > 50)
+		{
+			if (!one_in_(6)) chest = SV_SW_CHEST;
+			if (one_in_(3)) chest = SV_LI_CHEST;
+			else chest = SV_SI_CHEST;
+		}
+		else if (p_ptr->depth > 25)
+		{
+			if (!one_in_(6)) chest = SV_SI_CHEST;
+			if (one_in_(3)) chest = SV_LW_CHEST;
+			else chest = SV_SW_CHEST;
+		}
+		else if (p_ptr->depth > 10)
+		{
+			if (one_in_(4)) chest = SV_LW_CHEST;
+			else chest = SV_SW_CHEST;
+		}
+		else chest = SV_SW_CHEST;
+	}
+	else chest = SV_QUESTBOX;
 
 	/* Get local object */
 	i_ptr = &object_type_body;
 
 	/* Make a quest box (by default with potions) */
-	object_prep(i_ptr, lookup_kind(TV_CHEST, SV_QUESTBOX));
+	object_prep(i_ptr, lookup_kind(TV_CHEST, chest));
 
 	/* Give it to the floor */
 	(void)floor_carry(y, x, i_ptr);
+
+	/* and be happy.. */
+    return (TRUE);
 }
 
 
@@ -5519,7 +5560,7 @@ void make_skeleton(int y, int x, int value)
 
 	/* -KN- Require space to hold the object */
 	if (!cave_allow_object_bold(y, x)) return;
-	
+
 	/* value (ICI) to make some treasure at some point at deeper levels */
 	if (value > 0) printf("No treasure yet.");
 

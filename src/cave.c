@@ -1340,6 +1340,53 @@ void lite_spot(int y, int x)
 
 
 
+/* -KN- fast color flicker */
+void lite_spot_color(int y, int x, int col)
+{
+	byte a;
+	char c;
+
+	byte ta;
+	char tc;
+
+	int ky, kx;
+
+	term *old = Term;
+
+	/* y/x Location relative to panel */
+	ky = y - p_ptr->wy;
+	kx = x - p_ptr->wx;
+
+	/* Verify location */
+	if ((ky < 0) || (ky >= map_rows)) return;
+	if ((kx < 0) || (kx >= map_cols)) return;
+
+	/* If not using a dedicated map term, convert to main screen coordinates */
+	if (!use_special_map)
+	{
+		ky += ROW_MAP;
+		kx += COL_MAP;
+	}
+
+	/* Get the text or graphics for this grid */
+	map_info(y, x, &a, &c, &ta, &tc);
+
+	/* Activate the dedicated map display (if available) */
+	if (use_special_map) (void)Term_activate(term_map);
+
+	/* Hack -- Queue it */
+	if (one_in_(3)) Term_queue_char(kx, ky, col, c, ta, tc);
+	else if (col > 15) Term_queue_char(kx, ky, col - 6, c, ta, tc);
+	else if (col > 7) Term_queue_char(kx, ky, col - 8, c, ta, tc);
+	else if (col > 2) Term_queue_char(kx, ky, col + 8, c, ta, tc);
+	else if (col == 2) Term_queue_char(kx, ky, 1, c, ta, tc);
+	else if (col == 1) Term_queue_char(kx, ky, 2, c, ta, tc);
+
+	/* Restore the previous term (if necessary) */
+	if (use_special_map) (void)Term_activate(old);
+}
+
+
 /*
  * When requested, refresh stuff on the map display.  -LM-
  */

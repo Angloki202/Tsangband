@@ -31,11 +31,12 @@ M:E:185
 # Maximum number of monster races
 M:R:860
 
-# Maximum number of vaults
-M:V:150
+# Maximum number of vaults (-KN- from 150 to 180)
+M:V:180
 
 # changing this number will normally break savefile compatability
 # Maximum number of quests (including a slot for random quests)
+# -KN- was 4 originally
 M:Q:4
 
 # Maximum number of effects

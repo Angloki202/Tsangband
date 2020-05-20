@@ -342,6 +342,7 @@ extern void move_cursor_relative(int y, int x);
 extern void print_rel(char c, byte a, int y, int x);
 extern void note_spot(int y, int x);
 extern void lite_spot(int y, int x);
+extern void lite_spot_color(int y, int x, int col);			/* -KN- added graphics flicker */
 extern void map_animate(void);
 extern void prt_map(void);
 extern void display_map(int *cy, int *cx);
@@ -712,7 +713,7 @@ extern void acquirement(int y1, int x1, int num, bool great);
 extern void place_object(int y, int x, bool good, bool great, bool exact_kind);
 extern void place_gold(int y, int x);
 extern void make_boulder(int y, int x, int level);
-extern void make_box(int y, int x);						//	-KN- a questbox summon
+extern bool make_box(int y, int x, bool questbox);		//	-KN- a questbox summon
 extern void make_food(int y, int x);
 extern void make_skeleton(int y, int x, int value);		//	-KN- added function for bone piles
 extern void inven_item_charges(int item);

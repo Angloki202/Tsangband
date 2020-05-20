@@ -87,6 +87,32 @@ void do_cmd_go_down(void)
 	/* New level */
 	p_ptr->depth++;
 
+	/* -KN- Upon arrival from FIXED level */
+	/* (accomplished only with the generated stairs */
+	if (quest_num(p_ptr->depth - 1) == QUEST_FIXED)
+	{
+		int i;
+		
+		for (i = 0; i < z_info->q_max; i++)
+		{
+			quest_type *q_ptr = &q_info[i];
+
+			/* what's the status of the left FIXED quest? */
+			if (q_ptr->active_level == p_ptr->depth - 1)
+			{
+				if (p_ptr->quest_memory[i].succeeded == 0)
+				{
+					/* not slain the roaming QUESTOR, yet descended via QUEST_VAULT */
+					message(MSG_SLATE, 50, "You seem to be forgetting something.");		
+					/* (IDEA) use later to bite the player in the ass :) */
+				}
+				/* and set as extra, which means no longer generate the QUEST_VAULT */
+				p_ptr->quest_memory[i].extra = 1;
+			}
+		}
+	}
+
+
 	/* Go down another level if allowed */
 	if ((cave_feat[p_ptr->py][p_ptr->px] == FEAT_MORE2) &&
 	    (!quest_check(p_ptr->depth)) && (p_ptr->depth < MAX_DEPTH - 1))
@@ -3529,12 +3555,14 @@ static void do_cmd_hold_or_stay(int pickup)
 	if (p_ptr->cstam < p_ptr->mstam)
 	{
 		/* with some additional chance to replenish stamina (STA) */
-		if (one_in_(3)) p_ptr->ixstam += 1;
-		msg_print("Catching breath... ");
-		
-		/* (probably add foo that manages regenerating STA with some limits) */
+		if (one_in_(4))
+		{
+			p_ptr->ixstam += 1;
+			msg_print("Catching breath... ");
+		}
 	}
-	else msg_print("Just standing... ");
+	//else msg_print("Just standing... ");
+	/* (probably add foo that manages regenerating STA with some limits) */
 
 	/* Notice unseen objects */
 	notice_unseen_objects();

@@ -23,6 +23,3 @@ W:100:768:1
 
 # "Fake" slot for the random quests
 # N:3:Random
-
-
-

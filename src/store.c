@@ -3881,7 +3881,11 @@ static void store_process_command(bool inn_cmd)
 			if (inn_cmd) inn_purchase(3);
 			break;
 		}
-
+		case '9':
+		{
+			if (inn_cmd) inn_purchase(9);
+			break;
+		}
 
 		/*** Inventory Commands ***/
 

@@ -320,6 +320,9 @@ void do_cmd_search(void)
 		/* the rubble and sometimes you would find the igredient (ingredient++) and monsters could */
 		/* appear.. */
 		
+		/* monster type could be associated with minor quest and when you kill one, */
+		/* it would drop hint - search to get some clues */
+		
 		/* remove the interesting type */
 		cave_info[p_ptr->py][p_ptr->px] &= ~(CAVE_TYP0);
 		cave_info[p_ptr->py][p_ptr->px] &= ~(CAVE_TYP1);

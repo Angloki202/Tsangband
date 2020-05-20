@@ -1106,9 +1106,6 @@ void display_inn(void)
 			put_str(format("%c)", '1' + i), 9 + i, 3);
 			c_put_str(attr, format ("%s quest.", p), 9 + i, 7);
 		}
-
-
-		prt(format("%c-%c) Get a quest.", '1', '1' + (avail_quest - 1)), Term->rows - 3, 3);
 	}
 
 	/* Describe current quest */
@@ -1127,6 +1124,11 @@ void display_inn(void)
 			put_str(q_out, 10, 3);
 		}
 	}
+	
+	/* -KN- minor quest (IDEA) (ICI) */
+	prt(format("9)  "), 13, 3);
+	c_put_str(TERM_UMBER, format("Collector quest"), 13, 7);
+	prt(format("   9) Ask about collecting."), Term->rows - 3, 56);
 }
 
 /*
@@ -1183,81 +1185,91 @@ void inn_purchase(int item)
 	if (p_ptr->fame >=  5) avail_quest = 2;
 	if (p_ptr->fame >= 10) avail_quest = 3;
 
-	/* In a current quest */
-	if (p_ptr->cur_quest)
+	/* -KN- (9) is a number of special minor collecting quest */
+	if (item < 9)
 	{
-		msg_print("Finish your current quest first!");
-		return;
-	}
-
-	/* Quit if we don't have that quest available */
-	if (item > avail_quest)
-	{
-		msg_print("Unknown quest.");
-		return;
-	}
-
-	/* Get the quest number  (Hack -- adjust non-zero inputs) */
-	if (!item) item = get_quest();
-	else item -= 1;
-
-	/* Quit if no quest chosen */
-	if (item == -1) return;
-
-	/* Base depth might be based on power or depth */
-	base_depth = MAX(1, MAX(2 * p_ptr->power / 3, p_ptr->max_depth));
-
-	/* Get added depth of monsters (no variance for very early quest) */
-	add_depth = ((p_ptr->max_depth <= 2) ? 2 : rand_range(3, 5));
-
-	/* Get level for quest */
-	qlev = base_depth + add_depth;
-
-	/* Adjust approximate level of monster according to depth */
-	/* Add a depth of two for each additional level of difficulty -JM */
-	m_level = qlev + qlev / 20 + item * 2 + 1;
-
-
-	/* We've run out of OOD monsters.  XXX */
-	if (m_level >= 85 + add_depth)
-	{
-		msg_print("Alas, we have no quests that are worthy of you.");
-		return;
-	}
-
-	/* Check list of quests.  Never use the first quest. */
-	for (i = 1; i < z_info->q_max; i++)
-	{
-		/* Check fixed quests to see that they're not on the same level */
-		if (q_info[i].type == QUEST_FIXED)
+		/* In a current quest */
+		if (p_ptr->cur_quest)
 		{
-			if (q_info[i].active_level == qlev)
+			msg_print("Finish your current quest first!");
+			return;
+		}
+
+		/* Quit if we don't have that quest available */
+		if (item > avail_quest)
+		{
+			msg_print("Unknown quest.");
+			return;
+		}
+
+		/* Get the quest number  (Hack -- adjust non-zero inputs) */
+		if (!item) item = get_quest();
+		else item -= 1;
+
+		/* Quit if no quest chosen */
+		if (item == -1) return;
+
+		/* Base depth might be based on power or depth */
+		base_depth = MAX(1, MAX(2 * p_ptr->power / 3, p_ptr->max_depth));
+
+		/* Get added depth of monsters (no variance for very early quest) */
+		add_depth = ((p_ptr->max_depth <= 2) ? 2 : rand_range(3, 5));
+
+		/* Get level for quest */
+		qlev = base_depth + add_depth;
+
+		/* Adjust approximate level of monster according to depth */
+		/* Add a depth of two for each additional level of difficulty -JM */
+		m_level = qlev + qlev / 20 + item * 2 + 1;
+
+
+		/* We've run out of OOD monsters.  XXX */
+		if (m_level >= 85 + add_depth)
+		{
+			msg_print("Alas, we have no quests that are worthy of you.");
+			return;
+		}
+
+		/* Check list of quests.  Never use the first quest. */
+		for (i = 1; i < z_info->q_max; i++)
+		{
+			/* Check fixed quests to see that they're not on the same level */
+			if (q_info[i].type == QUEST_FIXED)
 			{
-				msg_print("A greater task lies before you!");
-				return;
+				if (q_info[i].active_level == qlev)
+				{
+					msg_print("A greater task lies before you!");
+					return;
+				}
+
+				/* If not problem, skip */
+				continue;
 			}
 
-			/* If not problem, skip */
-			continue;
+			slot = i;
+			found = TRUE;
+
+			break;
 		}
 
-		slot = i;
-		found = TRUE;
-
-		break;
-	}
-
-	if (found)
-	{
-		if (item < 3)
+		if (found)
 		{
-			if (!place_mon_quest(slot, qlev, m_level, item + 1)) return;
+			if (item < 3)
+			{
+				if (!place_mon_quest(slot, qlev, m_level, item + 1)) return;
+			}
+			else return;
 		}
-		else return;
+
+		else msg_print("You can't accept any more quests!");
 	}
-
-	else msg_print("You can't accept any more quests!");
-
+	else
+	{
+		/* -KN- always available to check on collectible quest */
+		/* currently only item == 9 */
+		msg_print("You ask for more info about collecting...");
+	}	
+	
 	/* Clear screen */
 	(void)Term_clear();
 
@@ -1306,6 +1318,7 @@ int quest_num(int lev)
 	/* No quest */
 	return (0);
 }
+
 
 /*
  * Fail your quest

@@ -821,8 +821,8 @@ struct quest_memory_type
 	s16b r_idx;			/* Monster race */
 	s16b max_num;		/* Number of monsters assigned */
 
-	byte succeeded;	/* Did the character succeed in the quest? */
-	byte extra;			/* Unused space */
+	byte succeeded;		/* Did the character succeed in the quest? */
+	byte extra;			/* -KN- Unused space, used now to tell more */
 };
 
 

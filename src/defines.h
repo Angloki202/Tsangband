@@ -950,7 +950,7 @@
 #define ROW_MAP          1
 #define COL_MAP         13
 
-/*
+/* -KN- at quest_check(p_ptr->depth)
  * Quest types
  */
 #define QUEST_FIXED         1

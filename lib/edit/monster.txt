@@ -9877,11 +9877,13 @@ D:undead comes to claim your soul.
 
 ## empty space (available for dungeon monsters) ##
 
+
+
 ## added minor ultra monster ##
 N:790:Bearer of empty grails
 G:u:t
-I:110:36:16:12:100:1:16
-W:4:3:20:15
+I:110:50:16:12:100:1:16
+W:3:3:20:15
 B:KICK:ELEC:1d6
 B:KICK:COLD:1d6
 F:FORCE_SLEEP | FEMALE | REGENERATE | 
@@ -9892,10 +9894,11 @@ S:BALL_CONFU | CURE | BLIND
 D:Two of Cups represented as its worst manifestation.  Defeat 
 D:the obsession and jealousy to claim the power of love.
 
+
 ## added minor ultra monster ##
 N:791:Bearer of false coins
 G:u:Y
-I:110:44:16:14:100:1:16
+I:110:60:16:14:100:1:16
 W:5:3:24:20
 B:HIT:HURT:2d4
 B:CRUSH:POISON:1d6

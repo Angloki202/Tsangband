@@ -6069,6 +6069,12 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 					case '>':
 					{
 						/* No down stairs at bottom or on quests */
+						if (type == 0)
+						{
+							/* -KN- condition for stair in QUEST_VAULT (ICI) */
+							cave_set_feat(y, x, FEAT_MORE);
+						}						
+						
 						if ((quest_check(p_ptr->depth) == QUEST_FIXED) ||
 							(p_ptr->depth >= MAX_DEPTH - 1)) break;
 
@@ -6526,6 +6532,64 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 	}
 
 	/* Success. */
+	return (TRUE);
+}
+
+
+/*
+ * Type 0 -- QUEST rooms. -KN-
+ */
+static bool build_type0(void)
+{
+	vault_type *v_ptr;
+	int i, y, x;
+	s16b *v_idx;
+	int v_cnt = 0;
+
+	/* Allocate the "v_idx" array */
+	C_MAKE(v_idx, z_info->v_max, s16b);
+
+
+	/* Examine each vault */
+	for (i = 0; i < z_info->v_max; i++)
+	{
+		/* Access the vault */
+		v_ptr = &v_info[i];
+
+		/* Accept each interesting room that is acceptable for this depth. */
+		if ((v_ptr->typ == 0) && (v_ptr->min_lev <= p_ptr->depth) &&
+		    (v_ptr->max_lev >= p_ptr->depth))
+		{
+			v_idx[v_cnt++] = i;
+		}
+	}
+
+	/* Note if there are no vaults available */
+	if (!v_cnt)
+	{
+		/* Free the array */
+		FREE(v_idx);
+
+		/* Leave */
+		return (FALSE);
+	}
+
+	/* Access a random vault record */
+	v_ptr = &v_info[v_idx[rand_int(v_cnt)]];
+
+	if (!find_space(&y, &x, v_ptr->hgt, v_ptr->wid)) return (FALSE);
+
+	/* Boost the rating */
+	level_rating += v_ptr->rat;
+
+
+	/* Build the vault (sometimes lit, ICKY, type 0) */
+	if (!build_vault(y, x, v_ptr->hgt, v_ptr->wid, v_text + v_ptr->text,
+		(p_ptr->depth < rand_int(37)), TRUE, 0)) return (FALSE);
+
+	/* Free the array */
+	FREE(v_idx);
+
 	return (TRUE);
 }
 
@@ -8341,6 +8405,27 @@ static void cave_gen(void)
 		 */
 		for (i = 0; i < ROOM_MAX; i++)
 		{
+			
+			/* -KN- ask about QUEST_VAULT here (i == 0) */
+			if ((i == 0) && (quest_check(p_ptr->depth) == QUEST_FIXED))
+			{
+				if (p_ptr->quest_memory[quest_num(p_ptr->depth)].extra == 1)
+				{
+					/* skip the vault if already visited this one */
+					msg_print("You remember there was a unique place...");
+					break;
+				}
+				
+				/* Build the QUEST room first. */
+				if (room_build(0))
+				{
+					/* Room built count +2 and proceed to other rooms. */
+					rooms_built += 2;
+					continue;
+				}
+				else msg_print("A special place was not built.");
+			}
+			
 			/* What type of room are we building now? */
 			room_type = room_build_order[i];
 
@@ -8983,10 +9068,6 @@ static void cave_gen(void)
 		}
 	}
 
-	/* -KN- know location */
-	printf(" and player is at x%d/y%d.\n\n", p_ptr->px, p_ptr->py);
-	
-	
 
 	/* Special quest */
 	if (p_ptr->special_quest) monster_level = p_ptr->depth;
@@ -10093,7 +10174,13 @@ void fetch_items(int y, int x, int d, int num, int typ, int lvl)
 			case 13:
 			{
 				/* ---- QUEST BOX ---- */
-				make_box(y, x);
+				make_box(y, x, 1);
+				break;
+			}
+			case 14:
+			{
+				/* ---- CHESTS ---- */
+				make_box(y, x, 0);
 				break;
 			}
 		}

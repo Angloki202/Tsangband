@@ -149,6 +149,14 @@ void tell_story(int part)
 		c_roff_centered(TERM_WHITE, format("     Morgoth lies vanquished, and fear dies with him; Illuvatar's bright creation, our Middle-Earth, is free!  Your skill and valour is the stuff of legend; always we will remember the %s %s who saved us.\n\nWhen ready to assume the crown that awaits you, press \'Q\' to retire.",  race_adj, buf), 5, 75);
 	}
 
+	/* -KN- (testing) */
+	else if ((part == 790) || (part == 791))
+	{
+		/* Display some text */
+		c_roff_centered(TERM_SLATE, "It is clear that you can now delve deeper, but where are the stairs.  Perhaps there is some hidden room with more clues...", 5, 75);
+	}
+
+
 	/* Wait for it */
 	pause_line(Term->rows - 1);
 
@@ -1677,30 +1685,27 @@ static void process_world(void)
 
 	/* -KN- (STA) regain fraction of lost stamina */
 	if (p_ptr->cstam < p_ptr->mstam) p_ptr->ixstam += 1;
-	
+
 	/* paranoia; before I put a better global function in place */
 	if (p_ptr->ixstam > 99)
 	{
 		p_ptr->ixstam = 0;
 		msg_print("You somehow focused too much.. (ERROR)");
 	}
-	
+
 	/* when fully exhausted, you will probably wait longer */
 	/* when better AC display, add some penalty associated with exhaust */
 	if ((p_ptr->cstam == 0) && (one_in_(4))) p_ptr->ixstam -= 1;
-	
+
 	if ((p_ptr->ixstam >= p_ptr->restam) && (p_ptr->cstam < p_ptr->mstam))
 	{
 		/* regain one point if you reach restam (reg.value is lower for fighters) */
 		p_ptr->cstam += 1;
-		
+
 		/* reset the counter and redraw */
 		p_ptr->ixstam = 0;
-		//left_panel_display(DISPLAY_STAMINA, 0);
 		p_ptr->redraw |= (PR_ARMOR);
 	}
-	p_ptr->cstam == 2;
-
 
 	/* Update time display */
 	left_panel_display(DISPLAY_TIME, 0);
@@ -3958,7 +3963,7 @@ void play_game(bool new_game)
 				/* Restore spell points */
 				p_ptr->csp = p_ptr->msp;
 				p_ptr->csp_frac = 0;
-				
+
 				/* -KN- (STAMINA) */
 				/* Restore stamina */
 				p_ptr->mstam = 3;

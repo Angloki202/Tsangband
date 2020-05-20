@@ -4490,15 +4490,27 @@ static int target_set_interactive_aux(int y, int x, int mode, cptr info)
 									}
 									else prt(format("%s%s%s%s (trapped) ", s1, s2, s3, m_name), 0, 0);
 								}
-								else if ((cave_feat[y][x] == FEAT_PIT0) || (cave_feat[y][x] == FEAT_PIT1))
+								else if ((cave_feat[y][x] == FEAT_PIT0) ||
+										(cave_feat[y][x] == FEAT_PIT1) ||
+										(cave_feat[y][x] == FEAT_ABYSS))
 								{
-									/* -KN- (hack) special call for pits (ICI) */
-									prt(format("%s%s%s%s (in a pit) ", s1, s2, s3, m_name), 0, 0);
+									if (r_ptr->flags2 & (RF2_FLYING))
+									{
+										prt(format("%s%s%s%s (over a pit) ", s1, s2, s3, m_name), 0, 0);
+									}
+									else prt(format("%s%s%s%s (in a pit) ", s1, s2, s3, m_name), 0, 0);
 								}
 								else if (cave_feat[y][x] == FEAT_TREE)
 								{
-									/* -KN- (hack) special call for pits (ICI) */
 									prt(format("%s%s%s%s (behind a tree) ", s1, s2, s3, m_name), 0, 0);
+								}
+								else if (cave_feat[y][x] == FEAT_WATER)
+								{
+									if (r_ptr->flags2 & (RF2_FLYING))
+									{
+										prt(format("%s%s%s%s (above water) ", s1, s2, s3, m_name), 0, 0);
+									}
+									else prt(format("%s%s%s%s (in water) ", s1, s2, s3, m_name), 0, 0);
 								}
 								else prt(format("%s%s%s%s ", s1, s2, s3, m_name), 0, 0);
 
