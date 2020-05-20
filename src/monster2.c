@@ -4606,8 +4606,8 @@ void monster_death(int m_idx)
 							p_ptr->quest_memory[j].r_idx = q_info[i].r_idx;
 							p_ptr->quest_memory[j].max_num = q_info[i].max_num;
 							p_ptr->quest_memory[j].succeeded = 1;
-							p_ptr->quest_memory[j].extra = 0;
-											// -KN- extra: both slain & descended, see cmd2.c
+							// 		p_ptr->quest_memory[j].extra = 0;
+							// -KN- extra is unused...
 							break;
 						}
 					}
@@ -4619,19 +4619,6 @@ void monster_death(int m_idx)
 					if (q_ptr->type == QUEST_FIXED)
 					{
 						fixedquest = TRUE;
-						
-						/* -KN- do not fulfill the FIXED until descending the stairs */
-						if (q_info[i].r_idx > 770)
-						{
-							q_ptr->active_level = p_ptr->depth;
-							/* QUEST_VAULT with stairs generated upon following: */
-							//(quest_check(p_ptr->depth) == QUEST_FIXED))
-							//which means (q_info[quest_num(int lev)].active_level == lev)
-							//p_ptr->quest_memory[j].extra = 0;
-							
-							//  Return the index of the quest for current level
-							//	int quest_num(int lev)
-						}
 					}
 
 					/* One complete */
@@ -4660,13 +4647,8 @@ void monster_death(int m_idx)
 		return;
 	}
 
-	/* -KN- Fixed quests are handled individually */
-	else
-	{
-		/* Continue the story */
-		tell_story(790);
-	}
-
+	/* Fixed quests are handled individually */
+	/* -KN- but it's neigh impossible to add new fixed quests */
 }
 
 /*

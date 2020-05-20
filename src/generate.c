@@ -1321,12 +1321,26 @@ static int pick_up_stairs(void)
  */
 static int pick_down_stairs(void)
 {
+	/* -KN- as QUEST_FIXED had failed me, there is this hackish solution
+			to make each x-th level an entrance to a new part of Angband
+			only accessible via QUEST_VAULTS */
+	if ((p_ptr->depth % XTH_VAULT == 0) && (p_ptr->max_depth == p_ptr->depth))
+	{
+        /* player had not been deeper and has to encounter QUEST_VAULT */
+        return (FEAT_LESS);
+	}
+
 	if ((p_ptr->depth >= 5) && (p_ptr->depth < MAX_DEPTH - 2) &&
 	    (!quest_check(p_ptr->depth + 1)))
 	{
+		if ((p_ptr->depth + 1) % XTH_VAULT == 0)
+		{
+			return (FEAT_MORE);
+		}
 		if (one_in_(2)) return (FEAT_MORE2);
 	}
 
+	printf(" ..counting stairs down.. \n");
 	return (FEAT_MORE);
 }
 
@@ -1350,7 +1364,16 @@ static void place_random_stairs(int y, int x)
 	}
 	else if ((p_ptr->character_type == PCHAR_IRONMAN) || (one_in_(2)))
 	{
-		cave_set_feat(y, x, FEAT_MORE);
+		if ((p_ptr->depth % XTH_VAULT == 0) && (p_ptr->max_depth == p_ptr->depth))
+		{
+			/* player had not been deeper and has to encounter QUEST_VAULT */
+			cave_set_feat(y, x, FEAT_LESS);
+		}
+		else
+		{
+			printf(" ..counting stairs down (r).. \n");
+			cave_set_feat(y, x, FEAT_MORE);
+		}
 	}
 	else
 	{
@@ -1412,6 +1435,13 @@ static void alloc_stairs(int feat, int num, int walls)
 				/* Clear previous contents, add up stairs */
 				cave_set_feat(y, x, pick_up_stairs());
 			}
+			
+			/* unseen Quest Vault - must go up */
+			else if ((p_ptr->depth % XTH_VAULT == 0) && (p_ptr->max_depth == p_ptr->depth))
+			{
+				/* player had not been deeper and has to encounter QUEST_VAULT */
+				cave_set_feat(y, x, pick_up_stairs());
+			}
 
 			/* Requested type */
 			else
@@ -1424,6 +1454,7 @@ static void alloc_stairs(int feat, int num, int walls)
 				}
 
 				/* Clear previous contents, add stairs */
+				if (feat == FEAT_MORE) printf(" ..counting stairs down.. (alloc) \n");
 				cave_set_feat(y, x, feat);
 			}
 
@@ -6071,13 +6102,14 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 						/* No down stairs at bottom or on quests */
 						if (type == 0)
 						{
-							/* -KN- condition for stair in QUEST_VAULT (ICI) */
+							/* -KN- condition for stairs in QUEST_VAULT (ICI) */
 							cave_set_feat(y, x, FEAT_MORE);
-						}						
-						
+						}
+
 						if ((quest_check(p_ptr->depth) == QUEST_FIXED) ||
 							(p_ptr->depth >= MAX_DEPTH - 1)) break;
 
+						printf(" ..counting stairs down.. (VAULT) \n");
 						cave_set_feat(y, x, FEAT_MORE);
 						break;
 					}
@@ -6582,7 +6614,6 @@ static bool build_type0(void)
 	/* Boost the rating */
 	level_rating += v_ptr->rat;
 
-
 	/* Build the vault (sometimes lit, ICKY, type 0) */
 	if (!build_vault(y, x, v_ptr->hgt, v_ptr->wid, v_text + v_ptr->text,
 		(p_ptr->depth < rand_int(37)), TRUE, 0)) return (FALSE);
@@ -7002,6 +7033,7 @@ static bool room_build(int room_type)
 		case  3: if (!build_type3())  return (FALSE); break;
 		case  2: if (!build_type2())  return (FALSE); break;
 		case  1: if (!build_type1())  return (FALSE); break;
+		case  0: if (!build_type0())  return (FALSE); break;
 
 		/* Paranoia */
 		default: return (FALSE);
@@ -8327,7 +8359,7 @@ static void cave_gen(void)
 	printf("Dungeon %d level: \n", p_ptr->depth);
 	printf("--- divided by 2, 5, 10, 16 = %d;%d;%d;%d \n", div_round(p_ptr->depth, 2),
 		div_round(p_ptr->depth, 5), div_round(p_ptr->depth, 10), div_round(p_ptr->depth, 16));
-		
+
 	/* Global data */
 	dun = &dun_body;
 
@@ -8405,27 +8437,29 @@ static void cave_gen(void)
 		 */
 		for (i = 0; i < ROOM_MAX; i++)
 		{
-			
+
 			/* -KN- ask about QUEST_VAULT here (i == 0) */
-			if ((i == 0) && (quest_check(p_ptr->depth) == QUEST_FIXED))
+			if ((i == 0) && (p_ptr->depth % XTH_VAULT == 0))
 			{
-				if (p_ptr->quest_memory[quest_num(p_ptr->depth)].extra == 1)
+				/* Build the QUEST room first if not already visited */
+				if (p_ptr->max_depth > p_ptr->depth)
 				{
 					/* skip the vault if already visited this one */
-					msg_print("You remember there was a unique place...");
-					break;
+					printf("....... You remember there was a unique place...\n");
 				}
-				
-				/* Build the QUEST room first. */
-				if (room_build(0))
+				else
 				{
 					/* Room built count +2 and proceed to other rooms. */
-					rooms_built += 2;
-					continue;
+					if (room_build(0))
+					{
+						rooms_built += 2;
+						printf("....... There should be a way out of here...\n");
+						continue;
+					}
+					else printf("----------------- A special place was not built.\n");
 				}
-				else msg_print("A special place was not built.");
 			}
-			
+
 			/* What type of room are we building now? */
 			room_type = room_build_order[i];
 
@@ -8737,12 +8771,12 @@ static void cave_gen(void)
 				{
 					spread_monsters('%', (p_ptr->depth - 1), 2, by, bx, j, j);
 					printf("war troupe.. ");
-				}	
+				}
 				else if ((p_ptr->depth > 25) && (one_in_(4)))
 				{
 					spread_monsters('U', (p_ptr->depth - 1), 3, by, bx, j, j);
 					printf("horde.. ");
-				}				
+				}
 				else if ((p_ptr->depth > 10) && (one_in_(3)))
 				{
 					spread_monsters('U', (p_ptr->depth - 1), 2, by, bx, j, j);
@@ -8754,7 +8788,7 @@ static void cave_gen(void)
 					printf("solitary.. ");
 				}
 				else printf("(empty).. ");
-				
+
 				/* various object that fit caverns */
 				if (one_in_(4))
 				{
@@ -8787,12 +8821,12 @@ static void cave_gen(void)
 				{
 					spread_monsters('1', (p_ptr->depth - 1), 3, by, bx, j, j);
 					printf("a colony.. ");
-				}	
+				}
 				else if ((p_ptr->depth > 25) && (one_in_(4)))
 				{
 					spread_monsters('1', (p_ptr->depth - 1), 2, by, bx, j, j);
 					printf("a hive.. ");
-				}				
+				}
 				else if ((p_ptr->depth > 10) && (one_in_(3)))
 				{
 					spread_monsters('3', (p_ptr->depth - 1), 3, by, bx, j, j);
@@ -8804,7 +8838,7 @@ static void cave_gen(void)
 					printf("moldy.. ");
 				}
 				else printf("(empty).. ");
-				
+
 				/* various object that fit rubbles */
 				if (one_in_(4))
 				{
@@ -8834,12 +8868,12 @@ static void cave_gen(void)
 				{
 					spread_monsters('0', (p_ptr->depth - 1), 3, by, bx, j, j);
 					printf("a large herd.. ");
-				}	
+				}
 				else if ((p_ptr->depth > 25) && (one_in_(4)))
 				{
 					spread_monsters('6', (p_ptr->depth - 1), 2, by, bx, j, j);
 					printf("waterborne.. ");
-				}				
+				}
 				else if ((p_ptr->depth > 10) && (one_in_(3)))
 				{
 					spread_monsters('2', (p_ptr->depth - 1), 3, by, bx, j, j);
@@ -8851,7 +8885,7 @@ static void cave_gen(void)
 					printf("insectoids.. ");
 				}
 				else printf("(empty).. ");
-				
+
 				/* various object that fit green */
 				if (one_in_(4))
 				{
@@ -8881,12 +8915,12 @@ static void cave_gen(void)
 				{
 					spread_monsters('%', (p_ptr->depth - 1), 3, by, bx, j, j);
 					printf("an terror camp.. ");
-				}	
+				}
 				else if ((p_ptr->depth > 25) && (one_in_(4)))
 				{
 					spread_monsters('o', (p_ptr->depth - 1), 2, by, bx, j, j);
 					printf("an orc band.. ");
-				}				
+				}
 				else if ((p_ptr->depth > 10) && (one_in_(3)))
 				{
 					spread_monsters('o', (p_ptr->depth - 1), 1, by, bx, j, j);
@@ -8898,7 +8932,7 @@ static void cave_gen(void)
 					printf("a camp.. ");
 				}
 				else printf("(empty).. ");
-				
+
 				/* various object that fit guardroom */
 				if (one_in_(4))
 				{
@@ -8933,12 +8967,12 @@ static void cave_gen(void)
 				{
 					spread_monsters('N', (p_ptr->depth - 1), 2, by, bx, j, j);
 					printf("group of unliving.. ");
-				}	
+				}
 				else if ((p_ptr->depth > 25) && (one_in_(4)))
 				{
 					spread_monsters('z', (p_ptr->depth - 1), 3, by, bx, j, j);
 					printf("army of dead.. ");
-				}				
+				}
 				else if ((p_ptr->depth > 10) && (one_in_(3)))
 				{
 					spread_monsters('s', (p_ptr->depth - 1), 2, by, bx, j, j);
@@ -8950,7 +8984,7 @@ static void cave_gen(void)
 					printf("walking dead.. ");
 				}
 				else printf("(empty).. ");
-				
+
 				/* various object that fit graves */
 				if (one_in_(4))
 				{
@@ -8980,12 +9014,12 @@ static void cave_gen(void)
 				{
 					spread_monsters('b', (p_ptr->depth - 1), 4, by, bx, j, j);
 					printf("a bat cave.. ");
-				}	
+				}
 				else if ((p_ptr->depth > 25) && (one_in_(4)))
 				{
 					spread_monsters('3', (p_ptr->depth - 1), 2, by, bx, j, j);
 					printf("venomous growth.. ");
-				}				
+				}
 				else if ((p_ptr->depth > 6) && (one_in_(3)))
 				{
 					spread_monsters('S', (p_ptr->depth - 1), 2, by, bx, j, j);
@@ -8997,7 +9031,7 @@ static void cave_gen(void)
 					printf("nest of scuttlers.. ");
 				}
 				else printf("(empty).. ");
-				
+
 				/* various object that fit cobwebs */
 				if (one_in_(4))
 				{
@@ -9022,12 +9056,12 @@ static void cave_gen(void)
 				{
 					spread_monsters('N', (p_ptr->depth - 1), 2, by, bx, j, j);
 					printf("undead experiment.. ");
-				}	
+				}
 				else if ((p_ptr->depth > 20) && (one_in_(3)))
 				{
 					spread_monsters('I', (p_ptr->depth - 1), 2, by, bx, j, j);
 					printf("demonoids.. ");
-				}				
+				}
 				else if ((p_ptr->depth > 8) && (one_in_(4)))
 				{
 					spread_monsters('e', (p_ptr->depth - 1), 3, by, bx, j, j);
@@ -9039,7 +9073,7 @@ static void cave_gen(void)
 					printf("worm infestation.. ");
 				}
 				else printf("(empty).. ");
-				
+
 				/* various object that fit laboratory */
 				if (one_in_(4))
 				{
@@ -10019,7 +10053,7 @@ void fetch_items(int y, int x, int d, int num, int typ, int lvl)
 	int i;
 	int k;
 	int rr;
-	
+
 	bool looking = TRUE;
 
 	/* We always look for the same level */
@@ -10029,7 +10063,7 @@ void fetch_items(int y, int x, int d, int num, int typ, int lvl)
 	for (k = 0; k < num; k++)
 	{
 		i = 0;
-		
+
 		/* Pick a "legal" spot */
 		while (looking == TRUE)
 		{
@@ -10041,7 +10075,7 @@ void fetch_items(int y, int x, int d, int num, int typ, int lvl)
 
 			/* fail the allocation */
 			if (i > ((d + 1) * (d + 1))) looking = FALSE;
-			
+
 			/* new location */
 			x = rand_spread(x, d);
 			y = rand_spread(y, d);
@@ -10052,13 +10086,13 @@ void fetch_items(int y, int x, int d, int num, int typ, int lvl)
 			/* Accept it */
 			break;
 		}
-		
+
 		/* Go to next object if we failed */
 		if (looking == FALSE) continue;
-		
+
 		/* randomizer */
 		rr = rand_int(100);
-		
+
 		/* What objects? */
 		switch (typ)
 		{
@@ -10241,6 +10275,14 @@ void generate_cave(void)
 		while (quest_num(p_ptr->depth) != 0) p_ptr->depth++;
 	}
 
+	/* -KN- this was moved up, hopefully without dire consequences */
+	/* Track maximum dungeon level */
+	if (p_ptr->max_depth < p_ptr->depth)
+	{
+		p_ptr->max_depth = p_ptr->depth;
+	}
+
+
 	/* Generate */
 	while (TRUE)
 	{
@@ -10397,12 +10439,6 @@ void generate_cave(void)
 	{
 		p_ptr->depth = p_ptr->max_depth;
 		p_ptr->special_quest = FALSE;
-	}
-
-	/* Track maximum dungeon level */
-	if (p_ptr->max_depth < p_ptr->depth)
-	{
-		p_ptr->max_depth = p_ptr->depth;
 	}
 
 	/* Display the quest description for the current level */

@@ -2655,6 +2655,21 @@ static bool hit_trap_aux(int who, int y, int x, int t_idx)
 
 			/* New depth */
 			p_ptr->depth++;
+			
+			if ((quest_check(p_ptr->depth - 1) == QUEST_FIXED) ||
+				(p_ptr->depth >= MAX_DEPTH))
+			{
+				/* -KN- reset the depth */
+				p_ptr->depth--;
+				msg_print("You landed not much deeper, it appears...");
+			}
+			else if (((p_ptr->depth - 1) % XTH_VAULT == 0) &&
+					(p_ptr->max_depth == p_ptr->depth - 1))
+			{
+				/* -KN- reset the depth */
+				p_ptr->depth--;
+				msg_print("You landed at the very similar place, it appears...");
+			}
 
 			/* Leaving */
 			p_ptr->leaving = TRUE;

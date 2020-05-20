@@ -6130,6 +6130,7 @@ void stair_creation(void)
 	delete_object(py, px);
 
 	/* Create a staircase */
+	/* -KN- probably a (BUG) allowing Ironman to skip Sauron */
 	if (!p_ptr->depth || p_ptr->character_type == PCHAR_IRONMAN)
 	{
 		cave_set_feat(py, px, FEAT_MORE);
@@ -6141,7 +6142,12 @@ void stair_creation(void)
 	}
 	else if (one_in_(2))
 	{
-		cave_set_feat(py, px, FEAT_MORE);
+		if ((p_ptr->depth % XTH_VAULT == 0) && (p_ptr->max_depth == p_ptr->depth))
+		{
+			/* player had not been deeper and has to encounter QUEST_VAULT yet */
+			cave_set_feat(py, px, FEAT_LESS);
+		}
+		else cave_set_feat(py, px, FEAT_MORE);
 	}
 	else
 	{

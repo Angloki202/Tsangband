@@ -78,40 +78,23 @@ void do_cmd_go_down(void)
 	/* Hack -- take a turn */
 	p_ptr->energy_use = 100;
 
-	/* Success */
-	message(MSG_STAIRS_DOWN, 0, "You enter a maze of down staircases.");
-
 	/* Create a way back (usually) */
 	p_ptr->create_stair = FEAT_LESS;
 
-	/* New level */
-	p_ptr->depth++;
-
-	/* -KN- Upon arrival from FIXED level */
-	/* (accomplished only with the generated stairs */
-	if (quest_num(p_ptr->depth - 1) == QUEST_FIXED)
+	/* -KN- info for leaving old-style dungeon */
+	if ((p_ptr->depth % XTH_VAULT == 0) && (p_ptr->max_depth == p_ptr->depth))
 	{
-		int i;
-		
-		for (i = 0; i < z_info->q_max; i++)
-		{
-			quest_type *q_ptr = &q_info[i];
-
-			/* what's the status of the left FIXED quest? */
-			if (q_ptr->active_level == p_ptr->depth - 1)
-			{
-				if (p_ptr->quest_memory[i].succeeded == 0)
-				{
-					/* not slain the roaming QUESTOR, yet descended via QUEST_VAULT */
-					message(MSG_SLATE, 50, "You seem to be forgetting something.");		
-					/* (IDEA) use later to bite the player in the ass :) */
-				}
-				/* and set as extra, which means no longer generate the QUEST_VAULT */
-				p_ptr->quest_memory[i].extra = 1;
-			}
-		}
+		/* (IDEA) maybe add some reward, but now only a different message */
+        message(MSG_STAIRS_DOWN, 0, "You enter an unexplored new region of Angband.");
+	}
+	else
+	{
+		/* Success */
+		message(MSG_STAIRS_DOWN, 0, "You enter a maze of down staircases.");
 	}
 
+	/* New level */
+	p_ptr->depth++;
 
 	/* Go down another level if allowed */
 	if ((cave_feat[p_ptr->py][p_ptr->px] == FEAT_MORE2) &&
@@ -352,7 +335,7 @@ static void chest_death(bool scattered, int y, int x, object_type *o_ptr)
 	/* Determine how much to drop. */
 	if (o_ptr->sval >= SV_CHEST_MIN_LARGE) number = rand_range(5, 6);
 	else number = rand_range(3, 4);
-	
+
 	/* Zero pval means empty chest */
 	if (!o_ptr->pval) number = 0;
 
@@ -361,7 +344,7 @@ static void chest_death(bool scattered, int y, int x, object_type *o_ptr)
 
 	/* Select an item type that the chest will disperse. */
 	required_tval = get_choice(object_level);
-	
+
 
 	/* -KN- experimental quest chest (ICI) */
 	if (o_ptr->sval == 9)
@@ -2158,7 +2141,7 @@ static bool do_cmd_tunnel_aux(int y, int x)
 			more = TRUE;
 		}
 	}
-	
+
 	/* -KN- added bonepile */
 	else if (cave_feat[y][x] == FEAT_BONEPILE)
 	{
@@ -3039,11 +3022,11 @@ void do_cmd_alter(bool deliberate)
 			if (p_ptr->cstam > 0)
 			{
 				msg_print("You focus on your attack.");
-			
+
 				/* deplete one point and reset the counter */
 				if (p_ptr->mstam == p_ptr->cstam) p_ptr->ixstam = 0;
 				p_ptr->cstam -= 1;
-				
+
 				/* set the focus flag and redraw */
 				/* one more slot for special flag, hybrid char support */
 				p_ptr->special_attack |= (ATTACK_FOCUS);
