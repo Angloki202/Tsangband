@@ -106,7 +106,7 @@ static void find_range(monster_type *m_ptr)
 				{
 					/* and haste very decently the monster */
 					m_ptr->hasted = 2;
-					
+
 					/* inform player when visible, but not adjacent */
 					if ((m_ptr->ml) && (m_ptr->cdis > 1))
 					{
@@ -120,10 +120,10 @@ static void find_range(monster_type *m_ptr)
 					}
 				}
 			}
-			
+
 			/* if hunting (hasted), modify range */
 			if (m_ptr->hasted > 0)
-			{			
+			{
 				/* set range to go after the player */
 				m_ptr->best_range = 1;
 			}
@@ -1308,6 +1308,7 @@ bool cave_exist_mon(monster_race *r_ptr, int y, int x, bool occupied_ok,
 		/* Earthbound demons, firebreathers, and red elementals cannot handle water */
 		if (feat == FEAT_WATER)
 		{
+			/* Unless they fly of course */
 			if (r_ptr->flags2 & (RF2_FLYING)) return (TRUE);
 
 			if ((r_ptr->flags4 & (RF4_BRTH_FIRE)) ||
@@ -4205,46 +4206,57 @@ static void process_move(monster_type *m_ptr, int ty, int tx, bool bash)
 		/* The grid is occupied by a monster. */
 		if (cave_m_idx[ny][nx] > 0)
 		{
-			monster_type *n_ptr = &m_list[cave_m_idx[ny][nx]];
-			monster_race *nr_ptr = &r_info[n_ptr->r_idx];
 
-			/* XXX - Kill (much) weaker monsters */
-			if ((r_ptr->flags2 & (RF2_KILL_BODY)) &&
-			    (!(nr_ptr->flags1 & (RF1_UNIQUE))) &&
-			    (r_ptr->mexp > nr_ptr->mexp * 2))
+			if (cave_m_idx[ny][nx] == cave_m_idx[oy][ox])
 			{
-				/* Note that the monster killed another monster (if visible) */
-				did_kill_body = TRUE;
-
-				/* Notice the kill  -TNB- */
-				if ((m_ptr->mflag & MFLAG_VIEW) ||
-				    (n_ptr->mflag & MFLAG_VIEW))
-				{
-					char m_name[DESC_LEN], n_name[DESC_LEN];
-
-					/* Get the monster names */
-					monster_desc(m_name, m_ptr, 0x04);
-					monster_desc(n_name, n_ptr, 0x04);
-
-					/* Dump a message */
-					msg_format("%^s kills %s.", m_name, n_name);
-				}
-
-				/* Kill the monster */
-				delete_monster(ny, nx);
+				/* -KN- it's the same monster (BIG_BODY) (?) */
+				printf("\n");
+				printf("monster would switch with itself (?) \n");
+				monster_swap(oy, ox, ny, nx);
 			}
-
-			/* Swap with or push aside the other monster */
 			else
 			{
-				/* The other monster cannot switch places */
-				if (!cave_exist_mon(nr_ptr, m_ptr->fy, m_ptr->fx, TRUE, TRUE))
+				monster_type *n_ptr = &m_list[cave_m_idx[ny][nx]];
+				monster_race *nr_ptr = &r_info[n_ptr->r_idx];
+
+				/* XXX - Kill (much) weaker monsters */
+				if ((r_ptr->flags2 & (RF2_KILL_BODY)) &&
+					(!(nr_ptr->flags1 & (RF1_UNIQUE))) &&
+					(r_ptr->mexp > nr_ptr->mexp * 2))
 				{
-					/* Try to push it aside */
-					if (!push_aside(m_ptr, n_ptr))
+					/* Note that the monster killed another monster (if visible) */
+					did_kill_body = TRUE;
+
+					/* Notice the kill  -TNB- */
+					if ((m_ptr->mflag & MFLAG_VIEW) ||
+						(n_ptr->mflag & MFLAG_VIEW))
 					{
-						/* Cancel move on failure */
-						do_move = FALSE;
+						char m_name[DESC_LEN], n_name[DESC_LEN];
+
+						/* Get the monster names */
+						monster_desc(m_name, m_ptr, 0x04);
+						monster_desc(n_name, n_ptr, 0x04);
+
+						/* Dump a message */
+						msg_format("%^s kills %s.", m_name, n_name);
+					}
+
+					/* Kill the monster */
+					delete_monster(ny, nx);
+				}
+
+				/* Swap with or push aside the other monster */
+				else
+				{
+					/* The other monster cannot switch places */
+					if (!cave_exist_mon(nr_ptr, m_ptr->fy, m_ptr->fx, TRUE, TRUE))
+					{
+						/* Try to push it aside */
+						if (!push_aside(m_ptr, n_ptr))
+						{
+							/* Cancel move on failure */
+							do_move = FALSE;
+						}
 					}
 				}
 			}
@@ -4483,9 +4495,33 @@ static void process_move(monster_type *m_ptr, int ty, int tx, bool bash)
 	}
 
 	/* End of monster's move */
-
 	/* -KN- finally process effects of leaving and entering spec. terrain */
 	/* entering PIT, entering WEB, roaming ABYSS, leaving (?); better handling with INTERESTING_MOVE */
+
+	/* (BIG_BODY) handling (BROKEN, do not employ) (FIX)*/
+
+//	if (r_ptr->flags2 & (RF2_BIG_BODY))
+//	{
+//		/* duplicates itself */
+//		cave_m_idx[oy][ox] = cave_m_idx[ny][nx];
+//
+//		if(m_ptr->last_x > 0)
+//		{
+//			cave_m_idx[m_ptr->last_y][m_ptr->last_x] = 0;
+//
+//			/* redraw with TAIL specific symbol */
+//			lite_spot (m_ptr->last_y, m_ptr->last_x);
+//		}
+//	}
+
+
+//	/* last location is now saved if move actually happened */
+//	if ((ny != oy) && (nx != oy))
+//	{
+//		m_ptr->last_y = oy;
+//		m_ptr->last_x = ox;
+//	}
+
 	if ((cave_feat[ny][nx] == FEAT_PIT0) || (cave_feat[ny][nx] == FEAT_PIT1) ||
 		(cave_feat[ny][nx] == FEAT_ABYSS))
 	{
@@ -4539,7 +4575,7 @@ static void process_move(monster_type *m_ptr, int ty, int tx, bool bash)
 		/* For spiders webs mean something */
 		if (strchr("S", r_ptr->d_char))
 		{
-			if ((player_has_los_bold(ny, nx)) && (one_in_(9)))
+			if ((player_has_los_bold(ny, nx)) && (one_in_(6)))
 			{
 				/* Alert player sometimes */
 				monster_desc(m_name, m_ptr, 0x44);

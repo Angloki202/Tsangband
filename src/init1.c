@@ -280,7 +280,7 @@ static cptr r_info_flags2[] =
 	"BASH_DOOR",
 	"PASS_WALL",
 	"KILL_WALL",
-	"XXX1",
+	"BIG_BODY",			/* -KN- changed from XXX1 */
 	"KILL_BODY",
 	"TAKE_ITEM",
 	"KILL_ITEM",

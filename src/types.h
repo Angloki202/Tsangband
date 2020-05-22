@@ -647,6 +647,11 @@ struct monster_type
 	s16b r_idx;					/* Monster race index */
 	byte fy;					/* Y location on map */
 	byte fx;					/* X location on map */
+	
+	/* -KN- added */
+	//byte last_y;				/* previous Y location on map; if 0, it had not moved yet */
+	//byte last_x;				/* previous X location on map */
+	//byte extra;					/* one more extra info */
 
 	s16b hp;					/* Current Hit points */
 	s16b maxhp;					/* Max Hit points */
@@ -666,15 +671,15 @@ struct monster_type
 	s16b hold_o_idx;			/* Object being held (if any) */
 
 	byte cdis;					/* Current distance from character  */
-	u16b mflag;					/* Extra monster flags */
+	u16b mflag;					/* Extra monster flags 		-KN- some are free to use */
 	byte ml;					/* Monster is visible or partially visible */
 
-	u32b smart;				/* Field for "smart_learn" */
+	u32b smart;					/* Field for "smart_learn" */
 
-	byte ty;				/* Monster target */
+	byte ty;					/* Monster target */
 	byte tx;
-	byte min_range;		/* What is the closest we want to be? */  /* Not saved */
-	byte best_range;		/* How close do we want to be? */  /* Not saved */
+	byte min_range;				/* What is the closest we want to be? */  /* Not saved */
+	byte best_range;			/* How close do we want to be? */  /* Not saved */
 };
 
 /*

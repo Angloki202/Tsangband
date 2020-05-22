@@ -2423,6 +2423,104 @@ static bool generate_starburst_room(int y1, int x1, int y2, int x2,
 }
 
 
+/*
+ * -KN- terrain feature groups
+ */
+static void generate_well(int y, int x, int shape, int feat1, int feat2)
+{
+	
+/*	t 1		t 2		t 3		t 4		t 5		t 6
+ *
+ *					 2	   2   2	2 2
+ *	 2		222		212		: :    22 22	2  2
+ *	212		212	   21 12	 1		 1		 11
+ *	 2		222		212		: :	   22 22	 11
+ *					 2     2   2	2 2		2  2
+ */
+
+	switch (shape)
+	{
+		case 1:
+		{
+			cave_set_feat(y, x-1, feat2);
+			cave_set_feat(y-1, x, feat2);
+			cave_set_feat(y, x, feat1);
+			cave_set_feat(y+1, x, feat2);
+			cave_set_feat(y, x+1, feat2);
+			break;
+		}
+		case 2:
+		{
+			cave_set_feat(y, x-1, feat2);
+			cave_set_feat(y-1, x-1, feat2);
+			cave_set_feat(y-1, x+1, feat2);
+			cave_set_feat(y-1, x, feat2);
+			cave_set_feat(y, x, feat1);
+			cave_set_feat(y+1, x, feat2);
+			cave_set_feat(y, x+1, feat2);
+			cave_set_feat(y+1, x-1, feat2);
+			cave_set_feat(y+1, x+1, feat2);
+			break;
+		}
+		case 3:
+		{
+			cave_set_feat(y, x-2, feat2);
+			cave_set_feat(y, x-1, feat1);
+			cave_set_feat(y-1, x-1, feat2);
+			cave_set_feat(y-1, x+1, feat2);
+			cave_set_feat(y-1, x, feat1);
+			cave_set_feat(y-2, x, feat2);
+			cave_set_feat(y+2, x, feat2);
+			cave_set_feat(y+1, x, feat1);
+			cave_set_feat(y, x+1, feat1);
+			cave_set_feat(y+1, x-1, feat2);
+			cave_set_feat(y+1, x+1, feat2);
+			cave_set_feat(y, x+2, feat2);
+			break;
+		}
+		case 4:
+		{
+			cave_set_feat(y-2, x-2, feat2);
+			cave_set_feat(y-2, x+2, feat2);
+			cave_set_feat(y, x, feat1);
+			cave_set_feat(y+2, x-2, feat2);
+			cave_set_feat(y+2, x+2, feat2);
+			break;
+		}
+		case 5:
+		{
+			cave_set_feat(y-2, x-1, feat2);
+			cave_set_feat(y-2, x+1, feat2);
+			cave_set_feat(y-1, x-2, feat2);
+			cave_set_feat(y-1, x+2, feat2);
+			cave_set_feat(y-1, x+1, feat2);
+			cave_set_feat(y-1, x-1, feat2);
+			cave_set_feat(y, x, feat1);
+			cave_set_feat(y+1, x-1, feat2);
+			cave_set_feat(y+1, x+1, feat2);
+			cave_set_feat(y+1, x-2, feat2);
+			cave_set_feat(y+1, x+2, feat2);
+			cave_set_feat(y+2, x-1, feat2);
+			cave_set_feat(y+2, x+1, feat2);
+			break;
+		}
+		case 6:
+		{
+			cave_set_feat(y-1, x-1, feat2);
+			cave_set_feat(y-1, x+2, feat2);
+			
+			cave_set_feat(y, x, feat1);
+			cave_set_feat(y, x+1, feat1);
+			cave_set_feat(y+1, x, feat1);
+			cave_set_feat(y+1, x+1, feat1);
+			
+			cave_set_feat(y+2, x-1, feat2);
+			cave_set_feat(y+2, x+2, feat2);
+			break;
+		}
+	}
+}
+
 
 /*
  * Generate helper -- fill a rectangle with a feature
@@ -3240,48 +3338,36 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						((x == x2) || (x == x1) || (y == y2) || (y == y1))) feat = FEAT_WEB;
 					}
 
-					/* make some cauldrons */
-					if ((advanced == TRUE) || ((zz == 15) && (p_ptr->depth > 45)))
+					/* make central interesting cauldron */
+					if ((advanced == TRUE) || ((zz == 15) && (p_ptr->depth > 30)))
 					{
-						/* big rooms have many cauldrons */
-						if (((x == (x1 + 3)) && (y == (y1 + 3))) ||
-							((x == (x2 - 3)) && (y == (y1 + 3))) ||
-							((x == (x1 + 3)) && (y == (y2 - 3))) ||
-							((x == (x2 - 3)) && (y == (y2 - 3))))
+						if ((x == x2) && (y == y2))
 						{
-							if (one_in_(2)) feat = FEAT_CAULDRON;
-							else feat = FEAT_CAULDRON_X;
-						}
-
-						/* second line of cauldrons */
-						if (((x == (x1 + 1)) && (y == (y1 + 1))) ||
-							((x == (x2 - 1)) && (y == (y1 + 1))) ||
-							((x == (x1 + 1)) && (y == (y2 - 1))) ||
-							((x == (x2 - 1)) && (y == (y2 - 1))))
-						{
-							/* sometimes with bonepile in the corner */
-							if (one_in_(2)) feat = FEAT_CAULDRON;
-							else if (rr % 4 == 0) feat = FEAT_BONEPILE;
-							else feat = FEAT_CAULDRON_X;
+							if (((x2 - x1) > 4) && ((y2 - y1) > 4))
+							{
+								generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 5, FEAT_CAULDRON_X, FEAT_TREE);
+							}
+							else generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 6, FEAT_CAULDRON_X, FEAT_BONEPILE);
 						}
 					}
 					else
 					{
-						/* less full cauldrons */
-						if (((x == (x1 + 1)) && (y == (y1 + 1))) ||
-							((x == (x2 - 1)) && (y == (y1 + 1))) ||
-							((x == (x1 + 1)) && (y == (y2 - 1))) ||
-							((x == (x2 - 1)) && (y == (y2 - 1))))
+						/* or more often make less impressive cauldrons */
+						if (((x == x2) && (y == y2)) && (one_in_(3)))
 						{
-							if (!one_in_(4)) feat = FEAT_CAULDRON;
-							else feat = FEAT_CAULDRON_X;
-
-							/* sometimes no cauldron in the corner */
-							if (rr % 4 == 0)
+							if (((x2 - x1) > 4) && ((y2 - y1) > 4))
 							{
-								if (one_in_(2)) feat = floor_sec;
-								else feat = FEAT_FLOOR;
+								generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 4, FEAT_CAULDRON_X, FEAT_BONEPILE);
 							}
+							else generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 1, FEAT_CAULDRON_X, FEAT_BONEPILE);
+						}
+						else if ((x == x2) && (y == y2))
+						{
+							if (((x2 - x1) > 4) && ((y2 - y1) > 4))
+							{
+								generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 4, FEAT_CAULDRON, FEAT_WATER);
+							}
+							else generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 2, FEAT_CAULDRON, FEAT_WATER);
 						}
 					}
 					break;
@@ -6114,21 +6200,30 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 						break;
 					}
 					/* -KN- added pillars */
-					case '{':
+					case 'U':
 					{
 						cave_set_feat(y, x, FEAT_PILLAR);
 						break;
 					}
-					/* -KN- added golden pillars */
-					case '}':
+					/* -KN- added detonables (ICI) better control */
+					case '{':
 					{
-						cave_set_feat(y, x, FEAT_PILLAR_GOLD);
+						if (one_in_(4)) cave_set_feat(y, x, FEAT_CAULDRON_X);
+						else cave_set_feat(y, x, FEAT_CAULDRON);
+						if (p_ptr->depth > 45) cave_set_feat(y, x, FEAT_ORB);
 						break;
 					}
-					/* -KN- added webs */
+					/* -KN- added bonepiles */
+					case '}':
+					{
+						cave_set_feat(y, x, FEAT_BONEPILE);
+						break;
+					}
+					/* -KN- added webs 92% of time */
 					case '`':
 					{
-						cave_set_feat(y, x, FEAT_WEB);
+						if (!one_in_(12)) cave_set_feat(y, x, FEAT_WEB);
+						else cave_set_feat(y, x, FEAT_FLOOR_B);
 						break;
 					}
 					/* -KN- added pits */
@@ -6136,6 +6231,18 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 					{
 						if (one_in_(12)) cave_set_feat(y, x, FEAT_PIT1);
 						else cave_set_feat(y, x, FEAT_PIT0);
+						break;
+					}
+					case 'n':
+					{
+						/* added crypt */
+						cave_set_feat(y, x, FEAT_CRYPT);
+						break;
+					}
+					case 'u':
+					{
+						/* added monolith */
+						cave_set_feat(y, x, FEAT_MONOLITH);
 						break;
 					}
 				}
@@ -6175,10 +6282,10 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 				if (flip_hori) x = x2 - j;
 				else           x = x1 + j;
 
-
 				/* Most alphabetic characters signify monster races. */
+				/* -KN- excluded 'U', 'n' and 'u' for pillars, crypts and monoliths */
 				if (((isalpha(*t)) || (*t == '&')) && (*t != 'x') &&
-				    (*t != 'X'))
+				    (*t != 'X') && (*t != 'n') && (*t != 'u') && (*t != 'U'))
 				{
 					/* If the symbol is not yet stored, ... */
 					if ((!strchr(racial_symbol, *t)) && (racial_symbol_num < 128))
@@ -6502,6 +6609,13 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 			d_char_req[0] = '\0';
 			racial_flag_mask = RF3_DEMON;
 		}
+		
+		/* -KN- Hack -- handle undead */
+		else if (d_char_req[0] == 'N')
+		{
+			d_char_req[0] = '\0';
+			racial_flag_mask = RF3_UNDEAD;
+		}
 
 		/* Determine level of monster */
 		if      (type == 0) temp = p_ptr->depth + 3;
@@ -6571,7 +6685,7 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 /*
  * Type 0 -- QUEST rooms. -KN-
  */
-static bool build_type0(void)
+static bool build_type0(int subtype)
 {
 	vault_type *v_ptr;
 	int i, y, x;
@@ -6588,11 +6702,30 @@ static bool build_type0(void)
 		/* Access the vault */
 		v_ptr = &v_info[i];
 
-		/* Accept each interesting room that is acceptable for this depth. */
-		if ((v_ptr->typ == 0) && (v_ptr->min_lev <= p_ptr->depth) &&
-		    (v_ptr->max_lev >= p_ptr->depth))
+		/* Accept each room that is acceptable for this depth. */
+		switch (subtype)
 		{
-			v_idx[v_cnt++] = i;
+			case 0:
+			{
+				/* Quest Vaults that hold the stairs to next levels */
+				if ((v_ptr->typ == 0) && (v_ptr->min_lev <= p_ptr->depth) &&
+					(v_ptr->max_lev >= p_ptr->depth))
+				{
+					v_idx[v_cnt++] = i;
+				}
+				break;
+			}
+			case 1:
+			{
+				/* Quest Crypts, where you can rescue bones and defeat mighty undead */
+				/* note: these are not types "1", those are ordinary by original definition */
+				/*		 this is still type "0" - quest room, with subtype 1 */
+				if ((v_ptr->typ == 1) && (v_ptr->min_lev <= p_ptr->depth) &&
+					(v_ptr->max_lev >= p_ptr->depth))
+				{
+					v_idx[v_cnt++] = i;
+				}
+			}
 		}
 	}
 
@@ -7033,7 +7166,7 @@ static bool room_build(int room_type)
 		case  3: if (!build_type3())  return (FALSE); break;
 		case  2: if (!build_type2())  return (FALSE); break;
 		case  1: if (!build_type1())  return (FALSE); break;
-		case  0: if (!build_type0())  return (FALSE); break;
+		case  0: if (!build_type0(0))  return (FALSE); break;
 
 		/* Paranoia */
 		default: return (FALSE);
@@ -8456,11 +8589,20 @@ static void cave_gen(void)
 						printf("....... There should be a way out of here...\n");
 						continue;
 					}
-					else printf("----------------- A special place was not built.\n");
+					else printf("!---------------- A special place was not built.\n");
 				}
+			}
+			else if ((i == 0) && (p_ptr->depth % 2 == 0))
+			{
+				/* try to build 2 crypts on even levels, but not on quest vault level (for now) */
+				if (!build_type0(1)) printf("!---------------- A crypt was not built.\n");
+				else printf("....... A crypt is nearby.\n");
+				if (!build_type0(1)) printf("!---------------- A second crypt was not built.\n");
+				else printf("....... A second crypt is also nearby.\n");
 			}
 
 			/* What type of room are we building now? */
+			/* -KN- this is after we already had built all the required Quest Vaults */
 			room_type = room_build_order[i];
 
 			/* Find out how many rooms of this type we can build. */
@@ -8636,8 +8778,8 @@ static void cave_gen(void)
 		/* -KN- chance for more CAULDRONs, more CAULDRONs deeper */
 		if (one_in_(22 - div_round(p_ptr->depth, 5)))
 			alloc_object(ALLOC_SET_ROOM, ALLOC_TYP_CAULDRON, rand_range(3, 4 + div_round(p_ptr->depth, 10)));
-		/* testing, now more cauldrons */
-		else alloc_object(ALLOC_SET_ROOM, ALLOC_TYP_CAULDRON, rand_range(2, 6));
+		/* (testing) too many cauldrons? */
+		else alloc_object(ALLOC_SET_ROOM, ALLOC_TYP_CAULDRON, rand_range(0, 2));
 
 		/* -KN- chance for PITs in corridors, more pits deeper */
 		if (one_in_(22 - div_round(p_ptr->depth, 5)))

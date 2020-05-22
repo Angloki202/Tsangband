@@ -428,6 +428,27 @@ C:15
 F:TF_INTERESTING | TF_NO_SCENT | TF_LOS | TF_TORCH_ONLY | TF_DETONATE
 D:A very large cauldron is blocking the way.  Is it full?
 
+# added magical orb (explodes with depth-driven different variation)
+N:68:crackling orb
+G:*:P
+C:15
+F:TF_INTERESTING | TF_NO_SCENT | TF_LOS | TF_TORCH_ONLY | TF_DETONATE
+D:Large orb of foul magic floats above the ground menacingly.
+
+# added a stone crypt - for quest vaults mainly
+N:69:crypt
+G:*:D
+C:10
+F:TF_INTERESTING | TF_NO_SCENT
+D:What hides in this crypt?  Obviously no hero would rest in such a dark place.
+
+# added a monolith - for quest vaults mainly
+N:70:monolith
+G:*:z
+C:10
+F:TF_INTERESTING | TF_NO_SCENT
+D:Tall obelisk-like menhir gleams in arcane light rays, coming from above.
+
 #
 #
 # space for more terrain here

@@ -419,10 +419,8 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 		{
 		
 			/* (testing) was rand_range(20,80) */
-			if ((cave_feat[y][x] == FEAT_CAULDRON_X) && (dam > rand_range(3, 6)))
+			if ((cave_feat[y][x] == FEAT_CAULDRON_X) && (dam > rand_range(8, 16)))
 			{
-				printf("bam! \n");
-				
 				/* forget the cauldron */
 				if (one_in_(4)) cave_set_feat(y, x, FEAT_RUBBLE);
 				else cave_set_feat(y, x, FEAT_FLOOR4);
@@ -430,6 +428,19 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 				/* explode from there (ICI) add variations */
 				if (one_in_(3)) explosion(0, 2, y, x, 15, GF_FIRE);
 				else explosion(0, 3, y, x, 10, GF_POIS);
+				
+				/* make some big noise (thrice of tunnel noise) */
+				add_wakeup_chance += 3000;
+			}
+			else if ((cave_feat[y][x] == FEAT_ORB) && (dam > rand_range(4, 8)))
+			{
+				/* forget the orb */
+				if (one_in_(4)) cave_set_feat(y, x, FEAT_PIT0);
+				else cave_set_feat(y, x, FEAT_FLOOR4);
+				
+				/* explode from there */
+				if (one_in_(3)) explosion(0, 2, y, x, 15, GF_COLD);
+				else explosion(0, 3, y, x, 10, GF_ELEC);
 				
 				/* make some big noise (thrice of tunnel noise) */
 				add_wakeup_chance += 3000;
@@ -7306,7 +7317,7 @@ bool project(int who, int rad, int y0, int x0, int y1, int x1, int dam,
 					gd[grids++] = 0;
 					
 					/* -KN- (experimental) always affect the last grid terrain feature */
-					/* CAULDRON_X support */
+					/* CAULDRON_X and ORB detonation support (works) */
 					flg |= (PROJECT_GRID);
 				}
 			}

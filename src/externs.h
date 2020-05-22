@@ -342,6 +342,7 @@ extern void move_cursor_relative(int y, int x);
 extern void print_rel(char c, byte a, int y, int x);
 extern void note_spot(int y, int x);
 extern void lite_spot(int y, int x);
+extern void lite_ball(int y, int x, int col);				/* -KN- added ball bloom for player */
 extern void lite_spot_color(int y, int x, int col);			/* -KN- added graphics flicker */
 extern void map_animate(void);
 extern void prt_map(void);

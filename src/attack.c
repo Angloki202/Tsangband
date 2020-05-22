@@ -3060,7 +3060,7 @@ void do_cmd_fire(void)
 		{
 			hit_wall = TRUE;
 			
-			/* -KN- experimental CAULDRON_X activation (working) */
+			/* -KN- experimental CAULDRON_X & ORB activation (working) */
 			if(cave_detonate_bold(ny, nx))
 			{
 				printf("... shooting at cauldron ...\n");
@@ -3569,7 +3569,7 @@ void do_cmd_throw(void)
 		{
 			hit_wall = TRUE;
 			
-			/* -KN- experimental CAULDRON_X activation (working) */
+			/* -KN- experimental CAULDRON_X & ORB activation (working) */
 			if(cave_detonate_bold(ny, nx))
 			{
 				printf("... aiming at cauldron ...\n");

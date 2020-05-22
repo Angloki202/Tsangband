@@ -1268,6 +1268,7 @@ void inn_purchase(int item)
 		/* -KN- always available to check on collectible quest */
 		/* currently only item == 9 */
 		msg_print("You ask for more info about collecting...");
+		return;
 	}	
 	
 	/* Clear screen */

@@ -302,6 +302,9 @@ void do_cmd_search(void)
 	/* -KN- mention that search is processing */
 	msg_print("Searching... ");
 
+	/* -KN- graphical little effect */
+	lite_ball(p_ptr->py, p_ptr->px, 6);
+
 	/* (testing) something interesting (lab & boneyard) */
 	if ((cave_info[p_ptr->py][p_ptr->px] & (CAVE_TYP0)) ||
 		(cave_info[p_ptr->py][p_ptr->px] & (CAVE_TYP1)))

@@ -1338,9 +1338,37 @@ void lite_spot(int y, int x)
 	if (use_special_map) (void)Term_activate(old);
 }
 
+/* -KN- added player-centered bloom effect */
+void lite_ball(int y1, int x1, int col)
+{
+	/* (fix) only player based, no x1 and y1 used yet */
+	int x, y;
+	int ii;
+	
+	for (ii = 0; ii < grids_in_radius[2]; ii++)
+	{
+		if (one_in_(3)) continue;
+		y = p_ptr->py + nearby_grids_y[ii];
+		x = p_ptr->px + nearby_grids_x[ii];
+		move_cursor_relative(y, x);
+		(void)Term_fresh();
+		pause_for(1);
+		lite_spot_color(y, x, col);
+		(void)Term_fresh();
+	}
+	for (ii = 0; ii < grids_in_radius[2]; ii++)
+	{
+		y = p_ptr->py + nearby_grids_y[ii];
+		x = p_ptr->px + nearby_grids_x[ii];
+		move_cursor_relative(y, x);
+		(void)Term_fresh();
+		pause_for(1);
+		lite_spot(y, x);
+		(void)Term_fresh();
+	}
+}
 
-
-/* -KN- fast color flicker */
+/* -KN- fast color flicker (FIX) */
 void lite_spot_color(int y, int x, int col)
 {
 	byte a;
@@ -1375,13 +1403,27 @@ void lite_spot_color(int y, int x, int col)
 	if (use_special_map) (void)Term_activate(term_map);
 
 	/* Hack -- Queue it */
-	if (one_in_(3)) Term_queue_char(kx, ky, col, c, ta, tc);
-	else if (col > 15) Term_queue_char(kx, ky, col - 6, c, ta, tc);
-	else if (col > 7) Term_queue_char(kx, ky, col - 8, c, ta, tc);
-	else if (col > 2) Term_queue_char(kx, ky, col + 8, c, ta, tc);
-	else if (col == 2) Term_queue_char(kx, ky, 1, c, ta, tc);
-	else if (col == 1) Term_queue_char(kx, ky, 2, c, ta, tc);
-
+	if (col == 0)
+	{
+		/* when type 0, use original color to flicker it */
+		if (one_in_(3)) Term_queue_char(kx, ky, a, c, ta, tc);
+		else if (a > 15) Term_queue_char(kx, ky, a - 6, c, ta, tc);
+		else if (a > 7) Term_queue_char(kx, ky, a - 8, c, ta, tc);
+		else if (a > 2) Term_queue_char(kx, ky, a + 8, c, ta, tc);
+		else if (a == 2) Term_queue_char(kx, ky, 1, c, ta, tc);
+		else if (a == 1) Term_queue_char(kx, ky, 2, c, ta, tc);
+	}
+	else
+	{
+		/* else flicker with selected color */
+		if (one_in_(3)) Term_queue_char(kx, ky, col, c, ta, tc);
+		else if (col > 15) Term_queue_char(kx, ky, col - 6, c, ta, tc);
+		else if (col > 7) Term_queue_char(kx, ky, col - 8, c, ta, tc);
+		else if (col > 2) Term_queue_char(kx, ky, col + 8, c, ta, tc);
+		else if (col == 2) Term_queue_char(kx, ky, 1, c, ta, tc);
+		else if (col == 1) Term_queue_char(kx, ky, 2, c, ta, tc);
+	}
+	
 	/* Restore the previous term (if necessary) */
 	if (use_special_map) (void)Term_activate(old);
 }

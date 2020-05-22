@@ -1279,9 +1279,12 @@
 #define FEAT_PERM_SOLID    63
 #define FEAT_PILLAR        64
 #define FEAT_PILLAR_GOLD   65
-/* -KN- added cauldrons */
+/* -KN- added cauldrons, orb, crypt, monolith */
 #define FEAT_CAULDRON      66
 #define FEAT_CAULDRON_X    67
+#define FEAT_ORB	       68
+#define FEAT_CRYPT	       69
+#define FEAT_MONOLITH      70
 
 /* Shops */
 #define FEAT_SHOP_HEAD     84
@@ -3866,7 +3869,7 @@
 #define MFLAG_WARY         0x0800  /* Monster is wary of stealing & traps */
 #define MFLAG_TURN         0x1000  /* Monster will lose a turn */
 #define MFLAG_BLBR         0x2000  /* Monster has the Black Breath */
-#define MFLAG_XXX5         0x4000  /*  */
+#define MFLAG_TAIL         0x4000  /* -KN- its only part of a monster */
 #define MFLAG_XXX6         0x8000  /*  */
 
 
@@ -3971,7 +3974,7 @@
 #define RF2_BASH_DOOR      0x00020000  /* Monster can bash doors */
 #define RF2_PASS_WALL      0x00040000  /* Monster can pass walls */
 #define RF2_KILL_WALL      0x00080000  /* Monster can destroy walls */
-#define RF2_XXX2           0x00100000  /* Was MOVE_BODY */
+#define RF2_BIG_BODY       0x00100000  /* Was MOVE_BODY -KN- now BIG_BODY */
 #define RF2_KILL_BODY      0x00200000  /* Monster can kill monsters */
 #define RF2_TAKE_ITEM      0x00400000  /* Monster can pick up items */
 #define RF2_KILL_ITEM      0x00800000  /* Monster can crush items */
