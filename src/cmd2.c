@@ -58,6 +58,14 @@ void do_cmd_go_up(void)
 		p_ptr->create_stair = FEAT_MORE2;
 	}
 
+	/* -KN- (QADV) adv. quest check */
+	if ((p_ptr->qadv_flags & (QADV_STARTED)) &&
+		!(p_ptr->qadv_flags & (QADV_SUCCESS)))
+	{
+		/* started but not finished adv. quest */
+		msg_print("You have abandoned the investigation.");
+	}
+
 	/* Leaving */
 	p_ptr->leaving = TRUE;
 }
@@ -95,6 +103,14 @@ void do_cmd_go_down(void)
 
 	/* New level */
 	p_ptr->depth++;
+
+	/* -KN- (QADV) adv. quest check */
+	if ((p_ptr->qadv_flags & (QADV_STARTED)) &&
+		!(p_ptr->qadv_flags & (QADV_SUCCESS)))
+	{
+		/* started but not finished adv. quest */
+		msg_print("You have abandoned the investigation.");
+	}
 
 	/* Go down another level if allowed */
 	if ((cave_feat[p_ptr->py][p_ptr->px] == FEAT_MORE2) &&

@@ -3543,6 +3543,18 @@ static void add_magic_to_others(object_type *o_ptr, int level, int power)
 			break;
 		}
 
+		case TV_SKELETON:
+		{
+			/* -KN- add for investigating cursed bones (ICI) */
+			if (power == 9)
+			{
+				o_ptr->pval = rand_range(1, 8);
+				o_ptr->inscrip = INSCRIP_CURSED;
+				printf("only this way we create GREAT bones +%d\n", o_ptr->pval);
+			}
+			break;
+		}
+
 		case TV_JUNK:
 		{
 			/* Boulders vary in size and weight */
@@ -4268,6 +4280,12 @@ void apply_magic(object_type *o_ptr, int lev, int okay, bool good, bool great)
 			/* Add magic */
 			add_magic_to_ring(o_ptr, lev, power);
 
+			break;
+		}
+		
+		case TV_SKELETON:
+		{
+			if (great) add_magic_to_others(o_ptr, lev, 9);
 			break;
 		}
 
@@ -5561,13 +5579,10 @@ void make_skeleton(int y, int x, int value)
 	/* -KN- Require space to hold the object */
 	if (!cave_allow_object_bold(y, x)) return;
 
-	/* value (ICI) to make some treasure at some point at deeper levels */
-	if (value > 0) printf("No treasure yet.");
-
 	/* Get local object */
 	i_ptr = &object_type_body;
 
-	/* Restrict to food/mushrooms */
+	/* Restrict to skeletons and bones */
 	required_tval = TV_SKELETON;
 
 	/* Keep trying */
@@ -5576,6 +5591,11 @@ void make_skeleton(int y, int x, int value)
 		/* Make an object (if possible) */
 		if (make_object(i_ptr, FALSE, FALSE, TRUE))
 		{
+			if (value > 0)
+			{
+				apply_magic(i_ptr, p_ptr->depth, TRUE, FALSE, TRUE);
+			}
+
 			/* Give it to the floor */
 			(void)floor_carry(y, x, i_ptr);
 

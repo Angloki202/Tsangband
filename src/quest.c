@@ -341,9 +341,28 @@ static void grant_reward(byte reward_level, byte type, int diff)
 	/* Get local object */
 	i_ptr = &forge;
 
+	/* -KN- (QADV) advanced type reward */
+	if (type == REWARD_ADVANCED)
+	{
+		/* will get replaced with player upgrades (IDEA) */
+		value_threshold = 80 * ((p_ptr->qlev_cy+1) * (p_ptr->qlev_my+1) * (p_ptr->qlev_el+1));
+
+		/* Keep making gold until satisfied */
+		for (value = 0, i = 0; value < value_threshold; i++)
+		{
+			/* Make some gold */
+			if (!make_gold(i_ptr)) continue;
+
+			/* Note value */
+			value += i_ptr->pval;
+
+			/* Drop it */
+			drop_near(i_ptr, 0, p_ptr->py, p_ptr->px, 0x00);
+		}
+	}
 
 	/* Create a gold reward */
-	if (type == REWARD_GOLD)
+	else if (type == REWARD_GOLD)
 	{
 		value_threshold = ((3L + p_ptr->fame) + (reward_level)) * 35 * diff;
 
@@ -1124,11 +1143,24 @@ void display_inn(void)
 			put_str(q_out, 10, 3);
 		}
 	}
-	
-	/* -KN- minor quest (IDEA) (ICI) */
-	prt(format("9)  "), 13, 3);
-	c_put_str(TERM_UMBER, format("Collector quest"), 13, 7);
-	prt(format("   9) Ask about collecting."), Term->rows - 3, 56);
+
+	/* -KN- advanced quest (QUEST VAULTs) */
+	prt(format("7)  "), 13, 3);
+	c_put_str(TERM_VIOLET, format("Unholy crypts"), 13, 7);
+	c_put_str(TERM_L_DARK, format("8)  Mythology"), 14, 3);
+	c_put_str(TERM_L_DARK, format("9)  Eldritch mysteries"), 15, 3);
+
+	if (p_ptr->qadv_flags & (QADV_CRYPTIC))
+	{
+		/* note the started quests */
+		c_put_str(TERM_VIOLET, format("Unholy crypts (started)"), 13, 7);
+	}
+
+	c_put_str(TERM_L_VIOLET, format("%d dark secrets", p_ptr->coll_cy), 13, 33);
+	c_put_str(TERM_MAGENTA, format("%d mythic lair clues", p_ptr->coll_my), 14, 33);
+	c_put_str(TERM_L_PURPLE, format("%d deep mysteries", p_ptr->coll_el), 15, 33);
+
+	prt(format(" 7-9) Ask about investigations."), Term->rows - 3, 56);
 }
 
 /*
@@ -1185,8 +1217,8 @@ void inn_purchase(int item)
 	if (p_ptr->fame >=  5) avail_quest = 2;
 	if (p_ptr->fame >= 10) avail_quest = 3;
 
-	/* -KN- (9) is a number of special minor collecting quest */
-	if (item < 9)
+	/* -KN- 7,8,9 are advanced quests (QADV) */
+	if (item < 7)
 	{
 		/* In a current quest */
 		if (p_ptr->cur_quest)
@@ -1266,11 +1298,75 @@ void inn_purchase(int item)
 	else
 	{
 		/* -KN- always available to check on collectible quest */
-		/* currently only item == 9 */
-		msg_print("You ask for more info about collecting...");
-		return;
-	}	
-	
+		if (item == 7)
+		{
+			/* --- dark secrets of crypts --- */
+			if (p_ptr->qadv_flags & (QADV_CRYPTIC))
+			{
+				if ((p_ptr->qadv_flags & (QADV_STARTED)) && (p_ptr->qadv_flags & (QADV_SUCCESS)))
+				{
+					/* ... and succeeded */
+					p_ptr->qlev_cy++;
+					grant_reward(p_ptr->depth, REWARD_ADVANCED, 1);
+					
+
+					/* ... with thanks */
+					msg_print("The reward for the succesfull investigation is outside...");
+					
+					/* revert the screen */
+					c_put_str(TERM_VIOLET, format("Unholy crypts          "), 13, 7);
+
+					/* clear the quest */
+					p_ptr->qadv_flags &= ~(QADV_CRYPTIC);
+					p_ptr->qadv_flags &= ~(QADV_SUCCESS);
+					p_ptr->qadv_flags &= ~(QADV_STARTED);
+					p_ptr->qadv_level = 0;
+					return;
+				}
+				else if (p_ptr->qadv_flags & (QADV_STARTED))
+				{
+					/* ... but returned without fullfiling the quest */
+					msg_print("Your investigations ended without much clues gathered...");
+
+					/* clear the quest */
+					p_ptr->qadv_flags &= ~(QADV_CRYPTIC);
+					p_ptr->qadv_flags &= ~(QADV_STARTED);
+					p_ptr->qadv_level = 0;
+					return;
+				}
+				else
+				{
+					/* ... but had not even started */
+					msg_print("Your investigation had not even started yet...");
+					return;
+				}
+			}
+			else
+			{
+				/* get a new one */
+				p_ptr->qadv_flags |= (QADV_CRYPTIC);
+				p_ptr->qadv_flags &= ~(QADV_SUCCESS);
+				p_ptr->qadv_flags &= ~(QADV_STARTED);
+
+				if(!p_ptr->max_depth)
+				{
+					p_ptr->qadv_level = 2;
+				}
+				else p_ptr->qadv_level = p_ptr->max_depth + 1;
+				
+				/* ... note the start of a new investigation */
+				msg_format("You should start your cryptic investigation on level %d.", p_ptr->qadv_level);
+				c_put_str(TERM_VIOLET, format("Unholy crypts (started)"), 13, 7);
+				return;
+			}
+		}
+		else
+		{
+			msg_print("Other investigations are unavailable.");
+			return;
+		}
+	}
+
 	/* Clear screen */
 	(void)Term_clear();
 

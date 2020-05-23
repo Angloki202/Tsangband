@@ -2044,8 +2044,10 @@ static void init_stomach(void)
 	/* -KN- (STA) set starting stamina (same for all atp) */
 	p_ptr->mstam = 3;
 	p_ptr->cstam = 3;
-	p_ptr->restam = 10;
+	p_ptr->restam = 12;
 	p_ptr->ixstam = 1;
+	p_ptr->ypstam = 0;
+	p_ptr->durstam = 6;
 }
 
 /*
@@ -2117,8 +2119,23 @@ bool player_birth(void)
 	/* Hack -- outfit the player */
 	player_outfit();
 
-	/* Hack -- initialize character food values */
+	/* Hack -- initialize character food values -KN- with STAMINA inside */
 	init_stomach();
+
+	/* -KN- restart advanced quests */
+	//p_ptr->qadv_flags = 0;
+	p_ptr->coll_cy = 0;
+	p_ptr->coll_my = 0;
+	p_ptr->coll_el = 0;
+	p_ptr->coll_ixth = 0;
+	p_ptr->qlev_cy = 0;
+	p_ptr->qlev_my = 0;
+	p_ptr->qlev_el = 0;
+	p_ptr->qlev_ixth = 0;
+	p_ptr->qadv_level = 0;
+	
+	/* buggy undefined max_depth (?) */
+	//p_ptr->max_depth = 0;
 
 	/* Hack -- cancel all cheating options */
 	cancel_cheat_options();

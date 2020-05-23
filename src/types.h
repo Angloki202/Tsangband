@@ -1110,7 +1110,21 @@ struct player_type
 	s16b mstam;					/* Max stamina */
 	s16b cstam;					/* Cur stamina */
 	s16b restam;				/* stamina regeneration */
-	s16b ixstam;				/* a helper (?) */
+	s16b ixstam;				/* stam. reg. counter */
+	s16b ypstam;				/* --- not yet used --- */
+	s16b durstam;				/* duration of special activation */
+
+/* -KN- (QADV) adv. quest stats */
+	u16b qadv_flags;			// for QADV_ quest flags
+	s16b coll_cy;				// collecting investigation of crypts
+	s16b coll_my;				// inv. of mythological lairs
+	s16b coll_el;				// inv. of eldritch
+	s16b coll_ixth;				// --- not yet used 4th inv. ---
+	byte qlev_cy;				// level of understanding (rewards) crypts
+	byte qlev_my;				// level of rewards for lairs
+	byte qlev_el;				// level of rewards for weird
+	byte qlev_ixth;				// --- not yet used 4th ---
+	s16b qadv_level;			// what depth next quest
 
 	s16b msp;					/* Max mana pts */
 	s16b csp;					/* Cur mana pts */

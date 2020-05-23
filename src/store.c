@@ -3881,6 +3881,16 @@ static void store_process_command(bool inn_cmd)
 			if (inn_cmd) inn_purchase(3);
 			break;
 		}
+		case '7':
+		{
+			if (inn_cmd) inn_purchase(7);
+			break;
+		}
+		case '8':
+		{
+			if (inn_cmd) inn_purchase(8);
+			break;
+		}
 		case '9':
 		{
 			if (inn_cmd) inn_purchase(9);

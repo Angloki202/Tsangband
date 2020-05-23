@@ -1563,10 +1563,11 @@ static void display_player_middle(void)
 	prt_lnum("Gold          ", p_ptr->au,             9, 53, TERM_L_GREEN);
 
 
-	/* -KN- space for collectibles (IDEA) */
-	prt_lnum("Vials         ", 9999,                 10, 53, TERM_UMBER);
-	prt_lnum("Gem orbs      ",  777,                 11, 53, TERM_L_UMBER);
-	prt_lnum("Rare herbs    ", 8888,                 12, 53, TERM_MUD);
+	/* -KN- space for collectibles (IDEA) (QADV) */
+	prt_lnum("dark secrets  ", p_ptr->coll_cy,           10, 53, TERM_VIOLET);
+	prt_lnum("m.lair clues  ", p_ptr->coll_my,           11, 53, TERM_MAGENTA);
+	prt_lnum("deep mysteries", p_ptr->coll_el,           12, 53, TERM_L_PURPLE);
+
 
 	/* Hitpoints, Mana */
 	if (TRUE)

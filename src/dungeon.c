@@ -3964,11 +3964,8 @@ void play_game(bool new_game)
 				p_ptr->csp = p_ptr->msp;
 				p_ptr->csp_frac = 0;
 
-				/* -KN- (STAMINA) */
-				/* Restore stamina */
-				p_ptr->mstam = 3;
-				p_ptr->cstam = 3;
-				p_ptr->restam = 10;
+				/* -KN- (STAMINA) restore */
+				p_ptr->cstam = p_ptr->mstam;
 				p_ptr->ixstam = 1;
 
 				/* Hack -- Healing */

@@ -1431,12 +1431,17 @@ static errr do_character(void)
 	do_s16b(&p_ptr->csp);
 	do_u16b(&p_ptr->csp_frac);
 
-	/* -KN- (STA) prepared for stamina */
-	do_s16b(&p_ptr->mstam);
-	do_s16b(&p_ptr->cstam);
-	do_s16b(&p_ptr->restam);
-	do_s16b(&p_ptr->ixstam);
+	/* -KN- (STA) prepared for stamina (moved to blanks) */
+//	do_s16b(&p_ptr->mstam);
+//	do_s16b(&p_ptr->cstam);
+//	do_s16b(&p_ptr->restam);
+//	do_s16b(&p_ptr->ixstam);
 	
+	/* -KN- (QADV) */
+
+//	do_u16b(&p_ptr->questadv_flags);	// bool quest flags
+
+
 
 	do_s16b(&p_ptr->max_depth);
 
@@ -1728,25 +1733,34 @@ static errr do_character(void)
 		do_u16b(&blank_u16b);
 		do_u16b(&blank_u16b);
 		do_u16b(&blank_u16b);
+		
+		/* -KN- (STA) stamina variables */
+		do_s16b(&p_ptr->mstam);
+		do_s16b(&p_ptr->cstam);
+		do_s16b(&p_ptr->restam);	// turns to regain
+		do_s16b(&p_ptr->ixstam);	// count for regain
+		do_s16b(&p_ptr->ypstam);	// for later use
+		do_s16b(&p_ptr->durstam);	// for duration of activation
+		
 		do_u16b(&blank_u16b);
 		do_u16b(&blank_u16b);
 		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
+		
+
+	
+		/* -KN- (QADV) advanced quest variables */
+		do_u16b(&p_ptr->qadv_flags);
+		do_s16b(&p_ptr->coll_cy);		// collecting investigation of crypts
+		do_s16b(&p_ptr->coll_my);		// inv. of mythological lairs
+		do_s16b(&p_ptr->coll_el);		// inv. of eldritch
+		do_s16b(&p_ptr->coll_ixth);		// --- not yet used 4th inv. ---
+		do_byte(&p_ptr->qlev_cy);		// level of understanding (rewards) crypts
+		do_byte(&p_ptr->qlev_my);		// level of rewards for lairs
+		do_byte(&p_ptr->qlev_el);		// level of rewards for weird
+		do_byte(&p_ptr->qlev_ixth);		// --- not yet used 4th ---
+		
+		do_s16b(&p_ptr->qadv_level);	// what depth next quest
+		
 		do_u16b(&blank_u16b);
 		do_u16b(&blank_u16b);
 		do_u16b(&blank_u16b);

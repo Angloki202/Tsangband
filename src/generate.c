@@ -1435,7 +1435,7 @@ static void alloc_stairs(int feat, int num, int walls)
 				/* Clear previous contents, add up stairs */
 				cave_set_feat(y, x, pick_up_stairs());
 			}
-			
+
 			/* unseen Quest Vault - must go up */
 			else if ((p_ptr->depth % XTH_VAULT == 0) && (p_ptr->max_depth == p_ptr->depth))
 			{
@@ -2428,7 +2428,7 @@ static bool generate_starburst_room(int y1, int x1, int y2, int x2,
  */
 static void generate_well(int y, int x, int shape, int feat1, int feat2)
 {
-	
+
 /*	t 1		t 2		t 3		t 4		t 5		t 6
  *
  *					 2	   2   2	2 2
@@ -2508,12 +2508,12 @@ static void generate_well(int y, int x, int shape, int feat1, int feat2)
 		{
 			cave_set_feat(y-1, x-1, feat2);
 			cave_set_feat(y-1, x+2, feat2);
-			
+
 			cave_set_feat(y, x, feat1);
 			cave_set_feat(y, x+1, feat1);
 			cave_set_feat(y+1, x, feat1);
 			cave_set_feat(y+1, x+1, feat1);
-			
+
 			cave_set_feat(y+2, x-1, feat2);
 			cave_set_feat(y+2, x+2, feat2);
 			break;
@@ -3081,7 +3081,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 
 					/* (experimental) */
 					/* add interesting type (search-activated) */
-					if (one_in_(5)) cave_info[y][x] |= (CAVE_TYP0);
+//					if (one_in_(5)) cave_info[y][x] |= (CAVE_TYP0);
 
 					if (p_ptr->depth > 45)
 					{
@@ -6237,6 +6237,7 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 					{
 						/* added crypt */
 						cave_set_feat(y, x, FEAT_CRYPT);
+						cave_info[y][x] |= (CAVE_CRYPT);
 						break;
 					}
 					case 'u':
@@ -6609,7 +6610,7 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 			d_char_req[0] = '\0';
 			racial_flag_mask = RF3_DEMON;
 		}
-		
+
 		/* -KN- Hack -- handle undead */
 		else if (d_char_req[0] == 'N')
 		{
@@ -8592,13 +8593,27 @@ static void cave_gen(void)
 					else printf("!---------------- A special place was not built.\n");
 				}
 			}
-			else if ((i == 0) && (p_ptr->depth % 2 == 0))
+			//else if ((i == 0) && (p_ptr->depth % 2 == 0))
+			else if ((p_ptr->qadv_flags & (QADV_CRYPTIC)) &&
+					(p_ptr->depth == p_ptr->qadv_level) &&
+					!(p_ptr->qadv_flags & (QADV_STARTED))
+					)
 			{
 				/* try to build 2 crypts on even levels, but not on quest vault level (for now) */
 				if (!build_type0(1)) printf("!---------------- A crypt was not built.\n");
 				else printf("....... A crypt is nearby.\n");
 				if (!build_type0(1)) printf("!---------------- A second crypt was not built.\n");
-				else printf("....... A second crypt is also nearby.\n");
+				else
+				{
+					printf("....... A second crypt is also nearby.\n");
+
+					/* so we can officialy start the quest */
+					p_ptr->qadv_flags |= (QADV_STARTED);
+					
+					static char quest_message[DESC_LEN];
+					(void)get_rnd_line("descriptive.txt", quest_message);
+					msg_format("There is %s.", quest_message);
+				}
 			}
 
 			/* What type of room are we building now? */
@@ -10253,7 +10268,7 @@ void fetch_items(int y, int x, int d, int num, int typ, int lvl)
 			case 3:
 			{
 				/* ---- SKELETON ---- */
-				make_skeleton(y, x, 0);
+				make_skeleton(y, x, lvl);
 				break;
 			}
 			case 4:
@@ -10406,6 +10421,23 @@ void generate_cave(void)
 
 	/* Allow special lighting */
 	p_ptr->dungeon_flags &= ~(DUNGEON_NO_SPECIAL_LIGHTING);
+
+	/* -KN- (IDEA) utilize level creation flags with minor rooms, quest vaults etc. */
+
+	/* --- */
+	/* --- */
+	/* MANY !!!!!!!!!! */
+	/* --- */
+	/* --- */
+
+
+
+
+
+
+
+
+
 
 
 	/* Hack -- jump to a special quest level */

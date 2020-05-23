@@ -1510,6 +1510,7 @@ static void prt_ac(void)
 		col_ac = TERM_MUSTARD;
 	}
 
+	/* -KN- this should move at some point (fix-move) */
 	/* and print with temp adjustment */
 	(void)strnfmt(tmp, sizeof(tmp), "%3d", ac + temp_ac);
 	c_put_str(col_ac, tmp, ROW_AC, COL_AC + 3);
@@ -2697,7 +2698,7 @@ static void left_panel_display_aux(byte item, byte row, int tmp)
 			/* -KN- Stamina bar for later use */
 			/* mstam; cstam; restam; ixstam */
 
-			/* (REMOVE) deprecated; moved to AC row */
+			/* (REMOVE) deprecated; moved to AC row (prt_ac()) */
 
 			c_put_str(TERM_SLATE, "sta:", row, 0);
 			//					  "*****[*****]"

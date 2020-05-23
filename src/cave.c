@@ -1339,12 +1339,14 @@ void lite_spot(int y, int x)
 }
 
 /* -KN- added player-centered bloom effect */
-void lite_ball(int y1, int x1, int col)
+bool lite_search(int y1, int x1, int col)
 {
-	/* (fix) only player based, no x1 and y1 used yet */
+	/* (fix)  only player based, no x1 and y1 used yet */
 	int x, y;
 	int ii;
-	
+
+	int crypt = 0;
+
 	for (ii = 0; ii < grids_in_radius[2]; ii++)
 	{
 		if (one_in_(3)) continue;
@@ -1365,7 +1367,49 @@ void lite_ball(int y1, int x1, int col)
 		pause_for(1);
 		lite_spot(y, x);
 		(void)Term_fresh();
+		if (cave_info[y][x] & (CAVE_CRYPT))
+		{
+			crypt++;
+			cave_info[y][x] &= ~(CAVE_CRYPT);
+		}
+		if (cave_o_idx[y][x] > 0)
+		{
+			object_type *o_ptr;
+			object_type object_type_body;
+			o_ptr = &object_type_body;
+			o_ptr = get_first_object(y, x);
+			
+			if ((o_ptr->tval == TV_SKELETON) && (o_ptr->inscrip == INSCRIP_CURSED))
+			{
+				/* inscribe as UNCURSED to mark these bones */
+				crypt += 10;
+				o_ptr->inscrip = INSCRIP_UNCURSED;
+				printf("now re-insribed:%d \n", o_ptr->inscrip);
+			}
+			else printf("(already inspected as number %d)\n", o_ptr->inscrip);
+		}
 	}
+
+	if ((crypt > 0) && (crypt < 9))
+	{
+		/* primary search of cave grid flags */
+		msg_print("You found suspicious bones near the crypt!");
+		p_ptr->coll_cy += crypt;
+
+		fetch_items(p_ptr->py, p_ptr->px, 2, crypt + 2, 3, 1);
+		return (TRUE);
+	}
+	else if (crypt > 9)
+	{
+		/* we have found the very interesting bones */
+		p_ptr->qadv_flags |= (QADV_SUCCESS);
+		msg_print("Finally, you know more about this crypt.  Report back.");
+
+		/* and add some more crypt lore */
+		p_ptr->coll_cy += crypt;
+		return (TRUE);
+	}
+	else return (FALSE);
 }
 
 /* -KN- fast color flicker (FIX) */
@@ -1423,7 +1467,7 @@ void lite_spot_color(int y, int x, int col)
 		else if (col == 2) Term_queue_char(kx, ky, 1, c, ta, tc);
 		else if (col == 1) Term_queue_char(kx, ky, 2, c, ta, tc);
 	}
-	
+
 	/* Restore the previous term (if necessary) */
 	if (use_special_map) (void)Term_activate(old);
 }

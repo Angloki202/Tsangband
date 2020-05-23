@@ -966,6 +966,8 @@
 #define REWARD_GOLD         1
 #define REWARD_GOOD_ITEM    2
 #define REWARD_GREAT_ITEM   3
+/* -KN- (QADV) advanced reward */
+#define REWARD_ADVANCED     4
 
 /*
  * Quest item name parts
@@ -3189,6 +3191,26 @@
 #define ATTACK_DEADLY      0x8000
 
 
+/* -KN- added advanced quest flags */
+#define QADV_TEMP      	   0x0000		// default FALSE
+#define QADV_CRYPTIC       0x0001		// on CRYPTIC quest
+#define QADV_MYTHIC        0x0002		// on MYTHIC quest
+#define QADV_ELDRITCH      0x0004		// on ELDRITCH quest
+#define QADV_XXX5          0x0008
+#define QADV_XXX6          0x0010
+#define QADV_XXX7          0x0020
+#define QADV_XXX8          0x0040
+#define QADV_XXX9          0x0080
+#define QADV_STARTED       0x0100		// started C/M/E quest
+#define QADV_SUCCESS       0x0200		// finished C/M/E quest
+#define QADV_XX30          0x0400
+#define QADV_XX40          0x0800
+#define QADV_XX50          0x1000
+#define QADV_XX60          0x2000
+#define QADV_XX70          0x4000
+#define QADV_QBOX          0x8000		// found Quest box
+
+
 /*** Player ailments - breakpoints */
 
 #define HVY_STUN        50
@@ -3253,14 +3275,14 @@
 #define CAVE_LITE         0x0400  /* Temporary light (light source) */
 #define CAVE_TRAP         0x0800  /* Has at least one trap */
 #define CAVE_INFR         0x1000  /* Actually seeable by character by infravision */
-#define CAVE_TYP0         0x2000  /* -KN- added for interesting purposes */
+#define CAVE_CRYPT        0x2000  /* -KN- added for advanced search (lite_search()) */
 #define CAVE_TYP1         0x4000  /* -KN- added for interesting purposes */
 #define CAVE_XX15         0x8000  /*  */
 
 /*
  * Cave grid flags that get saved in the savefile
  */
-#define SAVE_CAVE_FLAGS (CAVE_MARK | CAVE_GLOW | CAVE_ICKY | CAVE_TYP0 | CAVE_TYP1 | \
+#define SAVE_CAVE_FLAGS (CAVE_MARK | CAVE_GLOW | CAVE_ICKY | CAVE_CRYPT | CAVE_TYP1 | \
 						 CAVE_ROOM | CAVE_LOS | CAVE_EFFT | CAVE_TRAP)
 
 
@@ -3876,7 +3898,7 @@
 /*
  * -KN- (SUB) added sub-types flags
  */
- 
+
 /* thorns and CLOUD_SURROUND */
 #define RF0_FIERY          0x00000001  /* being of fire and flames */
 #define RF0_FROSTY         0x00000002  /* being of ice and frost */
@@ -4612,7 +4634,7 @@
  * like something non-living.
  */
  /* -KN- added archetypes as non-living */
- 
+
 #define monster_nonliving(M) \
 	(((M)->flags3 & (RF3_DEMON))  || \
 	 ((M)->flags3 & (RF3_UNDEAD)) || \
