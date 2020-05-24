@@ -3543,14 +3543,16 @@ static void add_magic_to_others(object_type *o_ptr, int level, int power)
 			break;
 		}
 
+		case TV_FORGOTTEN:
 		case TV_SKELETON:
 		{
-			/* -KN- add for investigating cursed bones (ICI) */
+			/* -KN- add for investigating cursed bones and debris */
 			if (power == 9)
 			{
 				o_ptr->pval = rand_range(1, 8);
-				o_ptr->inscrip = INSCRIP_CURSED;
-				printf("only this way we create GREAT bones +%d\n", o_ptr->pval);
+				if (o_ptr->tval == TV_FORGOTTEN) o_ptr->inscrip = INSCRIP_SPECIAL;
+				if (o_ptr->tval == TV_SKELETON) o_ptr->inscrip = INSCRIP_CURSED;
+				printf("--- only this way we INTERESTING debris +%d\n", o_ptr->pval);
 			}
 			break;
 		}
@@ -4283,8 +4285,11 @@ void apply_magic(object_type *o_ptr, int lev, int okay, bool good, bool great)
 			break;
 		}
 		
+		case TV_FORGOTTEN:
 		case TV_SKELETON:
 		{
+			/* -KN- make_skeleton(), make_debris() can generate inscripted */
+			/* 		determined by GREAT and power */
 			if (great) add_magic_to_others(o_ptr, lev, 9);
 			break;
 		}
@@ -4461,6 +4466,7 @@ bool kind_fits_tval(int k_idx)
 	if (k_ptr->tval == required_tval)
 	{
 		if (required_tval == TV_JUNK) return (TRUE);
+		if (required_tval == TV_FORGOTTEN) return (TRUE);	// -KN- added
 		if (required_tval == TV_SKELETON) return (TRUE);
 		if (required_tval == TV_GOLD) return (TRUE);
 		if (required_tval == TV_ESSENCE) return (TRUE);
@@ -4900,6 +4906,7 @@ int breakage_chance(object_type *o_ptr)
 		case TV_LITE:
 		case TV_SCROLL:
 		case TV_PARCHMENT:
+		case TV_FORGOTTEN:
 		case TV_SKELETON:
 		case TV_FOOD:
 		{
@@ -5576,8 +5583,10 @@ void make_skeleton(int y, int x, int value)
 	object_type *i_ptr;
 	object_type object_type_body;
 
-	/* -KN- Require space to hold the object */
-	if (!cave_allow_object_bold(y, x)) return;
+	//if (!cave_allow_object_bold(y, x)) return;
+	
+	/* -KN- Require empty (object-wise) space to hold the bones */
+	if (!cave_clean_bold(y, x)) return;
 
 	/* Get local object */
 	i_ptr = &object_type_body;
@@ -5607,6 +5616,52 @@ void make_skeleton(int y, int x, int value)
 	/* Clear restriction */
 	required_tval = 0;
 }
+
+
+/* -KN-
+ * Make a junk for visual effect, or quest purposes (QADV)
+ */
+void make_debris(int y, int x, int type)
+{
+	object_type *i_ptr;
+	object_type object_type_body;
+
+	//if (!cave_allow_object_bold(y, x)) return;
+	
+	/* -KN- Require space to hold the object */
+	if (!cave_clean_bold(y, x)) return;
+
+	/* Get local object */
+	i_ptr = &object_type_body;
+
+	/* Restrict by type */
+	/* now only supports TV of 4 */
+	required_tval = TV_FORGOTTEN;
+
+	/* Keep trying */
+	while (TRUE)
+	{
+		/* Make an object (if possible) */
+		if (make_object(i_ptr, FALSE, FALSE, TRUE))
+		{
+			if (type > 0)
+			{
+				/* set as GREAT to generate MYTHIC quest relatied clue */
+				apply_magic(i_ptr, p_ptr->depth, TRUE, FALSE, TRUE);
+			}
+
+			/* Give it to the floor */
+			(void)floor_carry(y, x, i_ptr);
+
+			/* All done */
+			break;
+		}
+	}
+
+	/* Clear restriction */
+	required_tval = 0;
+}
+
 
 /*
  * Describe the charges on an item in the inventory.

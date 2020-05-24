@@ -1565,8 +1565,8 @@ static void display_player_middle(void)
 
 	/* -KN- space for collectibles (IDEA) (QADV) */
 	prt_lnum("dark secrets  ", p_ptr->coll_cy,           10, 53, TERM_VIOLET);
-	prt_lnum("m.lair clues  ", p_ptr->coll_my,           11, 53, TERM_MAGENTA);
-	prt_lnum("deep mysteries", p_ptr->coll_el,           12, 53, TERM_L_PURPLE);
+	prt_lnum("mythic clues  ", p_ptr->coll_my,           11, 53, TERM_L_PURPLE);
+	prt_lnum("deep mysteries", p_ptr->coll_el,           12, 53, TERM_MAGENTA);
 
 
 	/* Hitpoints, Mana */

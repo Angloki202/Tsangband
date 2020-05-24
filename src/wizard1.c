@@ -171,6 +171,7 @@ static grouper group_item[] =
 	{ TV_LITE,       NULL },
 	{ TV_FLASK,      NULL },
 	{ TV_JUNK,       NULL },
+	{ TV_FORGOTTEN,  NULL },		// -KN- added
 	{ TV_SKELETON,   NULL },
 	{ TV_POUCH,      NULL },
 	{ TV_GOLD,       NULL },

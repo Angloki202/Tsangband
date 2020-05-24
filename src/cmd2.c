@@ -2984,7 +2984,6 @@ void do_cmd_alter(bool deliberate)
 	y = py + ddy[dir];
 	x = px + ddx[dir];
 
-
 	/* Original feature */
 	feat = cave_feat[y][x];
 
@@ -3044,9 +3043,8 @@ void do_cmd_alter(bool deliberate)
 				p_ptr->cstam -= 1;
 
 				/* set the focus flag and redraw */
-				/* one more slot for special flag, hybrid char support */
+				/* one more slot for special flag, hybrid char support (IDEA) */
 				p_ptr->special_attack |= (ATTACK_FOCUS);
-				//(void)left_panel_display(DISPLAY_STAMINA, 0);
 				p_ptr->redraw |= (PR_ARMOR);
 			}
 			else msg_print("You are out of breath at the moment.");
@@ -3078,7 +3076,10 @@ void do_cmd_alter(bool deliberate)
 		}
 
 		/* Disarm */
-		if (action == -1) more = do_cmd_disarm_trap(y, x);
+		if (action == -1)
+		{
+			more = do_cmd_disarm_trap(y, x);
+		}
 	}
 
 	/* Tunnel through rock */
@@ -3115,9 +3116,9 @@ void do_cmd_alter(bool deliberate)
 	}
 
 	/* Close open doors */
-	else if (feat == FEAT_OPEN)
+	else if ((feat == FEAT_OPEN) && ((y != p_ptr->py) && (x != p_ptr->px)))
 	{
-		/* Close */
+		/* Close -KN- only if not inside the door */
 		more = do_cmd_close_aux(y, x);
 	}
 
@@ -3156,6 +3157,33 @@ void do_cmd_alter(bool deliberate)
 	         (get_skill(S_BURGLARY, 0, 100) >= LEV_REQ_TRAP))
 	{
 		more = py_set_trap(y, x, dir);
+	}
+
+	/* -KN- (STA) self alter to enter quick regen mode */
+	else if ((p_ptr->px == x) && (p_ptr->py == y))
+	{
+		/* only when fully prepared */
+		if (p_ptr->cstam > 2)
+		{
+			msg_print("You focus on your body.");
+
+			/* deplete two points and reset the counter */
+			if (p_ptr->mstam == p_ptr->cstam) p_ptr->ixstam = 0;
+			p_ptr->cstam -= 2;
+
+			/* (IDEA) place for other effect, bought with investigation clues */
+			if (p_ptr->qlev_cy > 0)
+			{
+				/* crypt researching makes player see invisible for few turns */
+				set_detect_inv(p_ptr->detect_inv + (p_ptr->durstam / 2));
+				printf("shimmering eyes: %d turns\n", (p_ptr->durstam / 2));
+			}
+
+			/* set the fast regeneration and redraw (p_ptr->durstam improves with QADV) */
+			(void)set_regen_hp(p_ptr->regen_hp + p_ptr->durstam);
+			p_ptr->redraw |= (PR_ARMOR);
+		}
+		else msg_print("You are still catching your breath.");
 	}
 
 	/* Oops */

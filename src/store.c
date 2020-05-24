@@ -3881,6 +3881,21 @@ static void store_process_command(bool inn_cmd)
 			if (inn_cmd) inn_purchase(3);
 			break;
 		}
+		case '4':
+		{
+			if (inn_cmd) inn_purchase(4);
+			break;
+		}
+		case '5':
+		{
+			if (inn_cmd) inn_purchase(5);
+			break;
+		}
+		case '6':
+		{
+			if (inn_cmd) inn_purchase(6);
+			break;
+		}
 		case '7':
 		{
 			if (inn_cmd) inn_purchase(7);
@@ -4092,7 +4107,20 @@ static void store_process_command(bool inn_cmd)
 			     msg_print("That command does not work in stores.");
 			else msg_print("That command does not work in your home.");
 		}
-		else msg_print("That command does not work in the Inn.");
+		else
+		{
+			/* (BUG) somehow numeric values gets legal & illegal hits (?) */
+			if ((p_ptr->command_cmd == '1') || (p_ptr->command_cmd == '2') ||
+				(p_ptr->command_cmd == '3') || (p_ptr->command_cmd == '4') ||
+				(p_ptr->command_cmd == '5') || (p_ptr->command_cmd == '6') ||
+				(p_ptr->command_cmd == '7') || (p_ptr->command_cmd == '8') ||
+				(p_ptr->command_cmd == '9'))
+			{
+				/* (HACK) -KN- don't mind those in the Inn */
+				printf("weird number in the inn (?)");
+			}
+			else msg_print("That command does not work in the Inn.");
+		}
 	}
 }
 
@@ -4269,7 +4297,7 @@ void do_cmd_store(void)
 
 		/* Process the command */
 		store_process_command(store_num == STORE_INN);
-
+		
 		/* Notice stuff */
 		notice_stuff();
 

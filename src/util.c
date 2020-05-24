@@ -4350,7 +4350,6 @@ void request_command(bool shopping)
 		/* Paranoia */
 		if (ch == '\0') continue;
 
-
 		/* Use command */
 		p_ptr->command_cmd = ch;
 
@@ -4384,6 +4383,14 @@ void request_command(bool shopping)
 
 			/* Command "s" -> "sell" (drop) */
 			case 's': p_ptr->command_cmd = 'd'; break;
+			
+			/* -KN- weird fix (fix) */
+			case '5': 
+			{
+				printf("pressed five\n");
+				p_ptr->command_cmd = '5';
+				break;
+			}
 		}
 	}
 

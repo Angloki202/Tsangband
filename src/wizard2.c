@@ -532,6 +532,7 @@ tval_desc tvals[] =
 	{ TV_SPIKE,        "Spikes",             FALSE },
 	{ TV_CHEST,        "Chest",              FALSE },
 	{ TV_SKELETON,     "Skeletons",          FALSE },
+	{ TV_FORGOTTEN,    "Debris",             FALSE },	// -KN- added
 	{ TV_JUNK,         "Junk",               FALSE },
 	{ TV_GOLD,         "Treasure",           FALSE },
 	{ 0,               NULL,                 FALSE }

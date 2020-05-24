@@ -1889,6 +1889,8 @@
 #define TV_SKELETON                 1	/* Skeletons ('`') */
 #define TV_JUNK                     2	/* Sticks, Pottery, etc ('`') */
 #define TV_SPIKE                    3	/* Spikes ('`') */
+/* -KN- added for quests */
+#define TV_FORGOTTEN				4	/* Junk, but in quests */
 
 #define TV_COMPONENT                5	/* Components (for making wearables) */
 #define TV_PARCHMENT                6	/* Parchments (for making scrolls) */
@@ -3251,7 +3253,7 @@
 #define TF_DOOR_CLOSED  0x00200000L  /* Is a closed door */
 #define TF_SHOP         0x00400000L  /* Is a shop */
 /* xxx (many) */
-#define TF_DETONATE     0x00800000L  /* Can be blown up */
+#define TF_DETONATE     0x00800000L  /* -KN- Can be blown up */
 
 
 
@@ -3275,14 +3277,14 @@
 #define CAVE_LITE         0x0400  /* Temporary light (light source) */
 #define CAVE_TRAP         0x0800  /* Has at least one trap */
 #define CAVE_INFR         0x1000  /* Actually seeable by character by infravision */
-#define CAVE_CRYPT        0x2000  /* -KN- added for advanced search (lite_search()) */
+#define CAVE_QADV         0x2000  /* -KN- for search in adv. quests */
 #define CAVE_TYP1         0x4000  /* -KN- added for interesting purposes */
 #define CAVE_XX15         0x8000  /*  */
 
 /*
  * Cave grid flags that get saved in the savefile
  */
-#define SAVE_CAVE_FLAGS (CAVE_MARK | CAVE_GLOW | CAVE_ICKY | CAVE_CRYPT | CAVE_TYP1 | \
+#define SAVE_CAVE_FLAGS (CAVE_MARK | CAVE_GLOW | CAVE_ICKY | CAVE_QADV | CAVE_TYP1 | \
 						 CAVE_ROOM | CAVE_LOS | CAVE_EFFT | CAVE_TRAP)
 
 
@@ -5180,6 +5182,15 @@
  */
 #define DUNGEON_NO_SPECIAL_LIGHTING     0x00000001  /* No special lighting */
 /* xxx (many) */
+
+
+
+
+
+
+
+
+
 
 
 

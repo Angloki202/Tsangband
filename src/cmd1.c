@@ -305,33 +305,7 @@ void do_cmd_search(void)
 	/* -KN- graphical little effect (QADV) */
 	if (lite_search(p_ptr->py, p_ptr->px, 6))
 	{
-		//printf("...found...\n");
-	}
-
-	/* (testing) something interesting (lab & boneyard) */
-	if ((cave_info[p_ptr->py][p_ptr->px] & (CAVE_CRYPT)) ||
-		(cave_info[p_ptr->py][p_ptr->px] & (CAVE_TYP1)))
-	{
-		//if (cave_info[p_ptr->py][p_ptr->px] & (CAVE_TYP0)) fetch_items(p_ptr->py, p_ptr->px, 2, 3, 1, 0);
-		//else fetch_items(p_ptr->py, p_ptr->px, 0, 2, 5, 0);
-
-		/* -KN- random quote (ICI) */
-		static char search_message[DESC_LEN];
-		(void)get_rnd_line("descriptive.txt", search_message);
-		msg_format("There is %s.", search_message);
-
-		/* (IDEA) new foo for better control over txt output, 1st letter could determine special */
-		/* example: quest to find foul ingredients */
-		/* each cauldron in laboratory could have CAVE_TYP0, after wrecking it, you would search */
-		/* the rubble and sometimes you would find the igredient (ingredient++) and monsters could */
-		/* appear.. */
-
-		/* monster type could be associated with minor quest and when you kill one, */
-		/* it would drop hint - search to get some clues */
-
-		/* remove the interesting type */
-		cave_info[p_ptr->py][p_ptr->px] &= ~(CAVE_CRYPT);
-		cave_info[p_ptr->py][p_ptr->px] &= ~(CAVE_TYP1);
+		/* -KN- all the interesting stuff happens inside the lite_search */
 	}
 
 	/* Search */

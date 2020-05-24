@@ -425,6 +425,7 @@ void easy_know_init(void)
 			/* Simple items */
 			case TV_FLASK:
 			case TV_SKELETON:
+			case TV_FORGOTTEN:
 			case TV_SPIKE:
 			case TV_COMPONENT:
 			case TV_PARCHMENT:
@@ -1303,6 +1304,7 @@ void object_desc(char *buf, size_t max, const object_type *o_ptr, int pref, int 
 			{
 				if (o_ptr->tval == TV_SKELETON)     basenm = "bones";
 				else if (o_ptr->tval == TV_BOTTLE)  basenm = "flask";
+				else if (o_ptr->tval == TV_FORGOTTEN)  basenm = "debris";
 				else if (o_ptr->tval == TV_JUNK)    basenm = "stuff";
 				else if (o_ptr->tval == TV_SPIKE)   basenm = "spikes";
 				else if (o_ptr->tval == TV_CHEST)   basenm = "chest";
@@ -1367,6 +1369,7 @@ void object_desc(char *buf, size_t max, const object_type *o_ptr, int pref, int 
 	{
 		/* Some objects are easy to describe */
 		case TV_SKELETON:
+		case TV_FORGOTTEN:
 		case TV_SPIKE:
 		case TV_FLASK:
 		case TV_CHEST:

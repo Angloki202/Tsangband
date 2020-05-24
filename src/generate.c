@@ -2431,11 +2431,11 @@ static void generate_well(int y, int x, int shape, int feat1, int feat2)
 
 /*	t 1		t 2		t 3		t 4		t 5		t 6
  *
- *					 2	   2   2	2 2
- *	 2		222		212		: :    22 22	2  2
- *	212		212	   21 12	 1		 1		 11
- *	 2		222		212		: :	   22 22	 11
- *					 2     2   2	2 2		2  2
+ *					 2	   2:2:2	2 2
+ *	 2		222		2 2	   :::::   22 22	2  2
+ *	212		212	   2 1 2   2:1:2	 1		 11
+ *	 2		222		2 2	   :::::   22 22	 11
+ *					 2     2:2:2	2 2		2  2
  */
 
 	switch (shape)
@@ -2464,27 +2464,28 @@ static void generate_well(int y, int x, int shape, int feat1, int feat2)
 		}
 		case 3:
 		{
-			cave_set_feat(y, x-2, feat2);
-			cave_set_feat(y, x-1, feat1);
+			cave_set_feat(y, x - 2, feat2);
+			cave_set_feat(y - 2, x, feat2);
 			cave_set_feat(y-1, x-1, feat2);
 			cave_set_feat(y-1, x+1, feat2);
-			cave_set_feat(y-1, x, feat1);
-			cave_set_feat(y-2, x, feat2);
-			cave_set_feat(y+2, x, feat2);
-			cave_set_feat(y+1, x, feat1);
-			cave_set_feat(y, x+1, feat1);
+			cave_set_feat(y, x, feat1);
 			cave_set_feat(y+1, x-1, feat2);
 			cave_set_feat(y+1, x+1, feat2);
-			cave_set_feat(y, x+2, feat2);
+			cave_set_feat(y + 2, x, feat2);
+			cave_set_feat(y, x + 2, feat2);
 			break;
 		}
 		case 4:
 		{
+			cave_set_feat(y, x - 2, feat2);
+			cave_set_feat(y - 2, x, feat2);
 			cave_set_feat(y-2, x-2, feat2);
 			cave_set_feat(y-2, x+2, feat2);
 			cave_set_feat(y, x, feat1);
 			cave_set_feat(y+2, x-2, feat2);
 			cave_set_feat(y+2, x+2, feat2);
+			cave_set_feat(y + 2, x, feat2);
+			cave_set_feat(y, x + 2, feat2);
 			break;
 		}
 		case 5:
@@ -3333,7 +3334,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					{
 						/* dungeon ... some bonepiles and webs */
 						if (one_in_(70)) feat = FEAT_BONEPILE;
-						else if (one_in_(30)) feat = FEAT_FLOOR2;
+						else if (one_in_(20)) feat = FEAT_FLOOR2;
 						else if ((one_in_(40)) &&
 						((x == x2) || (x == x1) || (y == y2) || (y == y1))) feat = FEAT_WEB;
 					}
@@ -3345,9 +3346,21 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						{
 							if (((x2 - x1) > 4) && ((y2 - y1) > 4))
 							{
-								generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 5, FEAT_CAULDRON_X, FEAT_TREE);
+								if (p_ptr->depth > 45)
+								{
+									generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 5, FEAT_CAULDRON_X, FEAT_BONEPILE);
+								}
+								else
+								{
+									generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 5, FEAT_CAULDRON_X, FEAT_TREE);
+								}
 							}
-							else generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 6, FEAT_CAULDRON_X, FEAT_BONEPILE);
+							else generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 4, FEAT_CAULDRON_X, FEAT_RUBBLE);
+							/* and one more in a random corner */
+							if (dd == 0) generate_well(y1 + 2, x1 + 2, 1, FEAT_CAULDRON, FEAT_WATER);
+							if (dd == 1) generate_well(y2 - 2, x1 + 2, 1, FEAT_CAULDRON, FEAT_WATER);
+							if (dd == 2) generate_well(y1 + 2, x2 - 2, 1, FEAT_CAULDRON, FEAT_WATER);
+							if (dd == 3) generate_well(y2 - 2, x2 - 2, 1, FEAT_CAULDRON, FEAT_WATER);
 						}
 					}
 					else
@@ -3359,13 +3372,23 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 							{
 								generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 4, FEAT_CAULDRON_X, FEAT_BONEPILE);
 							}
-							else generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 1, FEAT_CAULDRON_X, FEAT_BONEPILE);
+							else generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 3, FEAT_CAULDRON_X, FEAT_RUBBLE);
 						}
 						else if ((x == x2) && (y == y2))
 						{
 							if (((x2 - x1) > 4) && ((y2 - y1) > 4))
 							{
-								generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 4, FEAT_CAULDRON, FEAT_WATER);
+								/* two cauldrons on corners across if big enough */
+								if (dd > 1)
+								{
+									generate_well(y1 + 1, x1 + 1, 1, FEAT_CAULDRON, FEAT_WATER);
+									generate_well(y2 - 1, x2 - 1, 1, FEAT_CAULDRON, FEAT_WATER);
+								}
+								else
+								{
+									generate_well(y2 - 1, x1, 1, FEAT_CAULDRON, FEAT_WATER);
+									generate_well(y1, x2 - 1, 1, FEAT_CAULDRON, FEAT_WATER);
+								}
 							}
 							else generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 2, FEAT_CAULDRON, FEAT_WATER);
 						}
@@ -6235,9 +6258,9 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 					}
 					case 'n':
 					{
-						/* added crypt */
+						/* added crypt (only in QADV) */
 						cave_set_feat(y, x, FEAT_CRYPT);
-						cave_info[y][x] |= (CAVE_CRYPT);
+						cave_info[y][x] |= (CAVE_QADV);
 						break;
 					}
 					case 'u':
@@ -8572,14 +8595,14 @@ static void cave_gen(void)
 		for (i = 0; i < ROOM_MAX; i++)
 		{
 
-			/* -KN- ask about QUEST_VAULT here (i == 0) */
+			/* -KN- ask about GATE VAULT here */
 			if ((i == 0) && (p_ptr->depth % XTH_VAULT == 0))
 			{
-				/* Build the QUEST room first if not already visited */
+				/* Build the GATE room first if not already visited */
 				if (p_ptr->max_depth > p_ptr->depth)
 				{
 					/* skip the vault if already visited this one */
-					printf("....... You remember there was a unique place...\n");
+					printf("....... You remember there used to be a gate...\n");
 				}
 				else
 				{
@@ -8588,16 +8611,16 @@ static void cave_gen(void)
 					{
 						rooms_built += 2;
 						printf("....... There should be a way out of here...\n");
-						continue;
+						/* proceed to other quest vaults */
+						//continue;
 					}
-					else printf("!---------------- A special place was not built.\n");
+					else printf("!---------------- A special gate was not built.\n");
 				}
 			}
-			//else if ((i == 0) && (p_ptr->depth % 2 == 0))
-			else if ((p_ptr->qadv_flags & (QADV_CRYPTIC)) &&
+			/* -KN- (QADV) and add all the advanced quest locations */
+			if ((p_ptr->qadv_flags & (QADV_CRYPTIC)) &&
 					(p_ptr->depth == p_ptr->qadv_level) &&
-					!(p_ptr->qadv_flags & (QADV_STARTED))
-					)
+					!(p_ptr->qadv_flags & (QADV_STARTED)) && (i == 0))
 			{
 				/* try to build 2 crypts on even levels, but not on quest vault level (for now) */
 				if (!build_type0(1)) printf("!---------------- A crypt was not built.\n");
@@ -8609,10 +8632,10 @@ static void cave_gen(void)
 
 					/* so we can officialy start the quest */
 					p_ptr->qadv_flags |= (QADV_STARTED);
-					
+
 					static char quest_message[DESC_LEN];
 					(void)get_rnd_line("descriptive.txt", quest_message);
-					msg_format("There is %s.", quest_message);
+					message(MSG_L_PURPLE, 10, format("This level %s", quest_message));
 				}
 			}
 
@@ -9044,10 +9067,10 @@ static void cave_gen(void)
 				else printf("(empty).. ");
 
 				/* various object that fit green */
-				if (one_in_(4))
+				if (one_in_(2))
 				{
-					printf("and snacks \n");
-					fetch_items(y, x, 2, 2, 4, 0);
+					printf("and green stuff \n");
+					fetch_items(y, x, 3, 4, 15, 0);
 				}
 				else if (one_in_(3))
 				{
@@ -10372,6 +10395,18 @@ void fetch_items(int y, int x, int d, int num, int typ, int lvl)
 			{
 				/* ---- CHESTS ---- */
 				make_box(y, x, 0);
+				break;
+			}
+			case 15:
+			{
+				/* ---- DEBRIS (atm green stuff) ---- */
+				if (lvl == 0)
+				{
+					/* it is possible to find clues for the hidden lair by chance */
+					if (one_in_(6)) make_debris(y, x, 1);
+					else make_debris(y, x, 0);
+				}
+				else make_debris(y, x, 1);
 				break;
 			}
 		}

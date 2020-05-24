@@ -1346,6 +1346,7 @@ bool lite_search(int y1, int x1, int col)
 	int ii;
 
 	int crypt = 0;
+	int mythic = 0;
 
 	for (ii = 0; ii < grids_in_radius[2]; ii++)
 	{
@@ -1367,10 +1368,14 @@ bool lite_search(int y1, int x1, int col)
 		pause_for(1);
 		lite_spot(y, x);
 		(void)Term_fresh();
-		if (cave_info[y][x] & (CAVE_CRYPT))
+		if (cave_info[y][x] & (CAVE_QADV))
 		{
-			crypt++;
-			cave_info[y][x] &= ~(CAVE_CRYPT);
+			if (cave_feat[y][x] == FEAT_CRYPT)
+			{
+				/* unsearched crypts */
+				crypt++;
+				cave_info[y][x] &= ~(CAVE_QADV);
+			}
 		}
 		if (cave_o_idx[y][x] > 0)
 		{
@@ -1381,19 +1386,27 @@ bool lite_search(int y1, int x1, int col)
 			
 			if ((o_ptr->tval == TV_SKELETON) && (o_ptr->inscrip == INSCRIP_CURSED))
 			{
-				/* inscribe as UNCURSED to mark these bones */
+				/* inscribe as UNCURSED to mark the bones */
 				crypt += 10;
 				o_ptr->inscrip = INSCRIP_UNCURSED;
-				printf("now re-insribed:%d \n", o_ptr->inscrip);
+				//printf("now re-insribed:%d \n", o_ptr->inscrip);
 			}
-			else printf("(already inspected as number %d)\n", o_ptr->inscrip);
+			else if ((o_ptr->tval == TV_FORGOTTEN) && (o_ptr->inscrip == INSCRIP_SPECIAL))
+			{
+				/* inscribe as UNCURSED (add 5, 10 or 15 clues) */
+				msg_print("You found a clue. ");
+				mythic += (rand_int(3) + 1) * 5;
+				p_ptr->coll_my += mythic;
+				o_ptr->inscrip = INSCRIP_UNCURSED;
+				//printf("now re-insribed:%d \n", o_ptr->inscrip);
+			}
 		}
 	}
 
 	if ((crypt > 0) && (crypt < 9))
 	{
 		/* primary search of cave grid flags */
-		msg_print("You found suspicious bones near the crypt!");
+		msg_print("You found suspicious bones near the crypt.");
 		p_ptr->coll_cy += crypt;
 
 		fetch_items(p_ptr->py, p_ptr->px, 2, crypt + 2, 3, 1);
@@ -1401,15 +1414,23 @@ bool lite_search(int y1, int x1, int col)
 	}
 	else if (crypt > 9)
 	{
-		/* we have found the very interesting bones */
+		/* we have completed the crypt objective */
 		p_ptr->qadv_flags |= (QADV_SUCCESS);
 		msg_print("Finally, you know more about this crypt.  Report back.");
 
 		/* and add some more crypt lore */
-		p_ptr->coll_cy += crypt;
+		p_ptr->coll_cy += (crypt / 3);
 		return (TRUE);
 	}
-	else return (FALSE);
+	
+	if (mythic > 14) msg_print("You know much more about the mythic lair.");
+	else if (mythic > 9) msg_print("You learned some details about the mythic lair.");
+	else if (mythic > 4)
+	{
+		msg_print("You learned a bit about the mythic lair.");
+		return (TRUE);
+	}
+	return (FALSE);
 }
 
 /* -KN- fast color flicker (FIX) */

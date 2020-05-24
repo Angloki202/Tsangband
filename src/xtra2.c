@@ -1034,10 +1034,10 @@ bool set_regen_hp(int v)
 {
 	bool notice = FALSE;
 
-	/* Set regen_hp, output messages */
+	/* Set regen_hp, output messages -KN- changed */
 	notice = set_condition(&p_ptr->regen_hp, v, 0L,
-	        "You feel unusually robust!",
-	        "You no longer feel unusually robust.");
+	        "You feel regaining the vigor!",
+	        "Boost in vigor is gone.");
 
 	/* Nothing to notice */
 	if (!notice) return (FALSE);
@@ -3817,7 +3817,9 @@ int target_dir(char ch)
 	}
 
 	/* Paranoia */
-	if (d == 5) d = 0;
+	//if (d == 5) d = 0;
+	
+	/* -KN- (YYY) tried self direction */
 
 	/* Return direction */
 	return (d);
