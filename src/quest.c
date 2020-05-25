@@ -1350,8 +1350,6 @@ void inn_purchase(int item)
 			/* ... asking about MYTHICAL LAIR CLUES */
 			if (p_ptr->coll_my < 100)
 			{
-				/* for some weird reason (probably associated with constant illegal commands
-					promts) number 5 doesn't work */
 				msg_print("Come back when you found some clues about hidden lairs.");
 				return;
 			}
@@ -1391,12 +1389,16 @@ void inn_purchase(int item)
 							break;
 						}
 						case 2:
+						{
+							/* 2nd tier offers fire branding for one strike */
+							message(MSG_L_PURPLE, 10, "You can make your attack burn your foes.");
+						}
 						case 3:
 						case 4:
 						{
 							/* second reward makes the effects hold a bit longer */
 							message(MSG_L_PURPLE, 10, "Our research will make you focus longer.");
-							p_ptr->durstam += 4;
+							p_ptr->durstam += 2;
 							break;
 						}
 					}

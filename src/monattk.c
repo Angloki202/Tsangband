@@ -5195,14 +5195,22 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			else message_format(MSG_SUM_MONSTER, 250,
 				"%^s magically summons help!", m_name);
 
-			count += summon_specific(sy, sx, FALSE, summon_lev, 0, 1);
-
-			if (blind && count)
+			if (r_ptr->flags0 & (RF0_SUMMON_ONE))
 			{
-				message(MSG_SUM_MONSTER, 250,
-					"You hear something appear nearby.");
+				count += summon_specific(sy, sx, FALSE,	summon_lev, 0, 0);
+				if (blind && count) message(MSG_SUM_MONSTER, 250,
+					"You hear a creature approaching.");
 			}
+			else
+			{
+				count += summon_specific(sy, sx, FALSE, summon_lev, 0, 1);
 
+				if (blind && count)
+				{
+					message(MSG_SUM_MONSTER, 250,
+						"You hear something appear nearby.");
+				}
+			}
 			break;
 		}
 
@@ -5213,7 +5221,12 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			else message_format(MSG_SUM_MONSTER, 250,
 				"%^s magically summons monsters!", m_name);
 
-			count += summon_specific(sy, sx, FALSE, summon_lev, 0, 4);
+			if (r_ptr->flags0 & (RF0_SUMMON_ONE))
+			{
+				/* special case, summon half the number */
+				count += summon_specific(sy, sx, FALSE,	summon_lev, 0, 2);
+			}
+			else count += summon_specific(sy, sx, FALSE, summon_lev, 0, 4);
 
 			if (blind && count)
 			{
@@ -5234,7 +5247,7 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			else message_format(MSG_SUM_MONSTER, 250,
 				"%^s magically summons a hungry scuttler.", m_name);
 
-			/* -KN- always summon one scuttler */
+			/* -KN- always summon only one scuttler */
 			count += summon_specific(sy, sx, FALSE,
 					summon_lev, SUMMON_BEETLE, 0);
 
@@ -5254,13 +5267,23 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			else message_format(MSG_SUM_MONSTER, 250,
 				"%^s magically summons ants.", m_name);
 
-			count += summon_specific(sy, sx, FALSE,
-					summon_lev, SUMMON_ANT, 3);
-
-			if (blind && count)
+			if (r_ptr->flags0 & (RF0_SUMMON_ONE))
 			{
-				message(MSG_SUM_MONSTER, 250,
+				count += summon_specific(sy, sx, FALSE,	summon_lev,
+						SUMMON_ANT, 1);
+				if (blind && count) message(MSG_SUM_MONSTER, 250,
 					"You hear chittering and skittering.");
+			}
+			else
+			{
+				count += summon_specific(sy, sx, FALSE,
+						summon_lev, SUMMON_ANT, 3);
+
+				if (blind && count)
+				{
+					message(MSG_SUM_MONSTER, 250,
+						"You hear lots of chittering and skittering.");
+				}
 			}
 			break;
 		}
@@ -5272,14 +5295,24 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			else message_format(MSG_SUM_SPIDER, 250,
 				"%^s magically summons spiders.", m_name);
 
-			/* -KN- level adjusted */
-			count += summon_specific(sy, sx, FALSE,
-				summon_lev, SUMMON_SPIDER, (1 + div_round(p_ptr->depth, 30)));
-
-			if (blind && count)
+			if (r_ptr->flags0 & (RF0_SUMMON_ONE))
 			{
-				message(MSG_SUM_SPIDER, 250,
-					"You hear many things appear nearby.");
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_SPIDER, (0 + div_round(p_ptr->depth, 50)));
+				if (blind && count) message(MSG_SUM_MONSTER, 250,
+					"You hear something appear nearby.");
+			}
+			else
+			{
+				/* -KN- level adjusted */
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_SPIDER, (1 + div_round(p_ptr->depth, 30)));
+
+				if (blind && count)
+				{
+					message(MSG_SUM_SPIDER, 250,
+						"You hear many things appear nearby.");
+				}
 			}
 			break;
 		}
@@ -5289,9 +5322,9 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 		{
 			if (blind) msg_format("%^s mumbles.", m_name);
 			else message_format(MSG_SUM_HOUND, 250,
-				"%^s magically summons hounds.", m_name);
+				"%^s calls for more hounds.", m_name);
 
-			/* -KN- summon only two hounds on low levels */
+			/* -KN- summon only two hounds on low levels, not subject to SUMMON_ONE */
 			if (p_ptr->depth < 20)
 			{
 				count += summon_specific(sy, sx, FALSE,
@@ -5318,15 +5351,25 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			if (blind) msg_format("%^s mumbles.", m_name);
 			else message_format(MSG_SUM_ANIMAL, 250,
 				"%^s magically summons natural creatures.", m_name);
-
-			/* -KN- level adjusted */
-			count += summon_specific(sy, sx, FALSE,
-				summon_lev, SUMMON_ANIMAL, (2 + div_round(p_ptr->depth, 30)));
-
-			if (blind && count)
+				
+			if (r_ptr->flags0 & (RF0_SUMMON_ONE))
 			{
-				message(MSG_SUM_ANIMAL, 250,
-					"You hear many things appear nearby.");
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_ANIMAL, (0 + div_round(p_ptr->depth, 50)));
+				if (blind && count) message(MSG_SUM_MONSTER, 250,
+					"You hear something appear nearby.");
+			}
+			else
+			{
+				/* -KN- level adjusted */
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_ANIMAL, (2 + div_round(p_ptr->depth, 30)));
+
+				if (blind && count)
+				{
+					message(MSG_SUM_ANIMAL, 250,
+						"You hear many things appear nearby.");
+				}
 			}
 			break;
 		}
@@ -5343,13 +5386,23 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			else message_format(MSG_SUM_MONSTER, 250,
 				"%^s whistles up a den of thieves!", m_name);
 
-			count += summon_specific(sy, sx, FALSE,
-				summon_lev, SUMMON_THIEF, 4);
-
-			if (blind && count)
+			if (r_ptr->flags0 & (RF0_SUMMON_ONE))
 			{
-				message(MSG_SUM_MONSTER, 250,
-					"You hear footsteps and the whetting of knives.");
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_THIEF, 0);
+				if (blind && count) message(MSG_SUM_MONSTER, 250,
+					"You hear whetting of knives.");
+			}
+			else
+			{
+				count += summon_specific(sy, sx, FALSE,
+					summon_lev, SUMMON_THIEF, 4);
+
+				if (blind && count)
+				{
+					message(MSG_SUM_MONSTER, 250,
+						"You hear footsteps and the whetting of knives.");
+				}
 			}
 			break;
 		}
@@ -5385,7 +5438,7 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 				"%^s howls for help.", m_name);
 
 			/* Orc appears, usually at some distance, rarely in a group */
-			/* -KN- summon only two orcs on low levels */
+			/* -KN- summon only two orcs on low levels, not subject to SUMMON_ONE */
 			if (p_ptr->depth < 30)
 			{
 				count += summon_specific(sy, sx, FALSE,

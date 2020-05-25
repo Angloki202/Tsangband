@@ -953,7 +953,7 @@ Definition of "great":
 '-' wand or rod
 ',' food or mushroom
 
-'&' changed into random demon
+'&' changed into random demon (incl. I)
 'N' added as random undead
 '$' ordinary treasure
 
@@ -970,16 +970,18 @@ Definition of "great":
 '9' both good object + 15 and monster + 10
 '0' both great object + 20 and monster + 15
 
-'U'	added as pillar (no support for golden one)
+'I'	added as pillar (no support for golden one)
+'U' added as abyss
 '`' added as web
 '/' added as pit; 1/16 chance to be full
 '\' see used for (Treasure/trap)
 
 '{' added for cauldrons; 1/4 chance to be full or an orb if deep
 '}' added bonepiles
-'n' added crypt for quest vaults mainly (alt gr + E)
+'Y' added crypt for quest vaults mainly (alt gr + E)
 'u' added monolith for quest vaults mainly (alt gr + !)
 
+how to represent abyss?
 
 ====== Appendix F:  Color Sybols ======
 
@@ -1053,3 +1055,59 @@ Leon Marrick
 April, 2007
 
 
+
+
+
+//////////////////////
+
+
+
+	"A:angel",
+	"B:bird",
+	"C:canine",
+	"D:dragon",
+	"E:elemental",
+	"F:fly or dragon fly",
+	"G:ghost",
+	"H:hybrid",
+	"I:demon",
+	"J:snake",
+	"K:killer scuttler",	/* -KN- added scorpions */
+	"L:lich",
+	"M:mummy",
+	"O:ogre",
+	"P:giant",
+	"Q:quylthulg",
+	"R:reptile",
+	"S:spider",
+	"T:troll",
+	"V:vampire",
+	"W:wraith",
+	"Y:tree",		/* -KN- changed */
+	"Z:zephyr hound",
+	"a:ant",
+	"b:bat",
+	"c:centipede",
+	"d:dragon",
+	"e:floating eye",
+	"f:feline",
+	"g:golem",
+	"h:humanoid",
+	"i:insectoid",  /* -KN- changed */
+	"j:jelly",
+	"k:kobold",
+	"l:larva",		/* -KN- changed */
+	"m:mold",
+	"n:naga",
+	"o:orc",
+	"p:human",
+	"q:quadruped",
+	"r:rodent",
+	"s:skeleton",
+	"t:townsperson",
+	"v:vortex",
+	"w:worm",
+	"y:yeek",
+	"z:zombie",
+	",:mushroom patch",
+	"&:demon",

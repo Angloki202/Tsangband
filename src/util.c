@@ -4341,7 +4341,7 @@ void request_command(bool shopping)
 
 			/* Using a keymap */
 			p_ptr->using_keymap = TRUE;
-
+			
 			/* Continue */
 			continue;
 		}

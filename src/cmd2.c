@@ -3176,7 +3176,15 @@ void do_cmd_alter(bool deliberate)
 			{
 				/* crypt researching makes player see invisible for few turns */
 				set_detect_inv(p_ptr->detect_inv + (p_ptr->durstam / 2));
-				printf("shimmering eyes: %d turns\n", (p_ptr->durstam / 2));
+			}
+			if (p_ptr->qlev_cy > 1)
+			{
+				/* crypt research adds one free fire attack */
+				set_fire_attack(p_ptr->fire_attack + 1);
+				
+				/* redraw */
+				left_panel_display(DISPLAY_SPECIAL_ATTACK, 0);
+				p_ptr->redraw |= (PR_CONDITIONS);
 			}
 
 			/* set the fast regeneration and redraw (p_ptr->durstam improves with QADV) */

@@ -6223,9 +6223,15 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 						break;
 					}
 					/* -KN- added pillars */
-					case 'U':
+					case 'I':
 					{
 						cave_set_feat(y, x, FEAT_PILLAR);
+						break;
+					}
+					/* -KN- added abyss */
+					case 'U':
+					{
+						cave_set_feat(y, x, FEAT_ABYSS);
 						break;
 					}
 					/* -KN- added detonables (ICI) better control */
@@ -6307,9 +6313,9 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 				else           x = x1 + j;
 
 				/* Most alphabetic characters signify monster races. */
-				/* -KN- excluded 'U', 'n' and 'u' for pillars, crypts and monoliths */
-				if (((isalpha(*t)) || (*t == '&')) && (*t != 'x') &&
-				    (*t != 'X') && (*t != 'n') && (*t != 'u') && (*t != 'U'))
+				/* -KN- excluded 'U', 'I', 'n' and 'u' for abyss, pillars, crypts and monoliths */
+				if (((isalpha(*t)) || (*t == '&')) && (*t != 'x') && (*t != 'I') &&
+				    (*t != 'X') && (*t != 'Y') && (*t != 'u') && (*t != 'U'))
 				{
 					/* If the symbol is not yet stored, ... */
 					if ((!strchr(racial_symbol, *t)) && (racial_symbol_num < 128))
@@ -6628,7 +6634,8 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 		}
 
 		/* Hack -- handle demons */
-		else if ((d_char_req[0] == '&') || (d_char_req[0] == 'I'))
+		/* || (d_char_req[0] == 'I') */
+		else if (d_char_req[0] == '&')
 		{
 			d_char_req[0] = '\0';
 			racial_flag_mask = RF3_DEMON;

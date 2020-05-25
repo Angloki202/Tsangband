@@ -2633,11 +2633,23 @@ static bool hit_trap_aux(int who, int y, int x, int t_idx)
 		/* Trap door */
 		case TRAP_DOOR:
 		{
+			/* -KN- Player is now in pit */
+			if ((who < 0) && ((p_ptr->py != y) || (p_ptr->px != x)))
+				monster_swap(p_ptr->py, p_ptr->px, y, x);
+
+			/* -KN- Center on player */
+			y = p_ptr->py;
+			x = p_ptr->px;
+			
 			if (p_ptr->ffall)
 			{
 				bool confirmed;
 
 				msg_print("You float over a trap door.");
+				
+				/* -KN- pit revealed now */
+				lite_spot(y, x);
+				
 				confirmed = get_check("Go down to the next level?");
 
 				if (confirmed)
@@ -2673,7 +2685,6 @@ static bool hit_trap_aux(int who, int y, int x, int t_idx)
 
 			/* Leaving */
 			p_ptr->leaving = TRUE;
-
 			break;
 		}
 

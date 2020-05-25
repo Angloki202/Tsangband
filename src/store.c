@@ -2704,7 +2704,7 @@ static int buy_and_sell(object_type *o_ptr, s32b *price, bool buying,
     /* -KN- global reduction of profit from sold items by 2/3
 		(stores_only_sell is too extreme) */
 	if (buying)
-	{		
+	{
 		cur_price = div_round(cur_price, 3);
 		final_price = div_round(final_price, 3);
 	}
@@ -3886,6 +3886,7 @@ static void store_process_command(bool inn_cmd)
 			if (inn_cmd) inn_purchase(4);
 			break;
 		}
+		case ',':
 		case '5':
 		{
 			if (inn_cmd) inn_purchase(5);
@@ -4109,15 +4110,9 @@ static void store_process_command(bool inn_cmd)
 		}
 		else
 		{
-			/* (BUG) somehow numeric values gets legal & illegal hits (?) */
-			if ((p_ptr->command_cmd == '1') || (p_ptr->command_cmd == '2') ||
-				(p_ptr->command_cmd == '3') || (p_ptr->command_cmd == '4') ||
-				(p_ptr->command_cmd == '5') || (p_ptr->command_cmd == '6') ||
-				(p_ptr->command_cmd == '7') || (p_ptr->command_cmd == '8') ||
-				(p_ptr->command_cmd == '9'))
+			if (p_ptr->command_cmd == 59)
 			{
-				/* (HACK) -KN- don't mind those in the Inn */
-				printf("weird number in the inn (?)");
+				printf("ignore dir pre-press");
 			}
 			else msg_print("That command does not work in the Inn.");
 		}
@@ -4297,7 +4292,7 @@ void do_cmd_store(void)
 
 		/* Process the command */
 		store_process_command(store_num == STORE_INN);
-		
+
 		/* Notice stuff */
 		notice_stuff();
 

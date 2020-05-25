@@ -1510,7 +1510,7 @@ static void prt_ac(void)
 		col_ac = TERM_MUSTARD;
 	}
 
-	/* -KN- this should move at some point (fix-move) */
+	/* -KN- this should move at some point (fix) (move) */
 	/* and print with temp adjustment */
 	(void)strnfmt(tmp, sizeof(tmp), "%3d", ac + temp_ac);
 	c_put_str(col_ac, tmp, ROW_AC, COL_AC + 3);

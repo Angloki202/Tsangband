@@ -1375,6 +1375,12 @@ bool lite_search(int y1, int x1, int col)
 				/* unsearched crypts */
 				crypt++;
 				cave_info[y][x] &= ~(CAVE_QADV);
+
+				/* wake undead guardian (1, 1 or 2) */
+				if (summon_specific(y, x, FALSE, p_ptr->depth + 3, SUMMON_UNDEAD, rand_int(3)))
+				{
+					msg_print("A corpse rises nearby!");
+				}
 			}
 		}
 		if (cave_o_idx[y][x] > 0)
@@ -1383,7 +1389,7 @@ bool lite_search(int y1, int x1, int col)
 			object_type object_type_body;
 			o_ptr = &object_type_body;
 			o_ptr = get_first_object(y, x);
-			
+
 			if ((o_ptr->tval == TV_SKELETON) && (o_ptr->inscrip == INSCRIP_CURSED))
 			{
 				/* inscribe as UNCURSED to mark the bones */
@@ -1422,7 +1428,7 @@ bool lite_search(int y1, int x1, int col)
 		p_ptr->coll_cy += (crypt / 3);
 		return (TRUE);
 	}
-	
+
 	if (mythic > 14) msg_print("You know much more about the mythic lair.");
 	else if (mythic > 9) msg_print("You learned some details about the mythic lair.");
 	else if (mythic > 4)

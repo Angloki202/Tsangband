@@ -1608,7 +1608,9 @@ static void do_cmd_refill_lamp(void)
 		o_ptr->pval = 0;
 	}
 
-	/* Recalculate torch */
+	/* Recalculate torch -KN- with abyss drain_light hack */
+	p_ptr->drain_light = FALSE;
+	p_ptr->update |= (PU_BONUS);
 	p_ptr->update |= (PU_TORCH);
 
 	/* Window stuff */
