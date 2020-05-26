@@ -2867,7 +2867,14 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 		/* -KN- added visual sound-clues (ICI - could be expanded and randomised) */
 		case 96+0:
 		{
-			if (r_ptr->flags3 & (RF3_ANIMAL))
+			if ((r_ptr->flags3 & (RF3_ANIMAL)) && (r_ptr->flags2 & (RF2_FLYING)))
+			{
+				/* -KN- flying animals are assumed to be bird-like (no insect SHRIEK)) */
+				msg_format("%^s caws relentlessly!", m_name);
+				message(MSG_L_UMBER, 4, " 'Caw, craa, craa!'");
+				sound(MSG_SHRIEK);
+			}
+			else if (r_ptr->flags3 & (RF3_ANIMAL))
 			{
 				/* -KN- animals make wild noise (not updated sound) */
 				msg_format("%^s howls ferociously.", m_name);

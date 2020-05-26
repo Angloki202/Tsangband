@@ -4955,7 +4955,7 @@ static void process_monster(monster_type *m_ptr)
 		else                              strcpy(filename, "smeagolr.txt");
 
 		/* Speak */
-		if (get_rnd_line(filename, speech) == 0)
+		if (get_rnd_line(filename, speech, 0) == 0)
 		{
 			monster_desc(m_name, m_ptr, 0x40);
 			msg_format("%^s %s", m_name, speech);

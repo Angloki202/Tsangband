@@ -944,17 +944,18 @@ Definition of "great":
      All specific items below have a bonus of three to their object generation level.  Both weapons and armor are guaranteed "good", food is never guaranteed "good", and all other specific items will be guaranteed "good" 25% of the time.
 
 ']' armor
-'|' a melee or missile weapon
+'|' a melee 
+'_' ranged weapon or missiles
 '=' ring
 '"' amulet
 '!' potion
 '?' scroll
-'_' staff
-'-' wand or rod
+'-' wand, rod or a staff
 ',' food or mushroom
 
 '&' changed into random demon (incl. I)
 'N' added as random undead
+'o' added as orc or ogre
 '$' ordinary treasure
 
 '1' ordinary monster 50% of the time, trap 25% of the time, and object
@@ -978,10 +979,12 @@ Definition of "great":
 
 '{' added for cauldrons; 1/4 chance to be full or an orb if deep
 '}' added bonepiles
-'Y' added crypt for quest vaults mainly (alt gr + E)
+'O' added crypt for quest vaults mainly (alt gr + E)
 'u' added monolith for quest vaults mainly (alt gr + !)
 
-how to represent abyss?
+')' reserved
+'(' reserved
+
 
 ====== Appendix F:  Color Sybols ======
 

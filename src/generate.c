@@ -6262,7 +6262,7 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 						else cave_set_feat(y, x, FEAT_PIT0);
 						break;
 					}
-					case 'n':
+					case 'O':
 					{
 						/* added crypt (only in QADV) */
 						cave_set_feat(y, x, FEAT_CRYPT);
@@ -6313,9 +6313,9 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 				else           x = x1 + j;
 
 				/* Most alphabetic characters signify monster races. */
-				/* -KN- excluded 'U', 'I', 'n' and 'u' for abyss, pillars, crypts and monoliths */
+				/* -KN- excluded 'U', 'I', 'O' and 'u' for abyss, pillars, crypts and monoliths */
 				if (((isalpha(*t)) || (*t == '&')) && (*t != 'x') && (*t != 'I') &&
-				    (*t != 'X') && (*t != 'Y') && (*t != 'u') && (*t != 'U'))
+				    (*t != 'X') && (*t != 'O') && (*t != 'u') && (*t != 'U'))
 				{
 					/* If the symbol is not yet stored, ... */
 					if ((!strchr(racial_symbol, *t)) && (racial_symbol_num < 128))
@@ -6566,28 +6566,41 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 
 						break;
 					}
-					/* Staff. */
+					/* -KN- Ranged and ammo; staff moved to wand/rod. */
 					case '_':
 					{
-						required_tval = TV_STAFF;
-
 						object_level = p_ptr->depth + 3;
-						if (one_in_(4))
-							place_object(y, x, TRUE, FALSE, TRUE);
-						else place_object(y, x, FALSE, FALSE, TRUE);
+
+						temp = randint(4);
+
+						if      (temp == 1) required_tval = TV_SLING;
+						else if (temp == 2) required_tval = TV_BOW;
+						else if (temp == 3) required_tval = TV_CROSSBOW;
+						else if (temp == 4)
+						{
+							if (one_in_(3)) required_tval = TV_SHOT;
+							else if (one_in_(2)) required_tval = TV_ARROW;
+							else required_tval = TV_BOLT;
+						}
+
+						place_object(y, x, TRUE, FALSE, TRUE);
 						object_level = p_ptr->depth;
 
 						required_tval = 0;
 
 						break;
 					}
-					/* Wand or rod. */
+					/* Wand or rod (or a staff). */
 					case '-':
 					{
-						if (one_in_(2)) required_tval = TV_WAND;
-						else required_tval = TV_ROD;
-
 						object_level = p_ptr->depth + 3;
+
+						temp = randint(3);
+
+						if      (temp == 1) required_tval = TV_WAND;
+						else if (temp == 2) required_tval = TV_ROD;
+						else if (temp == 3) required_tval = TV_STAFF;
+
 						if (one_in_(4))
 							place_object(y, x, TRUE, FALSE, TRUE);
 						else place_object(y, x, FALSE, FALSE, TRUE);
@@ -6634,11 +6647,17 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 		}
 
 		/* Hack -- handle demons */
-		/* || (d_char_req[0] == 'I') */
 		else if (d_char_req[0] == '&')
 		{
 			d_char_req[0] = '\0';
 			racial_flag_mask = RF3_DEMON;
+		}
+
+		/* Hack -- handle orcs and ogres */
+		else if (d_char_req[0] == 'o')
+		{
+			d_char_req[0] = '\0';
+			racial_flag_mask = RF3_ORC;
 		}
 
 		/* -KN- Hack -- handle undead */
@@ -6649,7 +6668,8 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 		}
 
 		/* Determine level of monster */
-		if      (type == 0) temp = p_ptr->depth + 3;
+		if      (type == 0) temp = p_ptr->depth + 1;	//	GATE VAULT
+		else if (type == 1) temp = p_ptr->depth + 1;	//	CRYPT Q.VAULT
 		else if (type == 7) temp = p_ptr->depth;
 		else if (type == 8) temp = p_ptr->depth + 3;
 		else if (type == 9) temp = p_ptr->depth + 6;
@@ -8617,13 +8637,12 @@ static void cave_gen(void)
 					if (room_build(0))
 					{
 						rooms_built += 2;
-						printf("....... There should be a way out of here...\n");
-						/* proceed to other quest vaults */
-						//continue;
+						message(MSG_L_UMBER, 40, format("There should be a gate to another part of Angband."));
 					}
 					else printf("!---------------- A special gate was not built.\n");
 				}
 			}
+			
 			/* -KN- (QADV) and add all the advanced quest locations */
 			if ((p_ptr->qadv_flags & (QADV_CRYPTIC)) &&
 					(p_ptr->depth == p_ptr->qadv_level) &&
@@ -8635,13 +8654,14 @@ static void cave_gen(void)
 				if (!build_type0(1)) printf("!---------------- A second crypt was not built.\n");
 				else
 				{
-					printf("....... A second crypt is also nearby.\n");
+					/* expend some special space */
+					rooms_built += 2;
 
 					/* so we can officialy start the quest */
 					p_ptr->qadv_flags |= (QADV_STARTED);
 
 					static char quest_message[DESC_LEN];
-					(void)get_rnd_line("descriptive.txt", quest_message);
+					(void)get_rnd_line("descriptive.txt", quest_message, 0);
 					message(MSG_L_PURPLE, 10, format("This level %s", quest_message));
 				}
 			}
@@ -9077,7 +9097,7 @@ static void cave_gen(void)
 				if (one_in_(2))
 				{
 					printf("and green stuff \n");
-					fetch_items(y, x, 3, 4, 15, 0);
+					fetch_items(y1, x1, 3, 4, 15, 0);
 				}
 				else if (one_in_(3))
 				{

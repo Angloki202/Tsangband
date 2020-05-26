@@ -1761,9 +1761,9 @@ static errr do_character(void)
 		
 		do_s16b(&p_ptr->qadv_level);	// what depth next quest
 		
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
-		do_u16b(&blank_u16b);
+		do_u16b(&p_ptr->rew_cy);		// flags for reward choice for CRYPT quests
+		do_u16b(&p_ptr->rew_my);		// flags for reward choice for MYTHIC quests
+		do_u16b(&p_ptr->rew_el);		// flags for reward choice for ELDRITCH quests
 		do_u16b(&blank_u16b);
 		do_u16b(&blank_u16b);
 		do_u16b(&blank_u16b);

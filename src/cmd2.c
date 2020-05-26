@@ -3166,6 +3166,9 @@ void do_cmd_alter(bool deliberate)
 		if (p_ptr->cstam > 2)
 		{
 			msg_print("You focus on your body.");
+			
+			/* add bloom effect */
+			lite_effect(y, x, 12, 1);
 
 			/* deplete two points and reset the counter */
 			if (p_ptr->mstam == p_ptr->cstam) p_ptr->ixstam = 0;
@@ -3180,7 +3183,7 @@ void do_cmd_alter(bool deliberate)
 			if (p_ptr->qlev_cy > 1)
 			{
 				/* crypt research adds one free fire attack */
-				set_fire_attack(p_ptr->fire_attack + 1);
+				set_fire_attack(p_ptr->fire_attack + (p_ptr->qlev_cy / 2));
 				
 				/* redraw */
 				left_panel_display(DISPLAY_SPECIAL_ATTACK, 0);
@@ -3188,7 +3191,7 @@ void do_cmd_alter(bool deliberate)
 			}
 
 			/* set the fast regeneration and redraw (p_ptr->durstam improves with QADV) */
-			(void)set_regen_hp(p_ptr->regen_hp + p_ptr->durstam);
+			set_regen_hp(p_ptr->regen_hp + p_ptr->durstam);
 			p_ptr->redraw |= (PR_ARMOR);
 		}
 		else msg_print("You are still catching your breath.");

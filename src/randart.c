@@ -3530,22 +3530,22 @@ static char *find_word(int a_idx)
 	{
 		if (is_any_weapon(a_ptr))
 		{
-			(void)get_rnd_line("w_cursed.txt", art_name);
+			(void)get_rnd_line("w_cursed.txt", art_name, 0);
 		}
 		else
 		{
-			(void)get_rnd_line("a_cursed.txt", art_name);
+			(void)get_rnd_line("a_cursed.txt", art_name, 0);
 		}
 	}
 	else
 	{
 		if (is_any_weapon(a_ptr))
 		{
-			(void)get_rnd_line("w_normal.txt", art_name);
+			(void)get_rnd_line("w_normal.txt", art_name, 0);
 		}
 		else
 		{
-			(void)get_rnd_line("a_normal.txt", art_name);
+			(void)get_rnd_line("a_normal.txt", art_name, 0);
 		}
 	}
 

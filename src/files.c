@@ -4110,10 +4110,10 @@ errr file_character(cptr name, bool full)
 }
 
 
-/*
+/* -KN- added some control
  * Get a random line from a file.  Taken from Zangband.
  */
-errr get_rnd_line(const char *file_name, char *output)
+errr get_rnd_line(const char *file_name, char *output, int spec)
 {
 	FILE	    *fp;
 	char	buf[1024];
@@ -4136,6 +4136,17 @@ errr get_rnd_line(const char *file_name, char *output)
 
 	/* choose a random line */
 	line = randint(lines);
+	
+	/* -KN- when specific, skip first x lines (has to be less than max) */
+	if ((spec > 0) && (spec < lines))
+	{
+		line = randint(lines - spec) + spec;
+	}
+	else if ((spec < 0) && (spec < lines))
+	{
+		/* when spec is negative, shorten the selection by that amount */
+		line = randint(lines - spec);
+	}
 
 	for (counter = 0; counter <= line; counter++)
 	{

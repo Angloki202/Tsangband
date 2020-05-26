@@ -1340,7 +1340,7 @@ void inn_purchase(int item)
 				p_ptr->durstam += 2;
 				msg_print("You can concentrate for longer now.");
 				c_put_str(TERM_VIOLET, format("     ", p_ptr->coll_cy), 13, 32);
-				c_put_str(TERM_VIOLET, format("(%d)", p_ptr->coll_cy), 13, 33);
+				c_put_str(TERM_VIOLET, format("(%d) ", p_ptr->coll_cy), 13, 33);
 			}
 			return;
 		}
@@ -1383,7 +1383,8 @@ void inn_purchase(int item)
 						case 1:
 						{
 							/* first reward allows you to see invisible for few moments */
-							message(MSG_L_PURPLE, 10, "Our research will allow you to see the unseen for a few moments.");
+							message(MSG_L_PURPLE, 10,
+							"Our research will allow you to see the unseen for a few moments.");
 							/* also a bit longer effect for the (STA) focus */
 							p_ptr->durstam += 2;
 							break;
@@ -1395,8 +1396,10 @@ void inn_purchase(int item)
 						}
 						case 3:
 						case 4:
+						case 5:
+						case 6:
 						{
-							/* second reward makes the effects hold a bit longer */
+							/* next rewards makes the effects hold a bit longer */
 							message(MSG_L_PURPLE, 10, "Our research will make you focus longer.");
 							p_ptr->durstam += 2;
 							break;
@@ -1438,8 +1441,8 @@ void inn_purchase(int item)
 				else
 				{
 					/* ... but had not even started */
-					//msg_print("Your investigation should lead you to level %d.", p_ptr->qadv_level);
-					message(MSG_WHITE, 10, format("Your investigation should lead you to level %d.", p_ptr->qadv_level));
+					message(MSG_WHITE, 10,
+					format("Your investigation should lead you to level %d.", p_ptr->qadv_level));
 					return;
 				}
 			}

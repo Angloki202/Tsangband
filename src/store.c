@@ -4112,7 +4112,7 @@ static void store_process_command(bool inn_cmd)
 		{
 			if (p_ptr->command_cmd == 59)
 			{
-				printf("ignore dir pre-press");
+				/* -KN- (hack-fix) stay silent */
 			}
 			else msg_print("That command does not work in the Inn.");
 		}

@@ -2510,9 +2510,9 @@ I:115:70:4:8:0:1
 W:12:1:0:50
 B:TOUCH:FIRE:4d8
 F:EMPTY_MIND | NEVER_MOVE | IM_FIRE | IM_POIS | IS_LIT | 
-F:NO_FEAR | NO_CONF | NO_SLEEP | 
+F:NO_FEAR | NO_CONF | NO_SLEEP | FIERY | CLOUD_SURROUND | 
 F:STUPID
-D:A strange red growth on the dungeon floor; it seems to burn with flame.
+D:A strange red growth on the dungeon floor; it burns with flames.
 
 N:236:Black ogre
 G:O:D

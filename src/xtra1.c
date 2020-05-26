@@ -5343,6 +5343,9 @@ int player_flags_pval(u32b flag_pval, bool shape)
 	}
 
 
+	/* -KN- why not add temporary as well? (ICI) to at least somehow show up */
+	//detect_inv;			/* Timed -- See Invisible      etc... */
+
 
 
 

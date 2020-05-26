@@ -1116,6 +1116,9 @@ struct player_type
 
 /* -KN- (QADV) adv. quest stats */
 	u16b qadv_flags;			// for QADV_ quest flags
+	u16b rew_cy;				// for QADV_CRYPTIC reward flags
+	u16b rew_my;				// for QADV_MYTHIC reward flags
+	u16b rew_el;				// for QADV_ELDRITCH reward flags
 	s16b coll_cy;				// collecting investigation of crypts
 	s16b coll_my;				// inv. of mythological lairs
 	s16b coll_el;				// inv. of eldritch

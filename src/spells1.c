@@ -1164,25 +1164,21 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 			if (cave_perma_bold(y, x)) break;
 
 			/* Affect only floor */
-			if (cave_floor_bold(y,x))
+			if (cave_floor_bold(y, x))
 			{
 				/* Change to web at 33% chance */
 				if (one_in_(3))
 				{
-					printf("The web is created on y=%d and x=%d \n", y, x);
 					cave_set_feat(y, x, FEAT_WEB);
 
 					/* inform player if now standing in the web */
 					if ((y == p_ptr->py) && (x == p_ptr->px))
 					{
-						printf("The web is created on you.\n");
 						message(MSG_SLATE, 40, "You are trapped in webs!");
 					}
-					
-					printf("Player standing at on y=%d and x=%d \n", p_ptr->py, p_ptr->px);
-					
+
 					/* refresh the spot to show new color */
-					lite_spot(y,x);
+					lite_spot(y, x);
 					obvious = TRUE;
 				}
 			}

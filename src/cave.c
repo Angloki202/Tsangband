@@ -1338,6 +1338,58 @@ void lite_spot(int y, int x)
 	if (use_special_map) (void)Term_activate(old);
 }
 
+/* -KN- added bloom effect */
+void lite_effect(int y1, int x1, int col, int rad)
+{
+	int x, y;
+	int ii;
+
+	if (rad > 0)
+	{
+		for (ii = 0; ii < grids_in_radius[rad]; ii++)
+		{
+			/* skip some for less delay with larger radia */
+			if ((one_in_(3)) && (rad > 1)) continue;
+			y = y1 + nearby_grids_y[ii];
+			x = x1 + nearby_grids_x[ii];
+			move_cursor_relative(y, x);
+			(void)Term_fresh();
+			
+			if (rad == 1) pause_for(2);
+			else pause_for(1);
+			
+			lite_spot_color(y, x, col);
+			(void)Term_fresh();
+		}
+	}
+	else
+	{
+		/* with radius 0, flicker 9 times at one spot */
+		for (ii = 0; ii < 9; ii++)
+		{
+			move_cursor_relative(y1, x1);
+			(void)Term_fresh();
+			pause_for(2);
+			lite_spot_color(y1, x1, col);
+			(void)Term_fresh();
+		}
+	}
+	for (ii = 0; ii < grids_in_radius[rad]; ii++)
+	{
+		/* then clean it back */
+		y = y1 + nearby_grids_y[ii];
+		x = x1 + nearby_grids_x[ii];
+		move_cursor_relative(y, x);
+		(void)Term_fresh();
+		pause_for(1);
+		lite_spot(y, x);
+		(void)Term_fresh();
+	}	
+	
+	// can add later ___ return (FALSE);
+}
+
+
 /* -KN- added player-centered bloom effect */
 bool lite_search(int y1, int x1, int col)
 {

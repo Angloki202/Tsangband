@@ -3212,6 +3212,60 @@
 #define QADV_XX70          0x4000
 #define QADV_QBOX          0x8000		// found Quest box
 
+/* -KN- added CRYPTIC rewards flags */
+#define CRYPT_X001         0x0001
+#define CRYPT_X002         0x0002
+#define CRYPT_X003         0x0004
+#define CRYPT_X004         0x0008
+#define CRYPT_X005         0x0010
+#define CRYPT_X006         0x0020
+#define CRYPT_X007         0x0040
+#define CRYPT_X008         0x0080
+#define CRYPT_X009         0x0100
+#define CRYPT_X010         0x0200
+#define CRYPT_X020         0x0400
+#define CRYPT_X030         0x0800
+#define CRYPT_X040         0x1000
+#define CRYPT_X050         0x2000
+#define CRYPT_X060         0x4000
+#define CRYPT_X100         0x8000
+
+/* -KN- added MYTHIC rewards flags */
+#define MYTHIC_X001        0x0001
+#define MYTHIC_X002        0x0002
+#define MYTHIC_X003        0x0004
+#define MYTHIC_X004        0x0008
+#define MYTHIC_X005        0x0010
+#define MYTHIC_X006        0x0020
+#define MYTHIC_X007        0x0040
+#define MYTHIC_X008        0x0080
+#define MYTHIC_X009        0x0100
+#define MYTHIC_X010        0x0200
+#define MYTHIC_X020        0x0400
+#define MYTHIC_X030        0x0800
+#define MYTHIC_X040        0x1000
+#define MYTHIC_X050        0x2000
+#define MYTHIC_X060        0x4000
+#define MYTHIC_X100        0x8000
+
+/* -KN- added ELDRITCH rewards flags */
+#define ELDRITCH_X001      0x0001
+#define ELDRITCH_X002      0x0002
+#define ELDRITCH_X003      0x0004
+#define ELDRITCH_X004      0x0008
+#define ELDRITCH_X005      0x0010
+#define ELDRITCH_X006      0x0020
+#define ELDRITCH_X007      0x0040
+#define ELDRITCH_X008      0x0080
+#define ELDRITCH_X009      0x0100
+#define ELDRITCH_X010      0x0200
+#define ELDRITCH_X020      0x0400
+#define ELDRITCH_X030      0x0800
+#define ELDRITCH_X040      0x1000
+#define ELDRITCH_X050      0x2000
+#define ELDRITCH_X060      0x4000
+#define ELDRITCH_X100      0x8000
+
 
 /*** Player ailments - breakpoints */
 
@@ -3973,7 +4027,7 @@
 #define RF1_DROP_GOOD      0x10000000  /* Drop good items */
 #define RF1_DROP_GREAT     0x20000000  /* Drop great items */
 #define RF1_DROP_CHEST     0x40000000  /* Drop a chest */
-#define RF1_DROP_XXX       0x80000000  /* Drop something */
+#define RF1_DROP_SPEC      0x80000000  /* Drop -KN- determined by sub-types on monster_death */
 
 /*
  * New monster race bit flags

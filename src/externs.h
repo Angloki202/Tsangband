@@ -342,6 +342,7 @@ extern void move_cursor_relative(int y, int x);
 extern void print_rel(char c, byte a, int y, int x);
 extern void note_spot(int y, int x);
 extern void lite_spot(int y, int x);
+extern void lite_effect(int y, int x, int col, int rad);	/* -KN- added general bloom effect */
 extern bool lite_search(int y, int x, int col);				/* -KN- added bloom effect for searching */
 extern void lite_spot_color(int y, int x, int col);			/* -KN- added graphics flicker */
 extern void map_animate(void);
@@ -491,7 +492,7 @@ extern errr process_pref_file_command(char *buf);
 extern errr process_pref_file(cptr name);
 extern void display_player(int mode, bool change_display);
 extern errr file_character(cptr name, bool full);
-extern errr get_rnd_line(const char *file_name, char *output);
+extern errr get_rnd_line(const char *file_name, char *output, int spec);
 extern bool show_file(cptr name, cptr what, int line, int mode);
 extern void do_cmd_help(void);
 extern bool display_file(char *filename);
