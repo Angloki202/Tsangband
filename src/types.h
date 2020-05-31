@@ -1111,7 +1111,7 @@ struct player_type
 	s16b cstam;					/* Cur stamina */
 	s16b restam;				/* stamina regeneration */
 	s16b ixstam;				/* stam. reg. counter */
-	s16b ypstam;				/* --- not yet used --- */
+	s16b attstam;				/* bonus of focus attack */
 	s16b durstam;				/* duration of special activation */
 
 /* -KN- (QADV) adv. quest stats */

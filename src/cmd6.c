@@ -4167,6 +4167,9 @@ void use_object(int tval)
 		{
 			(void)set_food(p_ptr->food + o_ptr->pval);
 		}
+		
+		/* -KN- can boost STA regain (ICI) */
+		/* **** */
 	}
 
 

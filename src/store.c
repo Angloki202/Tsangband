@@ -4112,7 +4112,7 @@ static void store_process_command(bool inn_cmd)
 		{
 			if (p_ptr->command_cmd == 59)
 			{
-				/* -KN- (hack-fix) stay silent */
+				/* -KN- (hack-fix) stay silent on comma */
 			}
 			else msg_print("That command does not work in the Inn.");
 		}

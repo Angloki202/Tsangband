@@ -1739,7 +1739,7 @@ static errr do_character(void)
 		do_s16b(&p_ptr->cstam);
 		do_s16b(&p_ptr->restam);	// turns to regain
 		do_s16b(&p_ptr->ixstam);	// count for regain
-		do_s16b(&p_ptr->ypstam);	// for later use
+		do_s16b(&p_ptr->attstam);	// for focus attack
 		do_s16b(&p_ptr->durstam);	// for duration of activation
 		
 		do_u16b(&blank_u16b);

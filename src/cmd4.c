@@ -5232,6 +5232,17 @@ void do_cmd_feeling(bool first_time)
 	/* Display the quest description for the current level */
 	quest_feel = describe_quest(p_ptr->depth, QMODE_SHORT);
 	if (quest_feel != NULL) msg_print(quest_feel);
+	
+	/* -KN- print that this is GATE level and/or CRYPT QUEST level */
+	if ((p_ptr->depth % XTH_VAULT == 0) && (p_ptr->max_depth == p_ptr->depth))
+	{
+		message(MSG_L_UMBER, 10, format("There should be a gate to another part of Angband."));
+	}
+	
+	if ((p_ptr->qadv_flags & (QADV_CRYPTIC)) &&	(p_ptr->depth == p_ptr->qadv_level))
+	{
+		message(MSG_L_UMBER, 10, "There is a crypt on this level.");
+	}
 }
 
 

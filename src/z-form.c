@@ -339,7 +339,10 @@ static const xchar_type latin1_encode[] =
     { "ograve", 242 }, { "oacute", 243 }, { "ocirc", 244 }, { "otilde", 245 },
     { "ouml", 246 }, { "oslash", 248 }, { "ugrave", 249 }, { "uacute", 250 },
     { "ucirc", 251 }, { "uuml", 252 }, { "yacute", 253 }, { "thorn", 254 },
-    { "yuml", 255 },   { "\0", 0 }
+    { "yuml", 255 },
+	{ "s1", 1 }, { "s2", 2 }, { "s3", 3 }, // -KN- added solids
+	{ "s4", 4 }, { "s5", 5 }, { "s6", 6 }, // -KN- added solids
+	{ "\0", 0 }
 };
 
 

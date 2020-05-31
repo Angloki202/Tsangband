@@ -1114,3 +1114,12 @@ April, 2007
 	"z:zombie",
 	",:mushroom patch",
 	"&:demon",
+
+
+
+
+	s16b acid_attack;				/* Acid attack */
+	s16b elec_attack;				/* Elec attack */
+	s16b fire_attack;				/* Fire attack */
+	s16b cold_attack;				/* Cold attack */
+	s16b pois_attack;				/* Pois attack */

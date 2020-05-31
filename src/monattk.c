@@ -2871,26 +2871,26 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			{
 				/* -KN- flying animals are assumed to be bird-like (no insect SHRIEK)) */
 				msg_format("%^s caws relentlessly!", m_name);
-				message(MSG_L_UMBER, 4, " 'Caw, craa, craa!'");
+				message(MSG_UMBER, 4, " 'Caw, craa, craa!'");
 				sound(MSG_SHRIEK);
 			}
 			else if (r_ptr->flags3 & (RF3_ANIMAL))
 			{
 				/* -KN- animals make wild noise (not updated sound) */
 				msg_format("%^s howls ferociously.", m_name);
-				message(MSG_L_UMBER, 4, " 'Whaaoorr!'");
+				message(MSG_UMBER, 4, " 'Whaaoorr!'");
 				sound(MSG_SHRIEK);
 			}
 			else if (r_ptr->flags2 & (RF2_SMART))
 			{
 				msg_format("%^s shouts for help.", m_name);
-				message(MSG_L_UMBER, 4, " 'There!'");
+				message(MSG_UMBER, 4, " 'There!'");
 				sound(MSG_YELL_FOR_HELP);
 			}
 			else
 			{
 				msg_format("%^s makes a high pitched shriek.", m_name);
-				message(MSG_L_UMBER, 4, " 'Aouii, iee, iee!'");
+				message(MSG_UMBER, 4, " 'Aouii, iee, iee!'");
 				sound(MSG_SHRIEK);
 			}
 			aggravate_monsters(m_idx, FALSE, NULL);
@@ -3500,8 +3500,8 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 				else msg_format("%^s conjures massive load of webs!", m_name);
 				rad = 3;
 			}
-			
-			if(r_ptr->flags2 & (RF2_MORGUL_MAGIC)) rad += 1;			
+
+			if(r_ptr->flags2 & (RF2_MORGUL_MAGIC)) rad += 1;
 			mon_ball(m_idx, GF_MAKE_WEBS, get_dam(3 * spower, 6), rad, TRUE);
 			break;
 		}
@@ -5180,7 +5180,7 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			{
 				count += summon_specific(sy, sx, FALSE,
 					summon_lev, SUMMON_KIN, (rlev > 40 ? 4 : 3));
-				
+
 				if (blind && count)
 				{
 					message(MSG_SUM_MONSTER, 250,
@@ -5358,7 +5358,7 @@ bool make_attack_ranged(monster_type *m_ptr, int attack)
 			if (blind) msg_format("%^s mumbles.", m_name);
 			else message_format(MSG_SUM_ANIMAL, 250,
 				"%^s magically summons natural creatures.", m_name);
-				
+
 			if (r_ptr->flags0 & (RF0_SUMMON_ONE))
 			{
 				count += summon_specific(sy, sx, FALSE,
@@ -5747,19 +5747,19 @@ void cloud_surround(int r_idx, int *typ, int *dam, int *rad)
 	*typ = 0;
 	*dam = 2 + rand_range(r_ptr->level / 5, r_ptr->level / 3);
 	*rad = 2;
-	
+
 	int multi = 0;
 
-	/*** Determine the kind of cloud we're supposed to be giving off ***/
-	if (r_ptr->d_char == 'm')
-	{
-		/* special case for molds */
-		*typ = GF_SPORE;
-		*dam = 2 + rand_range(r_ptr->level / 2, r_ptr->level);
-	}
+	/*** molds got moved for additional effects ***/
+	//	if (r_ptr->d_char == 'm')
+	//	{
+	//	/* special case for molds */
+	//	*typ = GF_SPORE;
+	//	*dam = 2 + rand_range(r_ptr->level / 2, r_ptr->level);
+	//}
 
 	/* If breaths and attrs match, the choice is clear. */
-	else if (r_ptr->flags4)
+	if (r_ptr->flags4)
 	{
 		/* This is mostly for the dragons (maybe vortexes?) */
 		if      ((r_ptr->flags4 & (RF4_BRTH_POIS)) &&
@@ -5845,27 +5845,35 @@ void cloud_surround(int r_idx, int *typ, int *dam, int *rad)
 			/* special case for blinding light */
 			multi++;
 			if (one_in_(multi))
-			{	
+			{
 				*typ = GF_LITE;
 				*rad += 1;
 			}
 		}
 	}
-	
+
+	if (r_ptr->d_char == 'm')
+	{
+		/* -KN- molds emit stronger variant */
+		multi++;
+		if (one_in_(multi)) *typ = GF_SPORE;
+		*dam = 2 + rand_range(r_ptr->level / 2, r_ptr->level);
+	}
+
 	if (*typ == 0)
 	{
 		/* if still nothing gets selected, we might have a problem */
 		*typ = GF_HURT;
 		printf ("!!!!     NO TYPE OF CLOUD_SURROUND     !!!! \n");
 	}
-	
+
 	/* Unique monsters have especially strong effects */
 	if (r_ptr->flags1 & (RF1_UNIQUE))
 	{
 		*rad += 1;
 		*dam *= 2;
 	}
-	
+
 	/* Large monsters have even larger effect */
 	if ((r_ptr->flags0 & (RF0_LARGE)) || (r_ptr->flags0 & (RF0_COLOSSAL)))
 	{

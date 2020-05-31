@@ -74,19 +74,30 @@ int monster_evade_or_resist(object_type *o_ptr,
 	/* Get object attributes */
 	object_flags(o_ptr, &f1, &f2, &f3);
 
+	/* -KN- better control of evasion chance (60% default) */
+	int evade_chance = 6;
+
 	/* Get base name of object kind (or "trap") */
 	if      (blow_type == BLOW_TRAP)  p = "trap";
 	else if (o_ptr->tval == TV_SHOT)  p = "shot";
 	else if (o_ptr->tval == TV_ARROW) p = "arrow";
 	else if (o_ptr->tval == TV_BOLT)  p = "bolt";
-	else if (is_melee_weapon(o_ptr))  p = "weapon";
-	else                              p = "missile";
+	else if (is_melee_weapon(o_ptr))
+	{
+		p = "weapon";
+		/* reduce chance by 20% if focused on attack */
+		if (p_ptr->special_attack & (ATTACK_FOCUS)) evade_chance -= 2;
+	}
+	else p = "missile";
 
-
-
+	/* reduce chance by 30% evasion if stunned */
+	if (m_ptr->stunned > 0) evade_chance -= 2;
+	
 	/* Some monsters are great at dodging  -EZ- */
-	if ((r_ptr->flags2 & (RF2_EVASIVE)) && (!m_ptr->csleep) &&
-	    (!m_ptr->confused) && (!one_in_(m_ptr->stunned ? 2 : 3)))
+	if ((r_ptr->flags2 & (RF2_EVASIVE)) &&
+		(!m_ptr->csleep) &&
+	    (!m_ptr->confused) &&
+		(randint(10) <= evade_chance))
 	{
 		/* Monster is at least partially visible */
 		if (m_ptr->ml)
@@ -1828,6 +1839,9 @@ bool py_attack(int y, int x)
 
 	/* Skill */
 	int bonus, chance;
+	
+	/* -KN- Focus (STA) */
+	int focus;
 
 	/* Weapon skill */
 	int skill = get_skill(sweapon(inventory[INVEN_WIELD].tval), 0, 100);
@@ -1936,6 +1950,10 @@ bool py_attack(int y, int x)
 			else if (m_ptr->min_range > MAX_SIGHT)
 			{
 				sleeping_bonus = get_skill(S_BURGLARY, 0, 50);
+				
+				/* -KN- (verbalize) if noticable */
+				if(sleeping_bonus > 24) msg_print("You sneakily backstab from behind.");
+				else if(sleeping_bonus > 9) msg_print("You attack from behind.");
 			}
 		}
 	}
@@ -2129,8 +2147,12 @@ bool py_attack(int y, int x)
 			if (!offhand) chance = p_ptr->skill_thn + BTH_PLUS_ADJ * bonus;
 			else chance = p_ptr->skill_thn2 + BTH_PLUS_ADJ * bonus;
 
+			/* Focus attack gets some bonus */
+			if (p_ptr->special_attack & (ATTACK_FOCUS)) focus = p_ptr->attstam;
+			else focus = 0;
+
 			/* This blow missed */
-			if (!test_hit_combat(chance + sleeping_bonus,
+			if (!test_hit_combat(chance + sleeping_bonus + focus,
 			         r_ptr->ac + terrain_adjust, m_ptr->ml))
 			{
                 learn_about_hits(0, offhand);
@@ -2525,13 +2547,24 @@ bool py_attack(int y, int x)
 				thrust_away(-1, m_ptr->fy, m_ptr->fx, MIN(3, 1 + k / 15));
 			}
 		}
-		else if (p_ptr->special_attack & (ATTACK_FOCUS))
+		else if (p_ptr->special_attack & (ATTACK_KNOCK))
 		{
 			/* -KN- if not forcing, focus can shove the monster a bit */
 			/* 		more rules should apply (testing) (STAMINA) */
-			thrust_away(-1, m_ptr->fy, m_ptr->fx, rand_range(1, 2));
-			message_format(MSG_SLATE, 0, "%^s is shoved back!", m_name);
-			mon_adjust_energy(m_ptr, -100);
+			if ((p_ptr->rew_cy & (CRYPT_KNOCK_SEE)) && 
+				(p_ptr->rew_cy & (CRYPT_KNOCK_SEE2)))
+			{
+				/* double knockback */
+				thrust_away(-1, m_ptr->fy, m_ptr->fx, rand_range(1, 2));
+				message_format(MSG_SLATE, 0, "%^s is knocked back!", m_name);
+				mon_adjust_energy(m_ptr, -100);
+			}
+			else
+			{
+				thrust_away(-1, m_ptr->fy, m_ptr->fx, 1);
+				message_format(MSG_SLATE, 0, "%^s is shoved back!", m_name);
+				mon_adjust_energy(m_ptr, -60);
+			}
 		}
 
 
@@ -2579,6 +2612,9 @@ bool py_attack(int y, int x)
 
 	/* Print "special attacks" */
 	left_panel_display(DISPLAY_SPECIAL_ATTACK, 0);
+	
+	/* -KN- do a little red (4) flicker (visual) */
+	lite_effect(y, x, 4, 0);
 
 	/* Return */
 	return (TRUE);

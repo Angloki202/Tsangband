@@ -1149,6 +1149,10 @@ static cptr do_talent(int talent, int mode, int talent_choice)
 			int num_mons = 0;
 			int total_blows;
 			int i, s;
+			
+			/* Whirlwind is automatically used with STA attack with CTRL + dir */
+			/* any character can use is with drawback, and once you reach 30 skill */
+			/* it emulates this talent (IDEA) */
 
 			/* Count the number of monsters to be hit */
 			for (i = 0; i < 8; i++)
@@ -1369,15 +1373,23 @@ static cptr do_talent(int talent, int mode, int talent_choice)
 					}
 
 					/* Attack monster */
-					if (!py_attack(y, x)) skip = TRUE;
+					if (!py_attack(y, x))
+					{
+						/* -KN- buggy due to assuming that setting bool makes it zero */
+						skip = TRUE;
+					}
+					else
+					{
+						/* -KN- simple fix */
+						skip = FALSE;
+					}
 
 					/* Restore values, later */
 					p_ptr->update |= PU_BONUS;
 				}
 				else msg_print("There is nothing there to attack!");
-				if (skip) return "";
+				if (skip == TRUE) return "";
 			}
-
 			break;
 		}
 
@@ -1576,8 +1588,6 @@ static cptr do_talent(int talent, int mode, int talent_choice)
 			break;
 		}
 	}
-
-
 
 	/* Used a talent */
 	if (use)

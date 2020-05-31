@@ -1680,8 +1680,9 @@ static void process_world(void)
 		}
 	}
 
-	/* loose any focus */
+	/* loose any focus/knockback */
 	p_ptr->special_attack &= ~(ATTACK_FOCUS);
+	p_ptr->special_attack &= ~(ATTACK_KNOCK);
 
 	/* -KN- (STA) regain fraction of lost stamina */
 	if (p_ptr->cstam < p_ptr->mstam) p_ptr->ixstam += 1;

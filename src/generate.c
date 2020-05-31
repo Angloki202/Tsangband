@@ -105,7 +105,7 @@
 #define TUNN_MAX            300
 #define STAIR_MAX            30
 /* -KN- minor room max details */
-#define MINOR_MAX            15
+#define MINOR_MAX            18
 
 /*
  * Simple structure to hold a map location
@@ -2651,7 +2651,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 				printf("=%d x%d/y%d  laboratory room - ", zz, x1, y1);
 			}
 
-			/* save first 15 minor rooms */
+			/* save first 18 minor rooms */
 			if((dun->minor_n) < MINOR_MAX)
 			{
 				dun->minors[dun->minor_n].y = y1 + (y2 - y1) / 2;
@@ -2663,10 +2663,10 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 			}
 
 			/* note if more interesting */
-			if (zz % 2 == 1) printf("-better- ");
+			if (zz % 2 == 1) printf("--better-- ");
 			if (dun->minors[dun->minor_n - 1].size > 1)
 				printf("(size =%d)", dun->minors[dun->minor_n - 1].size);
-			if (advanced == TRUE) printf("--- advanced! \n"); else printf(" \n");
+			if (advanced == TRUE) printf("--- ADVANCED! \n"); else printf(" \n");
 		}
 	}
 
@@ -3021,7 +3021,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						else if ((zz == 9) && ((x % (18 + dd) == 0) || (y % (18 + dd) == 0)))
 						{
 							/* each odd room might have a portcullis */
-							feat = FEAT_OPEN;
+							feat = FEAT_OPEN;							
 						}
 					}
 					else
@@ -3409,6 +3409,16 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 
 			/* draw the fill with variance */
 			cave_set_feat(y, x, feat);
+			
+			/* change door to closed doors */
+			if ((p_ptr->depth > 10) && (feat == FEAT_OPEN))
+			{
+				if (one_in_(11 - div_round(p_ptr->depth, 10)))
+				{
+					cave_set_feat(y, x, FEAT_FLOOR);
+					place_closed_door(y, x);
+				}
+			}
 		}
 	}
 }
@@ -8662,7 +8672,7 @@ static void cave_gen(void)
 
 					static char quest_message[DESC_LEN];
 					(void)get_rnd_line("descriptive.txt", quest_message, 0);
-					message(MSG_L_PURPLE, 10, format("This level %s", quest_message));
+					message(MSG_L_UMBER, 10, format("This level %s", quest_message));
 				}
 			}
 
@@ -9096,8 +9106,9 @@ static void cave_gen(void)
 				/* various object that fit green */
 				if (one_in_(2))
 				{
-					printf("and green stuff \n");
-					fetch_items(y1, x1, 3, 4, 15, 0);
+					printf("and gree-ee-ee-een stuff \n");
+					fetch_items(y1, x1, 2, 2, 15, 0);
+					fetch_items(y, x, 1, 3, 15, 0);
 				}
 				else if (one_in_(3))
 				{

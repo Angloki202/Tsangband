@@ -2878,7 +2878,15 @@ static bool hit_trap_aux(int who, int y, int x, int t_idx)
 				}
 			}
 			
+			/* -KN- remove the pit-trap */
+			remove_trap(p_ptr->py, p_ptr->px, -1);
+		
+			/* -KN- draw the pit */
+			cave_feat[p_ptr->py][p_ptr->px] = FEAT_PIT0;
+			
 			/* -KN- redraw to see the player in the pit */
+			p_ptr->drain_light = TRUE;
+			p_ptr->update |= (PU_TORCH);
 			lite_spot(y, x);
 
 			break;

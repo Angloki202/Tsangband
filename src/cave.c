@@ -1352,6 +1352,13 @@ void lite_effect(int y1, int x1, int col, int rad)
 			if ((one_in_(3)) && (rad > 1)) continue;
 			y = y1 + nearby_grids_y[ii];
 			x = x1 + nearby_grids_x[ii];
+			
+			/* control out of bounds */
+			if (y > dungeon_hgt) y = dungeon_hgt;
+			else if (y < 0) y = 0;
+			if (x > dungeon_wid) x = dungeon_wid;
+			else if (x < 0) y = 0;
+			
 			move_cursor_relative(y, x);
 			(void)Term_fresh();
 			
@@ -1364,8 +1371,8 @@ void lite_effect(int y1, int x1, int col, int rad)
 	}
 	else
 	{
-		/* with radius 0, flicker 9 times at one spot */
-		for (ii = 0; ii < 9; ii++)
+		/* with radius 0, flicker 12 times at one spot */
+		for (ii = 0; ii < 12; ii++)
 		{
 			move_cursor_relative(y1, x1);
 			(void)Term_fresh();
@@ -1379,9 +1386,16 @@ void lite_effect(int y1, int x1, int col, int rad)
 		/* then clean it back */
 		y = y1 + nearby_grids_y[ii];
 		x = x1 + nearby_grids_x[ii];
+		
+		/* control out of bounds */
+		if (y > dungeon_hgt) y = dungeon_hgt;
+		else if (y < 0) y = 0;
+		if (x > dungeon_wid) x = dungeon_wid;
+		else if (x < 0) y = 0;
+		
 		move_cursor_relative(y, x);
 		(void)Term_fresh();
-		pause_for(1);
+		//pause_for(1);
 		lite_spot(y, x);
 		(void)Term_fresh();
 	}	
@@ -1393,7 +1407,6 @@ void lite_effect(int y1, int x1, int col, int rad)
 /* -KN- added player-centered bloom effect */
 bool lite_search(int y1, int x1, int col)
 {
-	/* (fix)  only player based, no x1 and y1 used yet */
 	int x, y;
 	int ii;
 
@@ -1405,6 +1418,13 @@ bool lite_search(int y1, int x1, int col)
 		if (one_in_(3)) continue;
 		y = p_ptr->py + nearby_grids_y[ii];
 		x = p_ptr->px + nearby_grids_x[ii];
+		
+		/* control out of bounds */
+		if (y > dungeon_hgt) y = dungeon_hgt;
+		else if (y < 0) y = 0;
+		if (x > dungeon_wid) x = dungeon_wid;
+		else if (x < 0) y = 0;
+		
 		move_cursor_relative(y, x);
 		(void)Term_fresh();
 		pause_for(1);
@@ -1415,9 +1435,16 @@ bool lite_search(int y1, int x1, int col)
 	{
 		y = p_ptr->py + nearby_grids_y[ii];
 		x = p_ptr->px + nearby_grids_x[ii];
+		
+		/* control out of bounds */
+		if (y > dungeon_hgt) y = dungeon_hgt;
+		else if (y < 0) y = 0;
+		if (x > dungeon_wid) x = dungeon_wid;
+		else if (x < 0) y = 0;
+		
 		move_cursor_relative(y, x);
 		(void)Term_fresh();
-		pause_for(1);
+		//pause_for(1);
 		lite_spot(y, x);
 		(void)Term_fresh();
 		if (cave_info[y][x] & (CAVE_QADV))

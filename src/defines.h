@@ -3179,7 +3179,7 @@
 #define ATTACK_FLEE        0x0004
 /* -KN- (STA) added focus */
 #define ATTACK_FOCUS       0x0008
-#define ATTACK_XX02        0x0010
+#define ATTACK_KNOCK       0x0010
 #define ATTACK_HOLY        0x0020
 #define ATTACK_VORPAL      0x0040
 #define ATTACK_SNEAK       0x0080
@@ -3194,7 +3194,7 @@
 
 
 /* -KN- added advanced quest flags */
-#define QADV_TEMP      	   0x0000		// default FALSE
+#define QADV_BIRTH     	   0x0000		// default FALSE
 #define QADV_CRYPTIC       0x0001		// on CRYPTIC quest
 #define QADV_MYTHIC        0x0002		// on MYTHIC quest
 #define QADV_ELDRITCH      0x0004		// on ELDRITCH quest
@@ -3210,12 +3210,12 @@
 #define QADV_XX50          0x1000
 #define QADV_XX60          0x2000
 #define QADV_XX70          0x4000
-#define QADV_QBOX          0x8000		// found Quest box
+#define QADV_QUESTBOX      0x8000		// found Quest box (?)
 
 /* -KN- added CRYPTIC rewards flags */
-#define CRYPT_X001         0x0001
-#define CRYPT_X002         0x0002
-#define CRYPT_X003         0x0004
+#define CRYPT_KNOCK_SEE    0x0001		// Knockback or See invis when zero
+#define CRYPT_DUR_IMBUE    0x0002
+#define CRYPT_KNOCK_SEE2   0x0004		// Improved knock or see invis
 #define CRYPT_X004         0x0008
 #define CRYPT_X005         0x0010
 #define CRYPT_X006         0x0020
@@ -5478,20 +5478,20 @@
 /* Colored messages with no fanciness */
 #define MSG_DARK           200
 #define MSG_WHITE          201
-#define MSG_SLATE          202
-#define MSG_ORANGE         203
-#define MSG_RED            204
-#define MSG_GREEN          205
-#define MSG_BLUE           206
-#define MSG_UMBER          207
-#define MSG_L_DARK         208
+#define MSG_SLATE          202			// -KN- combat descriptive, webs
+#define MSG_ORANGE         203				// -KN- (orig) INN quest fail, hunger
+#define MSG_RED            204				// -KN- (orig) danger, super-hunger
+#define MSG_GREEN          205				// -KN- (orig) classic INN quest complete
+#define MSG_BLUE           206					// -KN-   --- free ---
+#define MSG_UMBER          207			// -KN- voice of sounds ie. 'Waorrrgh!'
+#define MSG_L_DARK         208			// -KN- sort of tutorial, explanatory
 #define MSG_L_WHITE        209
-#define MSG_L_PURPLE       210
-#define MSG_YELLOW         211
-#define MSG_L_RED          212
-#define MSG_L_GREEN        213
-#define MSG_L_BLUE         214
-#define MSG_L_UMBER        215
+#define MSG_L_PURPLE       210				// -KN- (orig) player ghost feeling
+#define MSG_YELLOW         211				// -KN- (orig) warning bell
+#define MSG_L_RED          212				// -KN- (orig) bbreath, other nasties
+#define MSG_L_GREEN        213					// -KN-   --- free ---
+#define MSG_L_BLUE         214				// -KN- (orig) priestly, commending
+#define MSG_L_UMBER        215			// -KN- related to GATE, QUESTS, QADV rewards
 /* Insert new colors here */
 
 

@@ -2007,7 +2007,7 @@ F:GIANT | EVIL | SMART
 D:A ten foot tall humanoid with powerful muscles.
 
 N:192:Druid
-G:p:G
+G:p:g
 I:110:50:20:10:15:8
 W:14:1:28:45
 B:PUNCH:HURT:2d4
@@ -4807,7 +4807,7 @@ D:of tiny legs.
 ## empty space (available for dungeon monsters) ##
 
 N:424:Mystic
-G:p:g
+G:p:m
 I:115:220:25:25:15:10:18
 W:42:2:80:450
 B:PUNCH:HURT:2d11
@@ -4886,7 +4886,7 @@ F:IM_POIS | NO_FEAR | NO_CONF | NO_SLEEP |
 F:STUPID | REGENERATE | FRIENDS
 S:1_IN_6 | POW_10 | 
 S:HUNGER
-D:This grass might actually bite. But why are you getting hungry?
+D:This grass might actually bite.  But why are you getting hungry?
 
 N:430:Berserker
 G:p:u
@@ -6560,7 +6560,7 @@ D:A wrathful female demon with many arms, each bearing deadly weapons.
 ## empty space (available for dungeon monsters) ##
 
 N:561:Master mystic
-G:p:g
+G:p:m
 I:120:800:25:24:10:15:18
 W:62:2:100:2700
 B:PUNCH:BATTER:2d10

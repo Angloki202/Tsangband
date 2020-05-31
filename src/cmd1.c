@@ -1205,17 +1205,24 @@ static bool escape_pit(void)
 	else msg_print("You leap out of the pit.");
 
 	/* We're free! */
+	
+	lite_spot(p_ptr->py, p_ptr->px);
+	
+	
+	/* (moved) to trap pit actiavation in traps.c (fix) */
 
 	/* -KN- change trap into empty pit */
-	if (cave_pit_trap(p_ptr->py, p_ptr->px))
-	{
-		/* remove the pit-trap and redraw for visual clue */
-		remove_trap(p_ptr->py, p_ptr->px, -1);
-		lite_spot(p_ptr->py, p_ptr->px);
-
-		/* we are assuming the trap was on a spot where a pit can be */
-		cave_feat[p_ptr->py][p_ptr->px] = FEAT_PIT0;
-	}
+	//if (cave_pit_trap(p_ptr->py, p_ptr->px))
+	//{
+	//	/* remove the pit-trap and redraw for visual clue */
+	//	remove_trap(p_ptr->py, p_ptr->px, -1);
+	//	
+	//	/* we are assuming the trap was on a spot where a pit can be */
+	//	cave_feat[p_ptr->py][p_ptr->px] = FEAT_PIT0;
+	//	
+	//	/* now redraw */
+	//	lite_spot(p_ptr->py, p_ptr->px);
+	//}
 	return (TRUE);
 }
 

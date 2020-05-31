@@ -3033,22 +3033,120 @@ void do_cmd_alter(bool deliberate)
 		}
 		else
 		{
-			/* -KN- (STA); burglary should check for sleeping */
-			if (p_ptr->cstam > 0)
+			/* -KN- (STA); burglary should check for sleeping or something */
+			if ((p_ptr->cstam > 0) ||
+				((p_ptr->pskills[S_SWORD].max > 29) ||
+				(p_ptr->pskills[S_HAFTED].max > 29) ||
+				(p_ptr->pskills[S_POLEARM].max > 29)))
 			{
-				msg_print("You focus on your attack.");
+				int x1, y1;
+				bool occupied[8];
+				int total_blows = 3;
+				int num_mons = 0;
+				int i, s;
+				int old_num_blows, old_num_blows2;
+				bool focused = TRUE;
 
-				/* deplete one point and reset the counter */
-				if (p_ptr->mstam == p_ptr->cstam) p_ptr->ixstam = 0;
-				p_ptr->cstam -= 1;
+				/* Count the number of monsters to be hit */
+				for (i = 0; i < 8; i++)
+				{
+					x1 = p_ptr->px + ddx[ddc[i]];
+					y1 = p_ptr->py + ddy[ddc[i]];
 
-				/* set the focus flag and redraw */
-				/* one more slot for special flag, hybrid char support (IDEA) */
-				p_ptr->special_attack |= (ATTACK_FOCUS);
-				p_ptr->redraw |= (PR_ARMOR);
+					if (cave_m_idx[y1][x1])
+					{
+						occupied[i] = TRUE;
+						num_mons++;
+					}
+					else occupied[i] = FALSE;
+				}
+
+				if ((p_ptr->pskills[S_SWORD].max > 29) ||
+					(p_ptr->pskills[S_HAFTED].max > 29) ||
+					(p_ptr->pskills[S_POLEARM].max > 29))
+				{
+					/* convert to actual whirlwind talent (almost) */
+					total_blows = (2 * p_ptr->num_blow + p_ptr->num_blow2 + num_mons + 1) / 2;
+					if (p_ptr->cstam > 0)
+					{
+						/* detract the stamina point only if there is one */
+						if (p_ptr->mstam == p_ptr->cstam) p_ptr->ixstam = 0;
+						p_ptr->cstam -= 1;
+						if (num_mons > 1) msg_print("You cleave your foes with focus.");
+						else 			  msg_print("You focus on your attacks.");
+						focused = TRUE;
+					}
+					else
+					{
+						/* free whirlwind for warriors do not grant FOCUS strike */
+						if (num_mons > 1) msg_print("You cleave your foes.");
+						else			  msg_print("You attack your foe.");
+						focused = FALSE;
+					}
+				}
+				else
+				{
+					msg_print("You focus on your attacks.");
+
+					/* deplete one point and reset the counter */
+					if (p_ptr->mstam == p_ptr->cstam) p_ptr->ixstam = 0;
+					p_ptr->cstam -= 1;
+				}
+
+				/* Hack -- set blows per attempt to one */
+				old_num_blows = p_ptr->num_blow;
+				old_num_blows2 = p_ptr->num_blow2;
+				if (num_mons > 1)
+				{
+					/* 1 hit/monster when more targets */
+					p_ptr->num_blow = 1;
+					p_ptr->num_blow2 = 1;
+				}
+				else
+				{
+					total_blows = 1;
+				}
+
+				/* set the focus and/or knockback flag and redraw */
+				/* FOCUS = hybrid char support (IDEA) */
+				if (focused == TRUE)
+				{
+					if (p_ptr->qlev_cy > 0)
+					{
+						if ((p_ptr->rew_cy & (CRYPT_KNOCK_SEE)) ||
+							(p_ptr->rew_cy & (CRYPT_KNOCK_SEE2)))
+							p_ptr->special_attack |= (ATTACK_KNOCK);
+					}
+
+					/* and is always focused (p_ptr->attstam) */
+					p_ptr->special_attack |= (ATTACK_FOCUS);
+					p_ptr->redraw |= (PR_ARMOR);
+				}
+
+				/* Attack up to three monsters in a circle */
+				for (i = 0, s = randint(8); i < total_blows; i++, s++)
+				{
+					/* Find next occupied spot */
+					while (!occupied[s % 8]) s++;
+
+					x1 = p_ptr->px + ddx[ddc[s % 8]];
+					y1 = p_ptr->py + ddy[ddc[s % 8]];
+
+					/* Handle attack if monster remains */
+					if (cave_m_idx[y1][x1]) py_attack(y1, x1);
+				}
+
+				/* Hack -- Reset number of blows */
+				p_ptr->num_blow  = old_num_blows;
+				p_ptr->num_blow2 = old_num_blows2;
 			}
-			else msg_print("You are out of breath at the moment.");
-			(void)py_attack(y, x);
+			else
+			{
+				/* attack without special moves */
+				msg_print("You are out of breath at the moment.");
+				(void)py_attack(y, x);
+			}
+
 		}
 	}
 
@@ -3160,13 +3258,14 @@ void do_cmd_alter(bool deliberate)
 	}
 
 	/* -KN- (STA) self alter to enter quick regen mode */
+	/* now called VIGOR */
 	else if ((p_ptr->px == x) && (p_ptr->py == y))
 	{
 		/* only when fully prepared */
 		if (p_ptr->cstam > 2)
 		{
 			msg_print("You focus on your body.");
-			
+
 			/* add bloom effect */
 			lite_effect(y, x, 12, 1);
 
@@ -3174,17 +3273,40 @@ void do_cmd_alter(bool deliberate)
 			if (p_ptr->mstam == p_ptr->cstam) p_ptr->ixstam = 0;
 			p_ptr->cstam -= 2;
 
-			/* (IDEA) place for other effect, bought with investigation clues */
-			if (p_ptr->qlev_cy > 0)
+			/* very short-term see invisibility */
+			/* (not having CRYPT_KNOCK_*** means having CRYPT_*****_SEE) */
+			if ((p_ptr->qlev_cy > 0) && (!(p_ptr->rew_cy & (CRYPT_KNOCK_SEE))))
 			{
-				/* crypt researching makes player see invisible for few turns */
-				set_detect_inv(p_ptr->detect_inv + (p_ptr->durstam / 2));
+				set_detect_inv(p_ptr->detect_inv + (p_ptr->durstam / 3));
 			}
-			if (p_ptr->qlev_cy > 1)
+
+			/* double short-term see invisibility */
+			if ((p_ptr->qlev_cy > 2) && (!(p_ptr->rew_cy & (CRYPT_KNOCK_SEE2))))
 			{
-				/* crypt research adds one free fire attack */
-				set_fire_attack(p_ptr->fire_attack + (p_ptr->qlev_cy / 2));
-				
+				set_detect_inv(p_ptr->detect_inv + (p_ptr->durstam / 3));
+			}
+
+			/* set one instance of weapon branding depending on magic realm knowledge */
+			/* (not having CRYPT_DUR means having CRYPT_IMBUE) */
+			if ((p_ptr->qlev_cy > 1) && (!(p_ptr->rew_cy & (CRYPT_DUR_IMBUE))))
+			{
+				if ((p_ptr->fire_attack == 0) && (p_ptr->pskills[S_WIZARDRY].cur > 14))
+				{
+					set_elec_attack(1);
+				}
+				if ((p_ptr->fire_attack == 0) && (p_ptr->pskills[S_PIETY].cur > 14))
+				{
+					set_elec_attack(1);
+				}
+				if ((p_ptr->fire_attack == 0) && (p_ptr->pskills[S_NATURE].cur > 14))
+				{
+					set_acid_attack(1);
+				}
+				if ((p_ptr->fire_attack == 0) && (p_ptr->pskills[S_DOMINION].cur > 14))
+				{
+					set_pois_attack(1);
+				}
+
 				/* redraw */
 				left_panel_display(DISPLAY_SPECIAL_ATTACK, 0);
 				p_ptr->redraw |= (PR_CONDITIONS);
@@ -3194,7 +3316,10 @@ void do_cmd_alter(bool deliberate)
 			set_regen_hp(p_ptr->regen_hp + p_ptr->durstam);
 			p_ptr->redraw |= (PR_ARMOR);
 		}
-		else msg_print("You are still catching your breath.");
+		else
+		{
+			msg_print("You are still catching your breath.");
+		}
 	}
 
 	/* Oops */
@@ -3599,8 +3724,6 @@ static void do_cmd_hold_or_stay(int pickup)
 			msg_print("Catching breath... ");
 		}
 	}
-	//else msg_print("Just standing... ");
-	/* (probably add foo that manages regenerating STA with some limits) */
 
 	/* Notice unseen objects */
 	notice_unseen_objects();

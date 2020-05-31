@@ -2046,7 +2046,7 @@ static void init_stomach(void)
 	p_ptr->cstam = 3;
 	p_ptr->restam = 16;
 	p_ptr->ixstam = 1;
-	p_ptr->ypstam = 0;
+	p_ptr->attstam = 4;		// slightly less than from 'blessing'
 	p_ptr->durstam = 6;
 }
 
