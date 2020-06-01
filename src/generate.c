@@ -2019,8 +2019,6 @@ static bool generate_room(int y1, int x1, int y2, int x2, int light)
 	return (TRUE);
 }
 
-
-
 /* -KN- moved further up in the code (from some 2500+ line) to avoid static troubles
  * Generate helper -- split a rectangle with a feature
  */
@@ -2423,6 +2421,40 @@ static bool generate_starburst_room(int y1, int x1, int y2, int x2,
 	return (TRUE);
 }
 
+/* -KN- moved further up in the code
+ * Make a pool (useful for water and lava).
+ */
+static bool generate_pool(int y1, int x1, int y2, int x2, int feat)
+{
+	int i, y0, x0;
+	int height, width;
+
+	/* Size allowed is too small -- return */
+	if (y2 - y1 < 2) return (FALSE);
+	if (x2 - x1 < 2) return (FALSE);
+
+
+	/* Look hard for a floor (or water) grid */
+	for (i = 0; i < 50; i++)
+	{
+		/* Find a random center within the rectangle of effect */
+		y0 = rand_range(y1+1, y2-1) + rand_int(2);
+		x0 = rand_range(x1+1, x2-1) + rand_int(2);
+
+		/* If it is a floor or water grid, accept it */
+		if (cave_floor_bold(y0, x0) || (cave_feat[y0][x0] == FEAT_WATER)) break;
+	}
+
+	/* Calculate pool size (must not be too narrow or long */
+	height  = y2 - y1;
+	width   = x2 - x1;
+	if      (height > width  * 2) height = width  * 2;
+	else if (width  > height * 2) width  = height * 2;
+
+	/* Make the pool */
+	return (generate_starburst_room(y0 - (height+1) / 2, x0 - (width+1) / 2,
+		y0 + height / 2, x0 + width / 2, FALSE, feat, FALSE));
+}
 
 /*
  * -KN- terrain feature groups
@@ -2546,7 +2578,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 		/* type 1 is default */
 		zz = 1;
 
-		/* random preferred direction */
+		/* random one direction */
 		dd = rand_int(4);
 
 		/* primary floor type by depth (each 15 floors a new one) */
@@ -2614,10 +2646,14 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 		if (one_in_(16 - div_round(p_ptr->depth, 8))) advanced = TRUE;
 
 		/* ever-raising chance for more varied and dangerous themes */
-		if (one_in_(8 - div_round(p_ptr->depth, 16)))
+		if (one_in_(7 - div_round(p_ptr->depth, 18)))
 		{
-			//zz = rand_range(2, 12 + div_round(p_ptr->depth, 16));
-			zz = rand_range(2, 15);
+			zz = rand_range(2, 17);
+
+			/* type (zz) of spec. room dependent on dungeon environment */
+
+
+
 
 			/* still testing (ICI) */
 			if (one_in_(3)) advanced = TRUE;
@@ -2650,6 +2686,10 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 			if ((zz == 14) || (zz == 15))
 			{
 				printf("=%d x%d/y%d  laboratory room - ", zz, x1, y1);
+			}
+			if ((zz == 16) || (zz == 17))
+			{
+				printf("=%d x%d/y%d  stalagmite room - ", zz, x1, y1);
 			}
 
 			/* save first 18 minor rooms */
@@ -2830,6 +2870,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						{
 							/* each odd room features uneven spider chessboard */
 							if (rr % 4 == 0) feat = FEAT_WEB;
+							else feat = FEAT_FLOOR_B;
 						}
 					}
 					else if (p_ptr->depth > 15)
@@ -2837,7 +2878,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						/* caves ... more webs */
 						if (one_in_(30)) feat = FEAT_WEB;
 						else if (rr % 24 == 0) feat = floor_plus;
-						else if ((zz == 5) && ((x % 14 == 0) || (y % 14 == 0)))
+						else if ((zz == 5) && ((x % (10 + dd) == 0) || (y % (10 + dd) == 0)))
 						{
 							/* each odd room could have a rubble line */
 							feat = FEAT_RUBBLE;
@@ -2895,7 +2936,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						/* frost pits ... add some roughness */
 						if (one_in_(45)) feat = FEAT_PIT0;
 						else if (rr % 18 == 0) feat = floor_plus;
-						else if ((zz == 7) && ((x % (12 + dd) == 0) || (y % (12 + dd) == 0)) &&
+						else if ((zz == 7) && ((x % (10 + dd) == 0) || (y % (10 + dd) == 0)) &&
 								(rr % 3 != 0))
 						{
 							/* each odd room could have a rift or two */
@@ -2952,8 +2993,8 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 								((x == x2 - 1) && (y == y1)) ||
 								((x == x2 - 1) && (y == y2)) ||
 								((x == x2) && (y = y1 + 1)) ||
-								((x == x2) && (y = y2 - 1))) return;
-							feat = FEAT_TREE;
+								((x == x2) && (y = y2 - 1))) feat = floor_sec;
+							else feat = FEAT_TREE;
 							if (p_ptr->depth > 45) feat = FEAT_ABYSS;
 						}
 					}
@@ -2971,8 +3012,8 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 								((x == x2 - 1) && (y == y1)) ||
 								((x == x2 - 1) && (y == y2)) ||
 								((x == x2) && (y = y1 + 1)) ||
-								((x == x2) && (y = y2 - 1))) return;
-								feat = FEAT_TREE;
+								((x == x2) && (y = y2 - 1))) feat = floor_sec;
+							else feat = FEAT_TREE;
 						}
 					}
 
@@ -2993,14 +3034,17 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 
 					if (p_ptr->depth > 45)
 					{
-						/* deep halls and deeper ... add some obstacles */
+						/* deep halls and deeper ... abyss and fissures */
 						if (one_in_(25)) feat = FEAT_PIT0;
+						else if ((rr % 3 != 0) &&
+						((x == x2) || (x == x1) || (y == y2) || (y == y1))) feat = FEAT_ABYSS;
 						else if (((((x % 2 == 0) && (y % 2 == 1)) || ((x % 2 == 1) && (y % 2 == 0))) &&
 							(!one_in_(12))) && (zz == 9))
 						{
 							/* tiled grounds */
 							feat = FEAT_FLOOR2;
-							if (p_ptr->depth > 75) feat = FEAT_ABYSS;
+							if (p_ptr->depth > 60) feat = FEAT_ABYSS;
+							if (p_ptr->depth > 75) feat = FEAT_LAVA;
 						}
 					}
 					else if (p_ptr->depth > 30)
@@ -3022,12 +3066,12 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						else if ((zz == 9) && ((x % (18 + dd) == 0) || (y % (18 + dd) == 0)))
 						{
 							/* each odd room might have a portcullis */
-							feat = FEAT_OPEN;							
+							feat = FEAT_OPEN;
 						}
 					}
 					else
 					{
-						/* dungeon ... more civil */
+						/* dungeon ... more civil and garbage pits */
 						if (one_in_(70)) feat = FEAT_RUBBLE;
 						else if ((one_in_(50)) &&
 						((x == x2) || (x == x1) || (y == y2) || (y == y1))) feat = FEAT_PIT0;
@@ -3081,20 +3125,17 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					else if (rr > 130) feat = floor;
 					else feat = FEAT_FLOOR;
 
-					/* (experimental) */
-					/* add interesting type (search-activated) */
-//					if (one_in_(5)) cave_info[y][x] |= (CAVE_TYP0);
-
 					if (p_ptr->depth > 45)
 					{
 						/* deep halls and deeper ... add some bones */
 						if (one_in_(30)) feat = FEAT_BONEPILE;
 						else if (rr % 8 == 0) feat = FEAT_FLOOR_B;
-						else if ((zz == 11) && ((x % (6 + dd) == 0) || (y % (6 + dd) == 0)) &&
+						else if ((zz == 11) && ((x % (6 + dd) == 0) || (y % (5 + dd) == 0)) &&
 								(rr % 4 != 0))
 						{
 							/* each odd room could have a many fissures */
-							feat = FEAT_ABYSS;
+							feat = FEAT_PIT0;
+							if (p_ptr->depth > 60) feat = FEAT_ABYSS;
 							if (p_ptr->depth > 75) feat = FEAT_LAVA;
 						}
 					}
@@ -3188,8 +3229,12 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 
 					if (p_ptr->depth > 60)
 					{
-						/* frost pits and deeper ... add some obstacles */
-						if (one_in_(60)) feat = FEAT_PILLAR;
+						/* frost pits and deeper ... add some thick webs */
+						if ((one_in_(10)) &&
+						((x == x2) || (x == x1) || (y == y2) || (y == y1))) feat = FEAT_WEB;
+						else if ((rr % 10 == 0) &&
+						((x != x2) || (x != x1) || (y != y2) || (y != y1)) &&
+						((x % 2 == 0) && (y % 2 == 0))) feat = FEAT_PILLAR;
 						else if (rr % 30 == 0) feat = FEAT_WEB;
 						else if (zz == 13)
 						{
@@ -3228,8 +3273,8 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					{
 						/* dungeon ... walls with webs */
 						if (one_in_(60)) feat = FEAT_RUBBLE;
-						else if ((one_in_(35)) &&
-						((x == x2) || (x == x1) || (y == y2) || (y == y1))) feat = FEAT_WEB;
+						else if ((one_in_(20)) &&
+						((x == x2) || (x == x1) || (y == y2) || (y == y1)))	feat = FEAT_WEB;
 						else if (rr % 6 == 0) feat = FEAT_FLOOR4;
 					}
 
@@ -3238,15 +3283,13 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					{
 						if (((x == x2) && (y == y2)) && (p_ptr->depth > 45))
 						{
-							/* a chasm */
+							/* a chasm if in deep halls and deeper */
 							generate_starburst_room(y1, x1, y2, x2, FALSE, FEAT_ABYSS, FALSE);
-							//generate_plus(y1, x1, y2, x2, FEAT_ABYSS);
 						}
 						else if ((x == x2) && (y == y2))
 						{
 							/* a large spider web */
 							generate_starburst_room(y1, x1, y2, x2, FALSE, FEAT_WEB, FALSE);
-							//generate_plus(y1, x1, y2, x2, FEAT_WEB);
 						}
 					}
 					else
@@ -3256,13 +3299,11 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						{
 							/* a chimney */
 							generate_starburst_room(y1, x1, y2, x2, FALSE, FEAT_WALL_EXTRA, FALSE);
-							//generate_plus(y1 + 1, x1 + 1, y2 - 1, x2 - 1, FEAT_WALL_EXTRA);
 						}
 						else if ((x == x2) && (y == y2))
 						{
 							/* 1/3 chance to make smaller central web */
 							generate_starburst_room(y1, x1, y2, x2, FALSE, FEAT_WEB, FALSE);
-							//generate_plus(y1 + 1, x1 + 1, y2 - 1, x2 - 1, FEAT_WEB);
 						}
 					}
 
@@ -3281,14 +3322,20 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					else if (rr > 130) feat = floor;
 					else feat = FEAT_FLOOR;
 
-					/* (experimental) */
-					/* add interesting type B (search-activated) */
-					if (one_in_(5)) cave_info[y][x] |= (CAVE_TYP1);
+		/*	(experimental) */
+		//	if (one_in_(5)) cave_info[y][x] |= (CAVE_TYP1);
 
 					if (p_ptr->depth > 60)
 					{
-						/* iron pits and deeper ... add some wells */
-						if (one_in_(40)) feat = FEAT_WATER;
+						/* iron pits and deeper ... add belt of bones and more */
+						if ((x == x1 + 1) || (x == x2 - 1) || (y == y1 + 1) || (y == y2 - 1))
+						{
+							if (rr % 6 == 0) feat = FEAT_BONEPILE;
+							if (rr % 11 == 0) feat = FEAT_ORB;
+						}
+						else if ((rr % 25 == 0) &&
+						((x != x2) || (x != x1) || (y != y2) || (y != y1))) feat = floor_sec;
+
 						else if ((rr % 3 == 0) && (zz == 15))
 						{
 							/* each odd room will have two semi-lines */
@@ -3300,7 +3347,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					{
 						/* underwoods and deep halls ... some bushes and bones */
 						if (one_in_(60)) feat = FEAT_BONEPILE;
-						else if (rr % 60 == 0) feat = FEAT_TREE;
+						else if (rr % 55 == 0) feat = FEAT_TREE;
 						if (((x == x2 - 1) || (x == x1 + 1) || (y == y2 - 1) ||
 							(y == y1 - 1)) && (one_in_(5)))
 						{
@@ -3312,9 +3359,9 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 								((x == x2 - 1) && (y == y1)) ||
 								((x == x2 - 1) && (y == y2)) ||
 								((x == x2) && (y = y1 + 1)) ||
-								((x == x2) && (y = y2 - 1))) return;
-							if (zz == 15) feat = FEAT_TREE;
-							else feat = floor_sec;
+								((x == x2) && (y = y2 - 1))) feat = floor_sec;
+							else if (zz == 15) feat = FEAT_TREE;
+							else feat = FEAT_FLOOR3;
 						}
 					}
 					else if (p_ptr->depth > 15)
@@ -3326,7 +3373,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						else if ((zz == 15) && ((x % (5 + dd) == 0) || (y % (5 + dd) == 0)))
 						{
 							/* each odd room have a pattern of bones with some cauldron */
-							if (one_in_(16)) feat = FEAT_CAULDRON;
+							if (one_in_(18)) feat = FEAT_CAULDRON;
 							else if (rr % 32 == 0) feat = FEAT_CAULDRON_X;
 							else feat = FEAT_FLOOR_B;
 						}
@@ -3382,18 +3429,188 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 								/* two cauldrons on corners across if big enough */
 								if (dd > 1)
 								{
-									generate_well(y1 + 1, x1 + 1, 1, FEAT_CAULDRON, FEAT_WATER);
-									generate_well(y2 - 1, x2 - 1, 1, FEAT_CAULDRON, FEAT_WATER);
+									generate_well(y1 + 2, x1 + 2, 1, FEAT_CAULDRON, FEAT_WATER);
+									generate_well(y2 - 2, x2 - 2, 1, FEAT_CAULDRON, FEAT_WATER);
 								}
 								else
 								{
-									generate_well(y2 - 1, x1, 1, FEAT_CAULDRON, FEAT_WATER);
-									generate_well(y1, x2 - 1, 1, FEAT_CAULDRON, FEAT_WATER);
+									generate_well(y2 - 2, x1 + 2, 1, FEAT_CAULDRON, FEAT_WATER);
+									generate_well(y1 + 2, x2 - 2, 1, FEAT_CAULDRON, FEAT_WATER);
 								}
 							}
 							else generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 2, FEAT_CAULDRON, FEAT_WATER);
 						}
 					}
+					break;
+				}
+				case 16:
+				case 17:
+				{
+					/* --- STALAGMITE ROOM --- */
+					/* rounded edges, pillars and stalagmites */
+					if (rr > 190) feat = floor_sec;
+					else if (rr > 188) feat = floor_plus;
+					else if (rr > 130) feat = floor;
+					else feat = FEAT_FLOOR;
+
+					if (p_ptr->depth > 75)
+					{
+						/* burn pits and deeper ... more spacious between pillars */
+						if (one_in_(30)) feat = FEAT_PIT1;
+						else if ((one_in_(20)) &&
+						((x != x2) || (x != x1) || (y != y2) || (y != y1)))
+						{
+							if ((x % 3 == 0) && (y % 3 == 0)) feat = FEAT_PILLAR;
+							else if (rr % 4 == 0) feat = FEAT_PIT0;
+						}
+						else if ((rr % 11 == 0) && (zz == 17))
+						{
+							/* each odd room will have chasm at the one end */
+							if ((dd == 0) && (x > x1)) feat = FEAT_ABYSS;
+							if ((dd == 1) && (x < x2)) feat = FEAT_ABYSS;
+							if ((dd == 2) && (y > y1)) feat = FEAT_ABYSS;
+							if ((dd == 3) && (y < y2)) feat = FEAT_ABYSS;
+						}
+						else if ((rr % 7 == 0) && (zz == 17))
+						{
+							if ((dd == 0) && (x > x1 + 1)) feat = FEAT_ABYSS;
+							if ((dd == 1) && (x < x2 - 1)) feat = FEAT_ABYSS;
+							if ((dd == 2) && (y > y1 + 1)) feat = FEAT_ABYSS;
+							if ((dd == 3) && (y < y2 - 1)) feat = FEAT_ABYSS;
+						}
+						else if ((rr % 2 == 0) && (zz == 17))
+						{
+							if ((dd == 0) && (x > x1 + 2)) feat = FEAT_ABYSS;
+							if ((dd == 1) && (x < x2 - 2)) feat = FEAT_ABYSS;
+							if ((dd == 2) && (y > y1 + 2)) feat = FEAT_ABYSS;
+							if ((dd == 3) && (y < y2 - 2)) feat = FEAT_ABYSS;
+						}
+					}
+					else if (p_ptr->depth > 45)
+					{
+						/* deep halls and iron pits ... pillars instead of stalagmites */
+						if (one_in_(30)) feat = FEAT_PIT0;
+						else if ((one_in_(30)) &&
+						((x != x2) || (x != x1) || (y != y2) || (y != y1)))
+						{
+							if ((x % 2 == 0) && (y % 2 == 0)) feat = FEAT_PILLAR;
+							else if (rr % 5 == 0) feat = FEAT_RUBBLE;
+						}
+						else if ((zz == 17) && (rr % 3))
+						{
+							/* each odd room could have big central stone */
+							if 		((dd > 1) && (x > x1 + 2) && (x < x2 - 2))
+							{
+								feat = FEAT_WALL_EXTRA;
+								if (p_ptr->depth > 60) feat = FEAT_PILLAR;
+								if ((y == y1) || (y == y2)) feat = floor_sec;
+							}
+							else if ((dd < 2) && (y > y1 + 2) && (y < y2 - 2))
+							{
+								feat = FEAT_WALL_EXTRA;
+								if (p_ptr->depth > 60) feat = FEAT_PILLAR;
+								if ((x == x1) || (x == x2)) feat = floor_sec;
+							}
+						}
+					}
+					else if (p_ptr->depth > 30)
+					{
+						/* underwoods ... more trees */
+						if (one_in_(30)) feat = floor_plus;
+						else if ((one_in_(35)) &&
+						((x != x2) || (x != x1) || (y != y2) || (y != y1))) feat = FEAT_WALL_EXTRA;
+						else if ((rr % 12 == 0) && (zz == 17))
+						{
+							/* each odd room features one side more overgrown */
+							if ((dd == 0) && (x > x1)) feat = FEAT_TREE;
+							if ((dd == 1) && (x < x2)) feat = FEAT_TREE;
+							if ((dd == 2) && (y > y1)) feat = FEAT_TREE;
+							if ((dd == 3) && (y < y2)) feat = FEAT_TREE;
+						}
+						else if ((rr % 9 == 0) && (zz == 17))
+						{
+							if ((dd == 0) && (x > x1 + 1)) feat = FEAT_TREE;
+							if ((dd == 1) && (x < x2 - 1)) feat = FEAT_TREE;
+							if ((dd == 2) && (y > y1 + 1)) feat = FEAT_TREE;
+							if ((dd == 3) && (y < y2 - 1)) feat = FEAT_TREE;
+						}
+						else if ((rr % 5 == 0) && (zz == 17))
+						{
+							if ((dd == 0) && (x > x1 + 2)) feat = FEAT_TREE;
+							if ((dd == 1) && (x < x2 - 2)) feat = FEAT_TREE;
+							if ((dd == 2) && (y > y1 + 2)) feat = FEAT_TREE;
+							if ((dd == 3) && (y < y2 - 2)) feat = FEAT_TREE;
+						}
+					}
+					else if (p_ptr->depth > 15)
+					{
+						/* caves ... more water and even more stalagmites */
+						if (one_in_(28)) feat = FEAT_WATER;
+						else if ((one_in_(40)) &&
+						((x != x2) || (x != x1) || (y != y2) || (y != y1))) feat = FEAT_WALL_EXTRA;
+						else if (rr % 8 == 0) feat = FEAT_FLOOR3;
+						else if ((rr % 3 == 0) && (zz == 17))
+						{
+							/* each odd room will have 1/3 filled with water puddles */
+							if ((dd == 0) && (x > x1 + 1)) feat = FEAT_WATER;
+							if ((dd == 1) && (x < x2 - 1)) feat = FEAT_WATER;
+							if ((dd == 2) && (y > y1 + 1)) feat = FEAT_WATER;
+							if ((dd == 3) && (y < y2 - 1)) feat = FEAT_WATER;
+						}
+					}
+					else
+					{
+						/* dungeon ... some water plus walls, but not close to walls */
+						if (one_in_(30)) feat = FEAT_WATER;
+						else if ((one_in_(50)) &&
+						((x != x2) || (x != x1) || (y != y2) || (y != y1))) feat = FEAT_WALL_EXTRA;
+						else if (rr % 5 == 0) feat = FEAT_FLOOR3;
+						else if (rr % 24 == 0) feat = FEAT_WEB;
+					}
+
+					/* cut lot of corners and prepare more natural feel */
+					if ((advanced == TRUE) || ((zz == 17) && (p_ptr->depth > 15)))
+					{
+						if ((((x == x1) && (y == y1)) || ((x == x2) && (y == y1)) ||
+							((x == x1) && (y == y2)) || ((x == x2) && (y == y2))) &&
+							(!one_in_(30)))
+						{
+							feat = FEAT_WALL_EXTRA;
+						}
+						if ((((x == (x1 + 1)) && (y == y1)) || ((x == (x2 - 1)) && (y == y1)) ||
+							((x == (x1 + 1)) && (y == y2)) || ((x == (x2 - 1)) && (y == y2))) &&
+							(!one_in_(20)))
+						{
+							feat = FEAT_RUBBLE;
+							if (p_ptr->depth > 30) feat = FEAT_TREE;
+							if ((p_ptr->depth > 45) && (rr % 4 != 0)) feat = FEAT_WEB;
+							if ((p_ptr->depth > 75) && (rr % 3 != 0)) feat = FEAT_BONEPILE;
+						}
+						if ((((x == x1) && (y == (y1 + 1))) || ((x == x2) && (y == (y1 + 1))) ||
+							((x == x1) && (y == (y2 - 1))) || ((x == x2) && (y == (y2 - 1)))) &&
+							(!one_in_(20)))
+						{
+							feat = FEAT_RUBBLE;
+							if (p_ptr->depth > 30) feat = FEAT_TREE;
+							if ((p_ptr->depth > 45) && (rr % 4 != 0)) feat = FEAT_WEB;
+							if ((p_ptr->depth > 75) && (rr % 3 != 0)) feat = FEAT_BONEPILE;
+						}
+					}
+					else
+					{
+						/* cut only 4 corners */
+						if ((((x == x1) && (y == y1)) || ((x == x2) && (y == y1)) ||
+							((x == x1) && (y == y2)) || ((x == x2) && (y == y2))) &&
+							(!one_in_(20)))
+						{
+							feat = FEAT_WALL_EXTRA;
+							if ((p_ptr->depth < 16) && (rr % 3 == 0)) feat = FEAT_RUBBLE;
+							if ((p_ptr->depth > 75) && (rr % 3 != 0)) feat = FEAT_BONEPILE;
+						}
+					}
+
+					/* also more cavernish feel */
+					if ((feat == FEAT_FLOOR) && (rr % 4 != 0)) feat = FEAT_FLOOR2;
 					break;
 				}
 				default:
@@ -3410,7 +3627,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 
 			/* draw the fill with variance */
 			cave_set_feat(y, x, feat);
-			
+
 			/* change door to closed doors */
 			if ((p_ptr->depth > 10) && (feat == FEAT_OPEN))
 			{
@@ -3670,7 +3887,7 @@ static void build_seam(int feat, int chance)
 	/* Determine actual size */
 	int height = rand_range(scale / 6, scale / 2);
 	int width  = rand_range(scale / 6, scale / 2);
-	
+
 	/* Calculate top-left position */
 	int top  = rand_int(dungeon_hgt - height);
 	int left = rand_int(dungeon_wid - width);
@@ -3680,7 +3897,7 @@ static void build_seam(int feat, int chance)
 		/* for placeholder, chance is quadrant */
 		if (chance == 0) chance = randint(4);
 		if (chance > 6) chance = randint(4) + 2;
-		
+
 		if ((chance == 1) || (chance == 5) || (chance == 6))
 		{
 			left = 1 + rand_int(dungeon_wid / 4 - 1);
@@ -3701,7 +3918,7 @@ static void build_seam(int feat, int chance)
 			left = (2 * dungeon_wid / 4) + rand_int(dungeon_wid / 4) - 4;
 			top = (2 * dungeon_hgt / 4) + rand_int(dungeon_hgt / 4) - 4;
 		}
-		
+
 		if (chance < 5)
 		{
 			width  = rand_range(dungeon_wid / 4, dungeon_wid / 3);
@@ -3719,11 +3936,9 @@ static void build_seam(int feat, int chance)
 			width  = rand_range(dungeon_wid / 3, dungeon_wid / 2 + 4);
 			height = rand_range(dungeon_hgt / 2, (dungeon_hgt - dungeon_hgt / 4));
 		}
-		
+
 		/* we don't need treasure chance anymore */
 		chance = 0;
-		
-		printf("+++ placeholder +++  yy/xx/hgt/wid: %d  %d  %d  %d \n", top, left, height, width);
 	}
 
 
@@ -3748,46 +3963,6 @@ static void build_seam(int feat, int chance)
 	/* No longer making a seam */
 	do_seam = FALSE;
 }
-
-
-
-/*
- * Make a pool (useful for water and lava).
- */
-static bool generate_pool(int y1, int x1, int y2, int x2, int feat)
-{
-	int i, y0, x0;
-	int height, width;
-
-	/* Size allowed is too small -- return */
-	if (y2 - y1 < 2) return (FALSE);
-	if (x2 - x1 < 2) return (FALSE);
-
-
-	/* Look hard for a floor (or water) grid */
-	for (i = 0; i < 50; i++)
-	{
-		/* Find a random center within the rectangle of effect */
-		y0 = rand_range(y1+1, y2-1) + rand_int(2);
-		x0 = rand_range(x1+1, x2-1) + rand_int(2);
-
-		/* If it is a floor or water grid, accept it */
-		if (cave_floor_bold(y0, x0) || (cave_feat[y0][x0] == FEAT_WATER)) break;
-	}
-
-	/* Calculate pool size (must not be too narrow or long */
-	height  = y2 - y1;
-	width   = x2 - x1;
-	if      (height > width  * 2) height = width  * 2;
-	else if (width  > height * 2) width  = height * 2;
-
-	/* Make the pool */
-	return (generate_starburst_room(y0 - (height+1) / 2, x0 - (width+1) / 2,
-		y0 + height / 2, x0 + width / 2, FALSE, feat, FALSE));
-}
-
-
-
 
 
 /*
@@ -8720,7 +8895,7 @@ static void cave_gen(void)
 					else printf("!---------------- A special gate was not built.\n");
 				}
 			}
-			
+
 			/* -KN- (QADV) and add all the advanced quest locations */
 			if ((p_ptr->qadv_flags & (QADV_CRYPTIC)) &&
 					(p_ptr->depth == p_ptr->qadv_level) &&
@@ -8875,11 +9050,11 @@ static void cave_gen(void)
 	}
 
 	/* -KN- Add water placeholder seams 1st */
-	for (i = 0; i < 8; i++)
+	for (i = 0; i < 4; i++)
 	{
 		build_seam(FEAT_MAGMA_H, 3);
 	}
-	
+
 	/* Add some magma seams */
 	for (i = 0; i < DUN_STR_MAG; i++)
 	{
@@ -8892,15 +9067,15 @@ static void cave_gen(void)
 		build_seam(FEAT_QUARTZ, DUN_STR_QC);
 	}
 
-	/* -KN- Add four smaller placeholder seams last*/
+	/* -KN- Add four smaller placeholder seams last */
 	for (i = 0; i < 4; i++)
 	{
-		build_seam(FEAT_QUARTZ_H, randint(4));
+		build_seam(FEAT_QUARTZ_H, randint(2));
 	}
 
 
 	/* -KN- (testing) rivers - from H seams */
-	if (p_ptr->dungeon_flags & (DUNGEON_RIVER))
+	if (p_ptr->dungeon_flags & (DUNGEON_HALLS))
 	{
 		for (y = 0; y < dungeon_hgt; y++)
 		{
@@ -8908,13 +9083,33 @@ static void cave_gen(void)
 			{
 				if (cave_feat[y][x] == FEAT_MAGMA_H)
 				{
-					if (!(cave_info[y][x] & (CAVE_ROOM))) cave_set_feat(y, x, FEAT_WATER);
+					/* a lake of water or chasm */
+					if (!(cave_info[y][x] & (CAVE_ROOM))) cave_set_feat(y, x, FEAT_ABYSS);
 					else cave_set_feat(y, x, FEAT_MAGMA);
 				}
-				
+
 				if (cave_feat[y][x] == FEAT_QUARTZ_H)
 				{
+					/* simple grove field */
 					cave_set_feat(y, x, FEAT_TREE);
+				}
+
+				if ((cave_feat[y][x] == FEAT_WALL_OUTER) && 
+					(((x % 2 == 0) && (y % 2 == 0)) || ((x % 2 == 1) && (y % 2 == 1))))
+				{
+					/* each second tile of room walls is now a wall-embedded pillar */
+					cave_set_feat(y, x, FEAT_PILLAR);
+				}
+
+				if ((f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)) && 
+					(cave_feat[y][x] != FEAT_SECRET))
+				{
+					/* always ask whether the doors are near a tree, then morph them into web */
+					if ((cave_feat[y+1][x] == FEAT_TREE) ||
+						(cave_feat[y][x+1] == FEAT_TREE) ||
+						(cave_feat[y-1][x] == FEAT_TREE) ||
+						(cave_feat[y][x-1] == FEAT_TREE)) cave_set_feat(y, x, FEAT_WEB);
+					else if (!(cave_info[y][x] & (CAVE_ROOM))) cave_set_feat(y, x, FEAT_WEB);
 				}
 			}
 		}
@@ -9400,7 +9595,7 @@ static void cave_gen(void)
 				if (one_in_(4))
 				{
 					printf("and scrolls \n");
-					fetch_items(y, x, 3, 2, 6, -1);
+					fetch_items(y, x, 2, 2, 6, -1);
 				}
 				else if (one_in_(3))
 				{
@@ -9411,6 +9606,59 @@ static void cave_gen(void)
 				{
 					printf("and many potions \n");
 					fetch_items(y, x, 2, 3, 5, -2);
+				}
+				else if (one_in_(9))
+				{
+					/* only cca 4% chance for this */
+					printf("and magic items!! \n");
+					fetch_items(y, x, 2, 2, 12, -2);
+				}
+				else printf(" \n");
+				break;
+			}
+			case 16:
+			case 17:
+			{
+				/* ---- STALAGMITE room ---- */
+				printf("[y%d/x%d] ...spelunkery... ", y1, x1);
+
+				if ((p_ptr->depth > 20) && (one_in_(4)))
+				{
+					spread_monsters('T', (p_ptr->depth - 1), 3, by, bx, j, j);
+					printf("troll lair.. ");
+				}
+				else if ((p_ptr->depth > 12) && (one_in_(4)))
+				{
+					spread_monsters('a', (p_ptr->depth - 1), 4, by, bx, j, j);
+					printf("anthill.. ");
+				}
+				else if ((p_ptr->depth > 6) && (one_in_(4)))
+				{
+					spread_monsters('c', (p_ptr->depth - 1), 2, by, bx, j, j);
+					printf("centipede nest.. ");
+				}
+				else if ((p_ptr->depth > 4) && (one_in_(3)))
+				{
+					spread_monsters('b', (p_ptr->depth - 1), 3, by, bx, j, j);
+					printf("bat infestation.. ");
+				}
+				else printf("(empty).. ");
+
+				/* various object that fit stalagmites */
+				if (one_in_(4))
+				{
+					printf("and lost bones \n");
+					fetch_items(y, x, 1, 1, 3, -1);
+				}
+				else if (one_in_(4))
+				{
+					printf("and gold! \n");
+					fetch_items(y, x, 3, 2, 1, -1);
+				}
+				else if (one_in_(3))
+				{
+					printf("and boulders \n");
+					fetch_items(y, x, 2, 3, 2, -1);
 				}
 				else printf(" \n");
 				break;
@@ -10601,6 +10849,7 @@ void generate_cave(void)
 	p_ptr->dungeon_flags &= ~(DUNGEON_NO_SPECIAL_LIGHTING);
 	p_ptr->dungeon_flags &= ~(DUNGEON_CAVERNOUS);
 	p_ptr->dungeon_flags &= ~(DUNGEON_UNDERWOOD);
+	p_ptr->dungeon_flags &= ~(DUNGEON_HALLS);
 	p_ptr->dungeon_flags &= ~(DUNGEON_RIVER);
 
 	/* -KN- (IDEA) utilize level creation flags with minor rooms, quest vaults etc. */
@@ -10617,8 +10866,7 @@ void generate_cave(void)
 	/* -KN- (testing) Cavernous feel */
 	if (p_ptr->depth > 1)
 	{
-		p_ptr->dungeon_flags |= (DUNGEON_RIVER);
-		p_ptr->dungeon_flags |= (DUNGEON_UNDERWOOD);
+		p_ptr->dungeon_flags |= (DUNGEON_HALLS);
 	}
 
 

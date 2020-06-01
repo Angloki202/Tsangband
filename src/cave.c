@@ -851,12 +851,12 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 	}
 
 	/* -KN- dungeon walls are brown (testing) */
-	if (p_ptr->dungeon_flags & (DUNGEON_UNDERWOOD))
+	if (p_ptr->dungeon_flags & (DUNGEON_HALLS))
 	{
 		if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
 		{
 			/* infra-seen walls dark */
-			a = 19;
+			a = 26;
 			//a = f_ptr->x_attr + 10;
 		}
 		else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
@@ -864,39 +864,98 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 			if (info & (CAVE_GLOW))
 			{
 				/* brighter walls */				
-				if (!one_in_(6)) a = 5;
-				else 			 a = 13;
+				if (!one_in_(8)) a = 20;
+				else 			  a = 1;
 				
 				/* reveal quartz and treasure seams */
-				if ((feat > 53) && (feat < 56)) a = 3;
-				if (feat < 53) a = 26;
+				if ((feat > 53) && (feat < 56)) a = 14;
+				if (feat < 53) a = 30;
 				//a = f_ptr->x_attr_lit + 10;
 			}
 			else
 			{
-				a = 25;
-				if ((feat > 53) && (feat < 56)) a = 11;
-				if (feat < 53) a = 26;
+				a = 9;
+				if ((feat > 53) && (feat < 56)) a = 27;
+				if (feat < 53) a = 19;
 				//a = f_ptr->x_attr + 11;
 			}
 		}
 		else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
 		{
 			/* walls in EXPLORED darkness */
-			if (!one_in_(9)) a = 19;
-			else 			 a = 18;
-			
-			if (feat < 56) a = 2;
-			//a = f_ptr->x_attr_dim + 10;
+			a = 28;
+			if (feat < 56) a = 8;
+		}
+		
+		if ((cave_feat[y][x] == FEAT_ABYSS) && (info & (CAVE_MARK)))
+		{
+			/* make abyss more menacing */
+			if 		(info & (CAVE_SEEN)) a =  4;
+			else if (info & (CAVE_INFR)) a = 12;
+			else 						 a = 28;
+		}
+		
+		/* some problems with 1st turn after teleport (didn't mark it yet) */
+		//if ((info & (CAVE_MARK)) && (cave_feat[y][x] == FEAT_FLOOR))
+		//{
+			/* modify color of basic floor lit by character */
+		//	if (info & (CAVE_LITE)) a = 20;
+		//	else 					a = 8;
+		//}
+		
+		if ((cave_feat[y][x] != FEAT_BROKEN) &&
+			(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
+			(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
+		{
+			/* iron doors */
+			a = 26;
+		}
+		//if (!(info & (CAVE_MARK))) a = 4;			// fog of war (dark red for lvl 75+)
+	}
+
+
+	/* -KN- dungeon walls are brown (testing) */
+	if (p_ptr->dungeon_flags & (DUNGEON_UNDERWOOD))
+	{
+		if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
+		{
+			/* infra-seen walls dark */
+			a = 18;
+		}
+		else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
+		{
+			if (info & (CAVE_GLOW))
+			{
+				/* brighter walls */				
+				if (!one_in_(9)) a = 5;
+				else 			 a = 13;
+				
+				/* reveal quartz and treasure seams */
+				if ((feat > 53) && (feat < 56)) a = 3;
+				if (feat < 53) a = 26;
+			}
+			else
+			{
+				a = 25;
+				if ((feat > 53) && (feat < 56)) a = 11;
+				if (feat < 53) a = 26;
+			}
+		}
+		else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
+		{
+			/* walls in EXPLORED darkness */
+			if (!one_in_(12)) a = 19;
+			else 			  a = 18;
+			if (feat < 56)    a = 2;
 		}
 		
 		if ((cave_feat[y][x] != FEAT_BROKEN) &&
 			(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
 			(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
 		{
+			/* non-hidden doors are slightly more barklike */
 			a = 19;
 		}
-		//if (!(info & (CAVE_MARK))) a = 4;			// fog of war
 	}
 
 

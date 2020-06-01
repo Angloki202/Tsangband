@@ -5238,7 +5238,7 @@
 /* xxx (many) */
 #define DUNGEON_CAVERNOUS               0x00000002	/* -KN- cavern feel */
 #define DUNGEON_UNDERWOOD               0x00000004	/* -KN- woody feel */
-#define DUNGEON_XX0  	                0x00000008	/* -KN-  */
+#define DUNGEON_HALLS  	                0x00000008	/* -KN- deephalls feel */
 #define DUNGEON_XX1		                0x00000010
 #define DUNGEON_XX2		                0x00000020
 #define DUNGEON_XX3	    	            0x00000040
