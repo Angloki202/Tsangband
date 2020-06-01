@@ -3033,11 +3033,11 @@ void do_cmd_alter(bool deliberate)
 		}
 		else
 		{
-			/* -KN- (STA); burglary should check for sleeping or something */
+			/* -KN- (STA); burglary should check for sleeping or running (?) */
 			if ((p_ptr->cstam > 0) ||
-				((p_ptr->pskills[S_SWORD].max > 29) ||
-				(p_ptr->pskills[S_HAFTED].max > 29) ||
-				(p_ptr->pskills[S_POLEARM].max > 29)))
+				((p_ptr->pskills[S_SWORD].cur > 29) ||
+				(p_ptr->pskills[S_HAFTED].cur > 29) ||
+				(p_ptr->pskills[S_POLEARM].cur > 29)))
 			{
 				int x1, y1;
 				bool occupied[8];
@@ -3061,9 +3061,9 @@ void do_cmd_alter(bool deliberate)
 					else occupied[i] = FALSE;
 				}
 
-				if ((p_ptr->pskills[S_SWORD].max > 29) ||
-					(p_ptr->pskills[S_HAFTED].max > 29) ||
-					(p_ptr->pskills[S_POLEARM].max > 29))
+				if ((p_ptr->pskills[S_SWORD].cur > 29) ||
+					(p_ptr->pskills[S_HAFTED].cur > 29) ||
+					(p_ptr->pskills[S_POLEARM].cur > 29))
 				{
 					/* convert to actual whirlwind talent (almost) */
 					total_blows = (2 * p_ptr->num_blow + p_ptr->num_blow2 + num_mons + 1) / 2;
@@ -3104,6 +3104,7 @@ void do_cmd_alter(bool deliberate)
 				}
 				else
 				{
+					/* or convert it to normal attack */
 					total_blows = 1;
 				}
 
@@ -3113,8 +3114,8 @@ void do_cmd_alter(bool deliberate)
 				{
 					if (p_ptr->qlev_cy > 0)
 					{
-						if ((p_ptr->rew_cy & (CRYPT_KNOCK_SEE)) ||
-							(p_ptr->rew_cy & (CRYPT_KNOCK_SEE2)))
+						if ((p_ptr->rew_cy & (CY_KNOCK)) ||
+							(p_ptr->rew_cy & (CY_KNOCK2)))
 							p_ptr->special_attack |= (ATTACK_KNOCK);
 					}
 
@@ -3123,7 +3124,7 @@ void do_cmd_alter(bool deliberate)
 					p_ptr->redraw |= (PR_ARMOR);
 				}
 
-				/* Attack up to three monsters in a circle */
+				/* Attack up to three monsters in a circle (or do whirlwind if skilled) */
 				for (i = 0, s = randint(8); i < total_blows; i++, s++)
 				{
 					/* Find next occupied spot */
@@ -3213,13 +3214,6 @@ void do_cmd_alter(bool deliberate)
 		if (!flag) more = do_cmd_open_aux(y, x);
 	}
 
-	/* Close open doors */
-	else if ((feat == FEAT_OPEN) && ((y != p_ptr->py) && (x != p_ptr->px)))
-	{
-		/* Close -KN- only if not inside the door */
-		more = do_cmd_close_aux(y, x);
-	}
-
 	/* -KN- hack away the webs */
 	else if (feat == FEAT_WEB)
 	{
@@ -3250,15 +3244,14 @@ void do_cmd_alter(bool deliberate)
 		}
 	}
 
-	/* If a burglar, set a trap.  -LM- */
-	else if ((cave_trap_allowed(y, x)) &&
-	         (get_skill(S_BURGLARY, 0, 100) >= LEV_REQ_TRAP))
+	/* Close open doors */
+	else if ((feat == FEAT_OPEN) && ((y != p_ptr->py) && (x != p_ptr->px)))
 	{
-		more = py_set_trap(y, x, dir);
+		/* Close -KN- only if not inside the door */
+		more = do_cmd_close_aux(y, x);
 	}
 
-	/* -KN- (STA) self alter to enter quick regen mode */
-	/* now called VIGOR */
+	/* -KN- (STA) self alter to enter quick regen mode = VIGOR */
 	else if ((p_ptr->px == x) && (p_ptr->py == y))
 	{
 		/* only when fully prepared */
@@ -3267,44 +3260,58 @@ void do_cmd_alter(bool deliberate)
 			msg_print("You focus on your body.");
 
 			/* add bloom effect */
-			lite_effect(y, x, 12, 1);
+			lite_effect(y, x, 10, 1);
 
 			/* deplete two points and reset the counter */
 			if (p_ptr->mstam == p_ptr->cstam) p_ptr->ixstam = 0;
 			p_ptr->cstam -= 2;
 
 			/* very short-term see invisibility */
-			/* (not having CRYPT_KNOCK_*** means having CRYPT_*****_SEE) */
-			if ((p_ptr->qlev_cy > 0) && (!(p_ptr->rew_cy & (CRYPT_KNOCK_SEE))))
+			if (p_ptr->rew_cy & (CY_SEE))
 			{
 				set_detect_inv(p_ptr->detect_inv + (p_ptr->durstam / 3));
 			}
 
 			/* double short-term see invisibility */
-			if ((p_ptr->qlev_cy > 2) && (!(p_ptr->rew_cy & (CRYPT_KNOCK_SEE2))))
+			if (p_ptr->rew_cy & (CY_SEE2))
 			{
 				set_detect_inv(p_ptr->detect_inv + (p_ptr->durstam / 3));
 			}
 
 			/* set one instance of weapon branding depending on magic realm knowledge */
-			/* (not having CRYPT_DUR means having CRYPT_IMBUE) */
-			if ((p_ptr->qlev_cy > 1) && (!(p_ptr->rew_cy & (CRYPT_DUR_IMBUE))))
+			if (p_ptr->rew_cy & (CY_IMBUE))
 			{
-				if ((p_ptr->fire_attack == 0) && (p_ptr->pskills[S_WIZARDRY].cur > 14))
+				if ((p_ptr->elec_attack == 0) && (p_ptr->pskills[S_WIZARDRY].cur > 9))
 				{
-					set_elec_attack(1);
+					if ((p_ptr->rew_cy & (CY_IMBUE2)) && (p_ptr->pskills[S_WIZARDRY].cur > 14))
+					{
+						 set_elec_attack(rand_range(4,6));
+					}
+					else set_elec_attack(rand_range(1,2));
 				}
-				if ((p_ptr->fire_attack == 0) && (p_ptr->pskills[S_PIETY].cur > 14))
+				if ((p_ptr->fire_attack == 0) && (p_ptr->pskills[S_PIETY].cur > 9))
 				{
-					set_elec_attack(1);
+					if ((p_ptr->rew_cy & (CY_IMBUE2)) && (p_ptr->pskills[S_PIETY].cur > 14))
+					{
+						 set_fire_attack(rand_range(4,6));
+					}
+					set_fire_attack(rand_range(1,2));
 				}
-				if ((p_ptr->fire_attack == 0) && (p_ptr->pskills[S_NATURE].cur > 14))
+				if ((p_ptr->acid_attack == 0) && (p_ptr->pskills[S_NATURE].cur > 9))
 				{
-					set_acid_attack(1);
+					if ((p_ptr->rew_cy & (CY_IMBUE2)) && (p_ptr->pskills[S_NATURE].cur > 14))
+					{
+						 set_acid_attack(rand_range(4,6));
+					}
+					set_acid_attack(rand_range(1,2));
 				}
-				if ((p_ptr->fire_attack == 0) && (p_ptr->pskills[S_DOMINION].cur > 14))
+				if ((p_ptr->pois_attack == 0) && (p_ptr->pskills[S_DOMINION].cur > 9))
 				{
-					set_pois_attack(1);
+					if ((p_ptr->rew_cy & (CY_IMBUE2)) && (p_ptr->pskills[S_DOMINION].cur > 14))
+					{
+						 set_pois_attack(rand_range(4,6));
+					}
+					set_pois_attack(rand_range(1,2));
 				}
 
 				/* redraw */
@@ -3320,6 +3327,13 @@ void do_cmd_alter(bool deliberate)
 		{
 			msg_print("You are still catching your breath.");
 		}
+	}
+	
+	/* If a burglar, set a trap.  -LM- */
+	else if ((cave_trap_allowed(y, x)) &&
+	         (get_skill(S_BURGLARY, 0, 100) >= LEV_REQ_TRAP))
+	{
+		more = py_set_trap(y, x, dir);
 	}
 
 	/* Oops */

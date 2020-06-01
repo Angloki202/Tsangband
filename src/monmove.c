@@ -102,13 +102,13 @@ static void find_range(monster_type *m_ptr)
 			if ((!m_ptr->hasted) && ((m_ptr->cdis == 2) || (m_ptr->cdis == 3)))
 			{
 				/* when feeling in the mood */
-				if (one_in_(3))
+				if (one_in_(2))
 				{
 					/* and haste very decently the monster */
 					m_ptr->hasted = 2;
 
-					/* inform player when visible, but not adjacent */
-					if ((m_ptr->ml) && (m_ptr->cdis > 1))
+					/* inform player when visible */
+					if (m_ptr->ml)
 					{
 						char m_name[DESC_LEN];
 

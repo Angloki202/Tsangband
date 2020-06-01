@@ -30,36 +30,36 @@ static bool choose_reward(int mode)
 	/* mode 1 = CRYPTIC quests */
 	/* mode 2 = MYTHIC LAIR quests */
 	/* mode 3 = ELDRITCH quests */
-	
+
 	int q_level;
 	char query;
 	char choice[DESC_LEN];
 	char selected[DESC_LEN];
-	
+
 	/* empty the choice array */
 	strcpy(choice, "");
-	
+
 	/* adjust for quest type */
 	if (mode == 1)
 	{
 		/* CRYPTIC quests */
 		q_level = p_ptr->qlev_cy;
 		strcpy(choice, "(1) might  or  (2) magic");
-		strcpy(selected, "Crypt investigation");
+		strcpy(selected, "Crypt investigation ");
 	}
 	else if (mode == 2)
 	{
 		/* MYTHIC LAIR quests */
 		q_level = p_ptr->qlev_my;
 		strcpy(choice, "(1) might  or  (2) hunting");
-		strcpy(selected, "Mythic lair exploration");
+		strcpy(selected, "Mythic lair exploration ");
 	}
 	else if (mode == 3)
 	{
 		/* ELDRITCH quests */
 		q_level = p_ptr->qlev_el;
 		strcpy(choice, "(1) hunting  or  (2) magic");
-		strcpy(selected, "Eldritch reward");
+		strcpy(selected, "Eldritch reward ");
 	}
 
 	/* ask the question */
@@ -97,10 +97,10 @@ static bool choose_reward(int mode)
 		{
 			if (mode == 1)
 			{
-				c_put_str(TERM_RED,    format("1) Might = longer vigor duration (+ 4t)"), 21, 1);
+				c_put_str(TERM_RED,    format("1) Might = improved vigor & focus (+4 t, +2 att)"), 21, 1);
 				c_put_str(TERM_VIOLET, format("2) Magic = imbue weapon with magic (V, magic dependent)"), 22, 1);
 				c_put_str(TERM_L_DARK,
-				format("   wiz 15: elec   piety 15: fire   nature 15: acid   blood 15: poison"), 23, 1);
+				format("   wiz 10: elec   piety 10: fire   nature 10: acid   blood 10: poison"), 23, 1);
 			}
 			else if (mode == 2)
 			{
@@ -119,7 +119,7 @@ static bool choose_reward(int mode)
 			if (mode == 1)
 			{
 				/* improve 1st tier CRYPT choice or select the other one */
-				if (p_ptr->rew_cy & (0x0001))
+				if (p_ptr->rew_cy & (CY_KNOCK))
 				{
 					c_put_str(TERM_RED,    format("1) Might = improved knockback (F)"), 21, 1);
 					c_put_str(TERM_VIOLET, format("2) Magic = short invisibility detection (V)"), 22, 1);
@@ -143,6 +143,39 @@ static bool choose_reward(int mode)
 			break;
 		}
 		case 4:
+		{
+			if (mode == 1)
+			{
+				c_put_str(TERM_RED,
+				format("1) Might = improved vigor & focus (+4 t, +2 att, +2 recovery)"), 21, 1);
+				if (p_ptr->rew_cy & (CY_IMBUE))
+				{
+					/* improved imbue weapon if already selected imbue */
+					c_put_str(TERM_VIOLET,
+					format("2) Magic = greater imbue (V, magic dependent)"), 22, 1);
+					c_put_str(TERM_L_DARK,
+					format("   wiz 15: elec   piety 15: fire   nature 15: acid   blood 15: poison"), 23, 1);
+				}
+				else
+				{
+					c_put_str(TERM_VIOLET,
+					format("2) Magic = imbue weapon with magic (V, magic dependent)"), 22, 1);
+					c_put_str(TERM_L_DARK,
+					format("   wiz 10: elec   piety 10: fire   nature 10: acid   blood 10: poison"), 23, 1);
+				}
+			}
+			else if (mode == 2)
+			{
+				c_put_str(TERM_RED,    format("1) Might = ..."), 21, 1);
+				c_put_str(TERM_GREEN,  format("2) Hunting = ..."), 22, 1);
+			}
+			else if (mode == 3)
+			{
+				c_put_str(TERM_GREEN,  format("1) Hunting = ..."), 21, 1);
+				c_put_str(TERM_VIOLET, format("2) Magic = ..."), 22, 1);
+			}
+			break;
+		}
 		case 5:
 		case 6:
 		{
@@ -160,17 +193,16 @@ static bool choose_reward(int mode)
 	if (!strchr("12", query)) return FALSE;
 
 
-	/* mark the selected flag reward for reference with rew. level */
-	/* query '2' doesn't add flag - already set (0x0000 birth default) */
+	/* mark the selected flag reward for references */
 	if (query == '1')
 	{
-		if ((mode == 1) || (mode == 2)) strcat(selected, "mighty reward,");
-		else if (mode == 3) 			strcat(selected, "hunting reward,");
+		if ((mode == 1) || (mode == 2)) strcat(selected, "mighty reward, ");
+		else if (mode == 3) 			strcat(selected, "hunting reward, ");
 		switch (q_level)
 		{
 			case 1:
 			{
-				if 		(mode == 1) p_ptr->rew_cy |= (0x0001);
+				if 		(mode == 1) p_ptr->rew_cy |= (CY_KNOCK);
 				else if (mode == 2) p_ptr->rew_my |= (0x0001);
 				else if (mode == 3) p_ptr->rew_el |= (0x0001);
 				break;
@@ -178,26 +210,31 @@ static bool choose_reward(int mode)
 			case 2:
 			{
 				if 		(mode == 1)
-				{
-					/* longer duration of VIGOR stance */
-					p_ptr->durstam += 4;
-					p_ptr->rew_cy |= (0x0002);
-					
-				}
+                {
+                    p_ptr->durstam += 4;
+                    p_ptr->attstam += 2;
+                }
 				else if (mode == 2) p_ptr->rew_my |= (0x0002);
 				else if (mode == 3) p_ptr->rew_el |= (0x0002);
 				break;
 			}
 			case 3:
 			{
-				if 		(mode == 1) p_ptr->rew_cy |= (0x0004);
+				/* CRYPT: improve knockback or gain knockback if not selected on tier 1 */
+				if 	   ((mode == 1) && (p_ptr->rew_cy & (CY_KNOCK))) p_ptr->rew_cy |= (CY_KNOCK2);
+				else if (mode == 1) p_ptr->rew_cy |= (CY_KNOCK);
 				else if (mode == 2) p_ptr->rew_my |= (0x0004);
 				else if (mode == 3) p_ptr->rew_el |= (0x0004);
 				break;
 			}
 			case 4:
 			{
-				if 		(mode == 1) p_ptr->rew_cy |= (0x0008);
+				if 		(mode == 1)
+                {
+                    p_ptr->durstam += 4;
+                    p_ptr->attstam += 2;
+                    p_ptr->restam -= 2;
+                }
 				else if (mode == 2) p_ptr->rew_my |= (0x0008);
 				else if (mode == 3) p_ptr->rew_el |= (0x0008);
 				break;
@@ -234,11 +271,74 @@ static bool choose_reward(int mode)
 	}
 	else
 	{
-		if ((mode == 1) || (mode == 3)) strcat(selected, "magical reward,");
-		else if (mode == 2) 			strcat(selected, "hunting reward,");
+		if ((mode == 1) || (mode == 3)) strcat(selected, "magical reward, ");
+		else if (mode == 2) 			strcat(selected, "hunting reward, ");
+		switch (q_level)
+		{
+			case 1:
+			{
+				if 		(mode == 1) p_ptr->rew_cy |= (CY_SEE);
+				else if (mode == 2) p_ptr->rew_my |= (0x0001);
+				else if (mode == 3) p_ptr->rew_el |= (0x0001);
+				break;
+			}
+			case 2:
+			{
+				if 		(mode == 1)	p_ptr->rew_cy |= (CY_IMBUE);
+				else if (mode == 2) p_ptr->rew_my |= (0x0002);
+				else if (mode == 3) p_ptr->rew_el |= (0x0002);
+				break;
+			}
+			case 3:
+			{
+				/* CRYPT: improve see inv. or gain see inv. if not selected on tier 1 */
+				if 	   ((mode == 1) && (p_ptr->rew_cy & (CY_SEE))) p_ptr->rew_cy |= (CY_SEE2);
+				else if (mode == 1) p_ptr->rew_cy |= (CY_SEE);
+				else if (mode == 2) p_ptr->rew_my |= (0x0004);
+				else if (mode == 3) p_ptr->rew_el |= (0x0004);
+				break;
+			}
+			case 4:
+			{
+				/* CRYPT: improve imbue weapon or gain imbue if not selected on tier 2 */
+				if 	   ((mode == 1) && (p_ptr->rew_cy & (CY_IMBUE))) p_ptr->rew_cy |= (CY_IMBUE2);
+				else if (mode == 1) p_ptr->rew_cy |= (CY_IMBUE);
+				else if (mode == 2) p_ptr->rew_my |= (0x0008);
+				else if (mode == 3) p_ptr->rew_el |= (0x0008);
+				break;
+			}
+			case 5:
+			{
+				if 		(mode == 1) p_ptr->rew_cy |= (0x0010);
+				else if (mode == 2) p_ptr->rew_my |= (0x0010);
+				else if (mode == 3) p_ptr->rew_el |= (0x0010);
+				break;
+			}
+			case 6:
+			{
+				if 		(mode == 1) p_ptr->rew_cy |= (0x0020);
+				else if (mode == 2) p_ptr->rew_my |= (0x0020);
+				else if (mode == 3) p_ptr->rew_el |= (0x0020);
+				break;
+			}
+			case 7:
+			{
+				if 		(mode == 1) p_ptr->rew_cy |= (0x0040);
+				else if (mode == 2) p_ptr->rew_my |= (0x0040);
+				else if (mode == 3) p_ptr->rew_el |= (0x0040);
+				break;
+			}
+			case 8:
+			{
+				if 		(mode == 1) p_ptr->rew_cy |= (0x0080);
+				else if (mode == 2) p_ptr->rew_my |= (0x0080);
+				else if (mode == 3) p_ptr->rew_el |= (0x0080);
+				break;
+			}
+		}
 	}
 
-	
+
 	if (q_level == 1) strcat(selected, "tier I.");
 	if (q_level == 2) strcat(selected, "tier II.");
 	if (q_level == 3) strcat(selected, "tier III.");
@@ -246,9 +346,9 @@ static bool choose_reward(int mode)
 	if (q_level == 5) strcat(selected, "master tier V.");
 	if (q_level == 6) strcat(selected, "master tier VI.");
 	if (q_level == 7) strcat(selected, "grandmaster tier VII.");
-	if (q_level == 8) strcat(selected, "grandmaster tier VIII.");	
-	
-	/* printout for history record */	
+	if (q_level == 8) strcat(selected, "grandmaster tier VIII.");
+
+	/* printout for history record */
 	message(MSG_L_UMBER, 10, format("%s", selected));
 
 	/* reached the end - reward selected */
@@ -580,8 +680,8 @@ static void grant_reward(byte reward_level, byte type, int diff)
 	if (type == REWARD_ADVANCED)
 	{
 		/* this is an additional reward - player upgrade reward is in qlev_cy++ */
-		value_threshold = ((2 * (((p_ptr->qlev_cy+1) * 2) + ((p_ptr->qlev_my+1) * 2) + 
-								((p_ptr->qlev_el+1) * 2))) * 
+		value_threshold = ((2 * (((p_ptr->qlev_cy+1) * 2) + ((p_ptr->qlev_my+1) * 2) +
+								((p_ptr->qlev_el+1) * 2))) *
 								(p_ptr->qlev_cy + p_ptr->qlev_cy + p_ptr->qlev_cy));
 
 		/* treasure advances as follows: */
@@ -1392,11 +1492,11 @@ void display_inn(void)
 	c_put_str(TERM_VIOLET, format("(%d)", p_ptr->coll_cy), 13, 33);
 	c_put_str(TERM_L_PURPLE, format("(%d)", p_ptr->coll_my), 14, 33);
 	c_put_str(TERM_MAGENTA, format("(%d)", p_ptr->coll_el), 15, 33);
-	
+
 	prt(format("7)  "), 17, 3);
 	c_put_str(TERM_VIOLET, format("Unholy crypts"), 17, 7);
 	prt(format("200 gold"), 17, 33);
-	
+
 	c_put_str(TERM_L_DARK, format("8)  Mythology"), 18, 3);
 	c_put_str(TERM_L_DARK, format("100 clues"), 18, 33);
 	c_put_str(TERM_L_DARK, format("9)  Eldritch"), 19, 3);
@@ -1407,7 +1507,7 @@ void display_inn(void)
 		/* note the started CRYPTIC QUEST */
 		c_put_str(TERM_L_VIOLET, format("(started)"), 17, 21);
 		prt(format("        "), 17, 33);
-		
+
 		if ((p_ptr->qadv_flags & (QADV_STARTED)) &&
 			!(p_ptr->qadv_flags & (QADV_SUCCESS)))
 		{
@@ -1578,7 +1678,7 @@ void inn_purchase(int item)
 			}
 			return;
 		}
-		
+
 		if (item == 5)
 		{
 			/* ... asking about MYTHICAL LAIR CLUES */
@@ -1609,17 +1709,17 @@ void inn_purchase(int item)
 				if ((p_ptr->qadv_flags & (QADV_STARTED)) && (p_ptr->qadv_flags & (QADV_SUCCESS)))
 				{
 					/* --- SUCCESS --- */
-					
+
 					/* ... and succeeded, advance the quest */
 					p_ptr->qlev_cy++;
-					
+
 					/* ... and select special character reward-upgrade */
 					if (choose_reward(1))
 					{
 						/* ... and not to forget some little reward for the investment */
 						message(MSG_WHITE, 10, "Some monetary compensation waits for you outside.");
 						grant_reward(p_ptr->depth, REWARD_ADVANCED, 1);
-						
+
 						/* revert the screen */
 						c_put_str(TERM_VIOLET, format("         "), 17, 21);
 						prt(format("200 gold"), 17, 33);
@@ -1635,7 +1735,7 @@ void inn_purchase(int item)
 						/* cancelled upon selecting rewards */
 						p_ptr->qlev_cy--;
 					}
-					
+
 					/* Clear screen and return */
 					(void)Term_clear();
 					display_inn();
@@ -1644,7 +1744,7 @@ void inn_purchase(int item)
 				else if (p_ptr->qadv_flags & (QADV_STARTED))
 				{
 					/* --- FAILED --- */
-					
+
 					/* ... but returned without fullfiling the quest */
 					msg_print("Your investigations ended without much clues gathered...");
 
@@ -1674,7 +1774,7 @@ void inn_purchase(int item)
 					/* --- NEW CRYPT QUEST --- */
 					/* for 200 gold pieces */
 					p_ptr->au -= 200;
-					
+
 					p_ptr->qadv_flags |= (QADV_CRYPTIC);
 					p_ptr->qadv_flags &= ~(QADV_SUCCESS);
 					p_ptr->qadv_flags &= ~(QADV_STARTED);
@@ -1684,7 +1784,7 @@ void inn_purchase(int item)
 						p_ptr->qadv_level = 3;
 					}
 					else p_ptr->qadv_level = p_ptr->max_depth + 2;
-					
+
 					/* ... note the start of a new investigation */
 					msg_format("You should start the investigation on the level %d.", p_ptr->qadv_level);
 					c_put_str(TERM_L_VIOLET, format("(started)"), 17, 21);

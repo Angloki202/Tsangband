@@ -229,7 +229,7 @@ static room_data room[ROOM_MAX] =
    /* Overlap */  {{70, 120, 150, 190, 200, 200, 200, 200, 200, 200, 200},  1},
    /* Large */    {{ 0,  30,  60,  80,  90,  95, 100, 100, 100, 100, 100},  3},
    /* Large */    {{ 0,  30,  60,  80,  90,  95, 100, 100, 100, 100, 100},  3},
-   /* Pit */      {{ 0,   6,  20,  30,  35,  40,  40,  40,  40,  40,  40},  7},
+   /* Pit */      {{ 0,   5,  10,  15,  20,  20,  25,  25,  30,  30,  35},  7},
    /* Chambers */ {{ 0,   2,   6,  12,  15,  18,  19,  20,  20,  20,  20},  7},
    /* I. Room */  {{40,  60,  70,  80,  80,  75,  70,  67,  65,  62,  60},  0},
    /* L. Vault */ {{ 0,   1,   4,   9,  16,  27,  40,  55,  70,  80,  90},  7},
@@ -237,6 +237,7 @@ static room_data room[ROOM_MAX] =
    /* Huge     */ {{ 0,   0,   0,   0,   4,   4,   4,   4,   4,   4,   4}, 41}
 };
 
+/* -KN- increased low level I. Room occurence, decreased pits as they are boring */
 
 /* Build rooms in descending order of difficulty. */
 static byte room_build_order[ROOM_MAX] = {10, 9, 6, 8, 5, 7, 4, 3, 2, 1, 0};
@@ -3669,10 +3670,61 @@ static void build_seam(int feat, int chance)
 	/* Determine actual size */
 	int height = rand_range(scale / 6, scale / 2);
 	int width  = rand_range(scale / 6, scale / 2);
-
+	
 	/* Calculate top-left position */
 	int top  = rand_int(dungeon_hgt - height);
 	int left = rand_int(dungeon_wid - width);
+
+	if ((feat == FEAT_MAGMA_H) || (feat == FEAT_QUARTZ_H))
+	{
+		/* for placeholder, chance is quadrant */
+		if (chance == 0) chance = randint(4);
+		if (chance > 6) chance = randint(4) + 2;
+		
+		if ((chance == 1) || (chance == 5) || (chance == 6))
+		{
+			left = 1 + rand_int(dungeon_wid / 4 - 1);
+			top = 1 + rand_int(dungeon_hgt / 4 - 1);
+		}
+		else if (chance == 2)
+		{
+			left = (2 * dungeon_wid / 4) + rand_int(dungeon_wid / 4) - 4;
+			top = 1 + rand_int(dungeon_hgt / 4 - 1);
+		}
+		else if (chance == 3)
+		{
+			left = 1 + rand_int(dungeon_wid / 4 - 1);
+			top = (2 * dungeon_hgt / 4) + rand_int(dungeon_hgt / 4) - 4;
+		}
+		else if (chance == 4)
+		{
+			left = (2 * dungeon_wid / 4) + rand_int(dungeon_wid / 4) - 4;
+			top = (2 * dungeon_hgt / 4) + rand_int(dungeon_hgt / 4) - 4;
+		}
+		
+		if (chance < 5)
+		{
+			width  = rand_range(dungeon_wid / 4, dungeon_wid / 3);
+			height = rand_range(dungeon_hgt / 4, dungeon_hgt / 3);
+		}
+		else if (chance == 5)
+		{
+			/* a bigger horizontal sea */
+			width  = rand_range(dungeon_wid / 2, (dungeon_wid - dungeon_wid / 4));
+			height = rand_range(dungeon_hgt / 3, dungeon_hgt / 2 + 4);
+		}
+		else if (chance == 6)
+		{
+			/* a bigger vertical sea */
+			width  = rand_range(dungeon_wid / 3, dungeon_wid / 2 + 4);
+			height = rand_range(dungeon_hgt / 2, (dungeon_hgt - dungeon_hgt / 4));
+		}
+		
+		/* we don't need treasure chance anymore */
+		chance = 0;
+		
+		printf("+++ placeholder +++  yy/xx/hgt/wid: %d  %d  %d  %d \n", top, left, height, width);
+	}
 
 
 	/* Initialize start point on the seam change array */
@@ -6268,21 +6320,35 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 					/* -KN- added pits */
 					case '/':
 					{
-						if (one_in_(12)) cave_set_feat(y, x, FEAT_PIT1);
+						if (one_in_(9)) cave_set_feat(y, x, FEAT_PIT1);
 						else cave_set_feat(y, x, FEAT_PIT0);
+						if (type == 2)
+						{
+							/* MYTHIC LAIR contains surprises */
+							cave_info[y][x] |= (CAVE_QADV);
+						}
 						break;
 					}
 					case 'O':
 					{
-						/* added crypt (only in QADV) */
+						/* added crypt (only in QADV?) */
 						cave_set_feat(y, x, FEAT_CRYPT);
-						cave_info[y][x] |= (CAVE_QADV);
+						if (type == 1)
+						{
+							/* CRYPT contains surprises */
+							cave_info[y][x] |= (CAVE_QADV);
+						}
 						break;
 					}
 					case 'u':
 					{
 						/* added monolith */
 						cave_set_feat(y, x, FEAT_MONOLITH);
+						if (type == 3)
+						{
+							/* ELDRITCH QUEST contains surprises */
+							cave_info[y][x] |= (CAVE_QADV);
+						}
 						break;
 					}
 				}
@@ -6679,7 +6745,9 @@ static bool build_vault(int y0, int x0, int ymax, int xmax, cptr data,
 
 		/* Determine level of monster */
 		if      (type == 0) temp = p_ptr->depth + 1;	//	GATE VAULT
-		else if (type == 1) temp = p_ptr->depth + 1;	//	CRYPT Q.VAULT
+		else if (type == 1) temp = p_ptr->depth + 2;	//	CRYPT Q.VAULT
+		else if (type == 2) temp = p_ptr->depth + 3;	//	M.LAIR Q.VAULT
+		else if (type == 3) temp = p_ptr->depth + 4;	//	ELDRITCH Q.VAULT
 		else if (type == 7) temp = p_ptr->depth;
 		else if (type == 8) temp = p_ptr->depth + 3;
 		else if (type == 9) temp = p_ptr->depth + 6;
@@ -8531,7 +8599,7 @@ static void cave_gen(void)
 {
 	int i, j, y, x, y1, x1;
 	int by, bx;
-	/* -KN- */
+	/* -KN- minor rooms */
 	int mm;
 
 	int num_to_build;
@@ -8806,7 +8874,12 @@ static void cave_gen(void)
 		}
 	}
 
-
+	/* -KN- Add water placeholder seams 1st */
+	for (i = 0; i < 8; i++)
+	{
+		build_seam(FEAT_MAGMA_H, 3);
+	}
+	
 	/* Add some magma seams */
 	for (i = 0; i < DUN_STR_MAG; i++)
 	{
@@ -8818,6 +8891,37 @@ static void cave_gen(void)
 	{
 		build_seam(FEAT_QUARTZ, DUN_STR_QC);
 	}
+
+	/* -KN- Add four smaller placeholder seams last*/
+	for (i = 0; i < 4; i++)
+	{
+		build_seam(FEAT_QUARTZ_H, randint(4));
+	}
+
+
+	/* -KN- (testing) rivers - from H seams */
+	if (p_ptr->dungeon_flags & (DUNGEON_RIVER))
+	{
+		for (y = 0; y < dungeon_hgt; y++)
+		{
+			for (x = 0; x < dungeon_wid; x++)
+			{
+				if (cave_feat[y][x] == FEAT_MAGMA_H)
+				{
+					if (!(cave_info[y][x] & (CAVE_ROOM))) cave_set_feat(y, x, FEAT_WATER);
+					else cave_set_feat(y, x, FEAT_MAGMA);
+				}
+				
+				if (cave_feat[y][x] == FEAT_QUARTZ_H)
+				{
+					cave_set_feat(y, x, FEAT_TREE);
+				}
+			}
+		}
+	}
+
+
+
 
 
 	/* Handle destroyed levels */
@@ -8965,16 +9069,16 @@ static void cave_gen(void)
 			continue;
 		}
 
-		/* get some variation from the center of rooms */
-		x = rand_spread(dun->minors[mm].x, 3);
-		y = rand_spread(dun->minors[mm].y, 3);
-		bx = rand_spread(dun->minors[mm].x, 2);
-		by = rand_spread(dun->minors[mm].y, 2);
-		x1 = rand_spread(dun->minors[mm].x, 1);
-		y1 = rand_spread(dun->minors[mm].y, 1);
-
 		/* this is the size in 3x3 blocks */
 		j = dun->minors[mm].size;
+
+		/* get some variation from the center of the room */
+		x = rand_spread(dun->minors[mm].x, 3);
+		y = rand_spread(dun->minors[mm].y, 3);
+		bx = rand_spread(dun->minors[mm].x, 2) - (j / 2);	// move it for square
+		by = rand_spread(dun->minors[mm].y, 2) - (j / 2);	// move it for square
+		x1 = rand_spread(dun->minors[mm].x, 1);
+		y1 = rand_spread(dun->minors[mm].y, 1);
 
 		switch (dun->minors[mm].zz)
 		{
@@ -9381,6 +9485,7 @@ static void cave_gen(void)
 
 	/* Restore level rating */
 	level_rating = old_level_rating;
+
 
 	/* Clear "temp" flags. */
 	for (y = 0; y < dungeon_hgt; y++)
@@ -10492,8 +10597,11 @@ void generate_cave(void)
 
 	/*** Dungeon conditions:  Defaults ***/
 
-	/* Allow special lighting */
+	/* Allow special lighting and other cleaning of past */
 	p_ptr->dungeon_flags &= ~(DUNGEON_NO_SPECIAL_LIGHTING);
+	p_ptr->dungeon_flags &= ~(DUNGEON_CAVERNOUS);
+	p_ptr->dungeon_flags &= ~(DUNGEON_UNDERWOOD);
+	p_ptr->dungeon_flags &= ~(DUNGEON_RIVER);
 
 	/* -KN- (IDEA) utilize level creation flags with minor rooms, quest vaults etc. */
 
@@ -10506,6 +10614,12 @@ void generate_cave(void)
 
 
 
+	/* -KN- (testing) Cavernous feel */
+	if (p_ptr->depth > 1)
+	{
+		p_ptr->dungeon_flags |= (DUNGEON_RIVER);
+		p_ptr->dungeon_flags |= (DUNGEON_UNDERWOOD);
+	}
 
 
 

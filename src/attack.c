@@ -90,7 +90,7 @@ int monster_evade_or_resist(object_type *o_ptr,
 	}
 	else p = "missile";
 
-	/* reduce chance by 30% evasion if stunned */
+	/* reduce chance by 20% if stunned */
 	if (m_ptr->stunned > 0) evade_chance -= 2;
 	
 	/* Some monsters are great at dodging  -EZ- */
@@ -1952,8 +1952,9 @@ bool py_attack(int y, int x)
 				sleeping_bonus = get_skill(S_BURGLARY, 0, 50);
 				
 				/* -KN- (verbalize) if noticable */
-				if(sleeping_bonus > 24) msg_print("You sneakily backstab from behind.");
-				else if(sleeping_bonus > 9) msg_print("You attack from behind.");
+				if(sleeping_bonus > 19) msg_print("You backstab sneakily.");
+				else if(sleeping_bonus > 9) msg_print("You skilfully attack from behind.");
+				else if(sleeping_bonus > 4) msg_print("You attack from behind.");
 			}
 		}
 	}
@@ -2551,8 +2552,8 @@ bool py_attack(int y, int x)
 		{
 			/* -KN- if not forcing, focus can shove the monster a bit */
 			/* 		more rules should apply (testing) (STAMINA) */
-			if ((p_ptr->rew_cy & (CRYPT_KNOCK_SEE)) && 
-				(p_ptr->rew_cy & (CRYPT_KNOCK_SEE2)))
+			if ((p_ptr->rew_cy & (CY_KNOCK)) && 
+				(p_ptr->rew_cy & (CY_KNOCK2)))
 			{
 				/* double knockback */
 				thrust_away(-1, m_ptr->fy, m_ptr->fx, rand_range(1, 2));

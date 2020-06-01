@@ -3194,7 +3194,7 @@
 
 
 /* -KN- added advanced quest flags */
-#define QADV_BIRTH     	   0x0000		// default FALSE
+#define QADV_XXXX     	   0x0000		// default FALSE
 #define QADV_CRYPTIC       0x0001		// on CRYPTIC quest
 #define QADV_MYTHIC        0x0002		// on MYTHIC quest
 #define QADV_ELDRITCH      0x0004		// on ELDRITCH quest
@@ -3203,22 +3203,22 @@
 #define QADV_XXX7          0x0020
 #define QADV_XXX8          0x0040
 #define QADV_XXX9          0x0080
-#define QADV_STARTED       0x0100		// started C/M/E quest
-#define QADV_SUCCESS       0x0200		// finished C/M/E quest
+#define QADV_STARTED       0x0100		// started Crypt quest
+#define QADV_SUCCESS       0x0200		// completed Crypt quest
 #define QADV_XX30          0x0400
-#define QADV_XX40          0x0800
+#define QADV_HUNTING       0x0800		// started Mythic Lair quest
 #define QADV_XX50          0x1000
 #define QADV_XX60          0x2000
 #define QADV_XX70          0x4000
 #define QADV_QUESTBOX      0x8000		// found Quest box (?)
 
 /* -KN- added CRYPTIC rewards flags */
-#define CRYPT_KNOCK_SEE    0x0001		// Knockback or See invis when zero
-#define CRYPT_DUR_IMBUE    0x0002
-#define CRYPT_KNOCK_SEE2   0x0004		// Improved knock or see invis
-#define CRYPT_X004         0x0008
-#define CRYPT_X005         0x0010
-#define CRYPT_X006         0x0020
+#define CY_KNOCK     	   0x0001
+#define CY_KNOCK2   	   0x0002
+#define CY_SEE      	   0x0004
+#define CY_SEE2     	   0x0008
+#define CY_IMBUE     	   0x0010
+#define CY_IMBUE2  	       0x0020
 #define CRYPT_X007         0x0040
 #define CRYPT_X008         0x0080
 #define CRYPT_X009         0x0100
@@ -5236,11 +5236,29 @@
  */
 #define DUNGEON_NO_SPECIAL_LIGHTING     0x00000001  /* No special lighting */
 /* xxx (many) */
-
-
-
-
-
+#define DUNGEON_CAVERNOUS               0x00000002	/* -KN- cavern feel */
+#define DUNGEON_UNDERWOOD               0x00000004	/* -KN- woody feel */
+#define DUNGEON_XX0  	                0x00000008	/* -KN-  */
+#define DUNGEON_XX1		                0x00000010
+#define DUNGEON_XX2		                0x00000020
+#define DUNGEON_XX3	    	            0x00000040
+#define DUNGEON_XX4	        	        0x00000080
+#define DUNGEON_RIVER                   0x00000100  /* -KN- add a river */
+#define DUNGEON_FOREST                  0x00000200  /* -KN- add a forest */
+#define DUNGEON_MAIN_CORRIDOR           0x00000400  /* -KN- big corridor around */
+#define DUNGEON_XX8	        	        0x00000800
+#define DUNGEON_XX9		                0x00001000
+#define DUNGEON_X10		                0x00002000
+#define DUNGEON_X11	    	            0x00004000
+#define DUNGEON_X12	        	        0x00008000
+#define DUNGEON_HALF_VERTICAL           0x00010000  /* -KN- features are up/down */
+#define DUNGEON_HALF_HORIZONTAL         0x00020000  /* -KN- features are left/right */
+#define DUNGEON_X15	    	            0x00040000
+#define DUNGEON_X16	        	        0x00080000
+#define DUNGEON_X17		                0x00100000
+#define DUNGEON_X18		                0x00200000
+#define DUNGEON_X19	    	            0x00400000
+#define DUNGEON_X20	        	        0x00800000
 
 
 
