@@ -856,7 +856,7 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 		if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
 		{
 			/* infra-seen walls dark */
-			a = 26;
+			a = 31;
 			//a = f_ptr->x_attr + 10;
 		}
 		else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
@@ -990,6 +990,14 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 			/* walls in EXPLORED darkness */
 			if (!one_in_(12)) a = 7;
 			else a = 15;
+		}
+		
+		if ((cave_feat[y][x] != FEAT_BROKEN) &&
+			(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
+			(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
+		{
+			/* non-hidden doors are not brown */
+			a = 2;
 		}
 	}
 
@@ -5240,6 +5248,20 @@ void town_illuminate(bool daytime)
  */
 void cave_set_feat(int y, int x, int feat)
 {
+	if ((feat == FEAT_FLOOR) && (p_ptr->depth > 0))
+	{
+		/* adjust the look of the floor to the depth */
+		if (p_ptr->depth > 90)      feat = FEAT_FLOOR_B;
+		else if (p_ptr->depth > 75) feat = FEAT_FLOOR6;
+		else if (p_ptr->depth > 60) feat = FEAT_FLOOR5;
+		else if (p_ptr->depth > 45) feat = FEAT_FLOOR4;
+		else if (p_ptr->depth > 30) feat = FEAT_FLOOR3;
+		else if (p_ptr->depth > 15) feat = FEAT_FLOOR2;
+		
+		/* with some chance to keep the original look */
+		if (one_in_(4 + div_round(p_ptr->depth, 15))) feat = FEAT_FLOOR;
+	}
+	
 	/* Change the feature */
 	cave_feat[y][x] = feat;
 

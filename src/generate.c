@@ -107,6 +107,13 @@
 /* -KN- minor room max details */
 #define MINOR_MAX            18
 
+
+/* -KN- variables to determine certain global placement specifics */
+static int env_rivers;
+static int env_groves;
+static byte env_river[8];
+static byte env_grove[8];
+
 /*
  * Simple structure to hold a map location
  */
@@ -3894,46 +3901,76 @@ static void build_seam(int feat, int chance)
 
 	if ((feat == FEAT_MAGMA_H) || (feat == FEAT_QUARTZ_H))
 	{
-		/* for placeholder, chance is quadrant */
+		/* for a placeholder seam, chance is a quadrant */
+		/*	1	2	3	4	5	6	7	8
+		 *  
+		 *  X:  :X  ::  ::  XX  ::  X:  :X
+		 *	::  ::  X:  :X  ::  XX  X:  :X
+		 */
+		
 		if (chance == 0) chance = randint(4);
-		if (chance > 6) chance = randint(4) + 2;
+		if (chance > 8) chance = randint(4) + 4;
 
-		if ((chance == 1) || (chance == 5) || (chance == 6))
+		if (chance == 1)
 		{
+			/* seam starts in upper left Q */
 			left = 1 + rand_int(dungeon_wid / 4 - 1);
 			top = 1 + rand_int(dungeon_hgt / 4 - 1);
 		}
 		else if (chance == 2)
 		{
+			/* upper right Q */
 			left = (2 * dungeon_wid / 4) + rand_int(dungeon_wid / 4) - 4;
 			top = 1 + rand_int(dungeon_hgt / 4 - 1);
 		}
 		else if (chance == 3)
 		{
+			/* lower left Q */
 			left = 1 + rand_int(dungeon_wid / 4 - 1);
 			top = (2 * dungeon_hgt / 4) + rand_int(dungeon_hgt / 4) - 4;
 		}
 		else if (chance == 4)
 		{
+			/* lower right Q */
 			left = (2 * dungeon_wid / 4) + rand_int(dungeon_wid / 4) - 4;
 			top = (2 * dungeon_hgt / 4) + rand_int(dungeon_hgt / 4) - 4;
 		}
 
 		if (chance < 5)
 		{
-			width  = rand_range(dungeon_wid / 4, dungeon_wid / 3);
-			height = rand_range(dungeon_hgt / 4, dungeon_hgt / 3);
+			/* size of smaller seams */
+			width  = rand_range(dungeon_wid / 5, dungeon_wid / 3);
+			height = rand_range(dungeon_hgt / 5, dungeon_hgt / 3);
 		}
-		else if (chance == 5)
+
+		else if ((chance == 5) || (chance == 6))
 		{
-			/* a bigger horizontal sea */
+			/* large horizontal sea on the upper half */
+			left = 1 + rand_int(dungeon_wid / 4 - 1);
+			top = 1 + rand_int(dungeon_hgt / 4 - 1);
+			if (chance == 6)
+			{
+				/* ... on the lower half */
+				left = 1 + rand_int(dungeon_wid / 4 - 1);
+				top = (2 * dungeon_hgt / 4) + rand_int(dungeon_hgt / 4) - 8;
+			}
+			
 			width  = rand_range(dungeon_wid / 2, (dungeon_wid - dungeon_wid / 4));
-			height = rand_range(dungeon_hgt / 3, dungeon_hgt / 2 + 4);
+			height = rand_range(dungeon_hgt / 3, dungeon_hgt / 2);
 		}
-		else if (chance == 6)
+		else if ((chance == 7) || (chance == 8))
 		{
-			/* a bigger vertical sea */
-			width  = rand_range(dungeon_wid / 3, dungeon_wid / 2 + 4);
+			/* large vertical sea on the left half */
+			left = 1 + rand_int(dungeon_wid / 4 - 1);
+			top = 1 + rand_int(dungeon_hgt / 4 - 1);
+			if (chance == 8)
+			{
+				/* ... on the right half */
+				left = (2 * dungeon_wid / 4) + rand_int(dungeon_wid / 4) - 8;
+				top = 1 + rand_int(dungeon_hgt / 4 - 1);
+			}
+
+			width  = rand_range(dungeon_wid / 3, dungeon_wid / 2);
 			height = rand_range(dungeon_hgt / 2, (dungeon_hgt - dungeon_hgt / 4));
 		}
 
@@ -8761,6 +8798,73 @@ static bool place_ghost(void)
 
 
 /*
+ * -KN- simple function to say how many features of a given type are adjacent to x, y;
+ * 		if found exactly --ONE--, return with change to another feature; conditions may apply
+ */
+static byte adj_to_feat(int y, int x, int feat1, int feat2, int condition)
+{
+	int count = 0;
+	int y_where = 0;
+	int x_where = 0;
+
+	if ((condition < 0) &&
+	   (((x % 2 == 0) && (y % 2 == 0)) || ((x % 2 == 1) && (y % 2 == 1))))
+	   {
+		   /* allow for changing only when testing in cross grid */
+		   /* useful for not repeating the change for adjacent tested tiles */
+		   condition = condition * (-1);
+	   }
+
+	switch (ABS(condition))
+	{
+		case 1:
+		{
+			/* looking for feature 1 */
+			if (cave_feat[y+1][x] == feat1) {  count++; y_where = y + 1; x_where = x; }
+			if (cave_feat[y][x+1] == feat1) {  count++; y_where = y; x_where = x + 1; }
+			if (cave_feat[y-1][x] == feat1) {  count++; y_where = y - 1; x_where = x; }
+			if (cave_feat[y][x-1] == feat1) {  count++; y_where = y; x_where = x - 1; }
+			break;
+		}
+		case 2:
+		{
+			/* looking for floor-like terrain */
+			if (cave_floor_bold(y+1,x)) {  count++; y_where = y + 1; x_where = x; }
+			if (cave_floor_bold(y,x+1)) {  count++; y_where = y; x_where = x + 1; }
+			if (cave_floor_bold(y-1,x)) {  count++; y_where = y - 1; x_where = x; }
+			if (cave_floor_bold(y,x-1)) {  count++; y_where = y; x_where = x - 1; }
+			break;
+		}
+		default:
+		{
+			/* unspecified condition */
+			return (0);
+		}
+	}			
+
+	/* secondary test for this situation
+	 * XX:::::::	=> room
+	 * XX:::::::
+	 * XxXXXXOXX	=> 'x' is tested as part of room, 'O' is okay to add obstacle above
+	 * :;::::XXX	=> ';' and blocks the corridor
+	 * X?XXX:XXX
+	 */
+	
+	/* solve it for non-passable replacements in unique position... */
+	if ((count == 1) && (feat2 > 49))
+	{
+		/* ... by asking if we are touching inside the room */
+		if (!(cave_info[y_where][x_where] & (CAVE_ROOM))) count += 1;
+	}
+
+	/* only change feature when exactly one has been found and condition is cleared (above) */
+	/* do --NOT-- change, if feature 2 is empty or zero */
+	if ((count == 1) && (condition > 0) && (feat2 > 0)) cave_set_feat(y_where, x_where, feat2);
+	return (count);
+}
+
+
+/*
  * Generate a new dungeon level.  Build up to DUN_ROOMS rooms, type by type, in
  * descending order of size and difficulty.
  *
@@ -9049,10 +9153,13 @@ static void cave_gen(void)
 		}
 	}
 
+
+
+
 	/* -KN- Add water placeholder seams 1st */
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < env_rivers; i++)
 	{
-		build_seam(FEAT_MAGMA_H, 3);
+		build_seam(FEAT_MAGMA_H, env_river[i]);
 	}
 
 	/* Add some magma seams */
@@ -9068,55 +9175,176 @@ static void cave_gen(void)
 	}
 
 	/* -KN- Add four smaller placeholder seams last */
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < env_groves; i++)
 	{
-		build_seam(FEAT_QUARTZ_H, randint(2));
+		build_seam(FEAT_QUARTZ_H, env_grove[i]);
 	}
 
 
-	/* -KN- (testing) rivers - from H seams */
-	if (p_ptr->dungeon_flags & (DUNGEON_HALLS))
+	int count = 0;
+
+	/* -KN- scanning the whole dungeon for environmental changes */
+	for (y = 0; y < dungeon_hgt; y++)
 	{
-		for (y = 0; y < dungeon_hgt; y++)
+		for (x = 0; x < dungeon_wid; x++)
 		{
-			for (x = 0; x < dungeon_wid; x++)
+			if (cave_feat[y][x] == FEAT_MAGMA_H)
 			{
-				if (cave_feat[y][x] == FEAT_MAGMA_H)
-				{
-					/* a lake of water or chasm */
-					if (!(cave_info[y][x] & (CAVE_ROOM))) cave_set_feat(y, x, FEAT_ABYSS);
-					else cave_set_feat(y, x, FEAT_MAGMA);
-				}
+				/* --- WATER - LAVA - ABYSS --- */
+				/* a lake of sorts or a chasm, sometimes over larger parts of dungeon */
+				if ((p_ptr->dungeon_flags & (DUNGEON_CHASM)) && 
+					(!(cave_info[y][x] & (CAVE_ROOM)))) cave_set_feat(y, x, FEAT_ABYSS);
+				else if ((p_ptr->dungeon_flags & (DUNGEON_RIVER)) && 
+					(!(cave_info[y][x] & (CAVE_ROOM)))) cave_set_feat(y, x, FEAT_WATER);
+				else cave_set_feat(y, x, FEAT_MAGMA);
+			}
 
-				if (cave_feat[y][x] == FEAT_QUARTZ_H)
-				{
-					/* simple grove field */
-					cave_set_feat(y, x, FEAT_TREE);
-				}
+			if (cave_feat[y][x] == FEAT_QUARTZ_H)
+			{
+				/* --- TREES --- */
+				/* simple grove of trees -- quartz_h is by default generated last */
+				/* so one can see sometimes only a few trees if forest is small */
+				if (p_ptr->dungeon_flags & (DUNGEON_FOREST)) cave_set_feat(y, x, FEAT_TREE);
+				else cave_set_feat(y, x, FEAT_QUARTZ);
+			}
 
-				if ((cave_feat[y][x] == FEAT_WALL_OUTER) && 
-					(((x % 2 == 0) && (y % 2 == 0)) || ((x % 2 == 1) && (y % 2 == 1))))
+			/* test room-defining walls for any changes */
+			if (cave_feat[y][x] == FEAT_WALL_OUTER)
+			{
+				/* --- ROOM WALLS --- */
+				/* modify some walls in rooms to fit the given dungeon */
+				if (p_ptr->dungeon_flags & (DUNGEON_HALLS))
 				{
-					/* each second tile of room walls is now a wall-embedded pillar */
-					cave_set_feat(y, x, FEAT_PILLAR);
+					count++;
+					
+					/* each second wall can be a wall-embedded pillar (visual) */
+					if (((x % 2 == 0) && (y % 2 == 0)) || ((x % 2 == 1) && (y % 2 == 1)))
+					{
+						cave_set_feat(y, x, FEAT_PILLAR);
+					}
+					else
+					{
+						/* sometimes rise a pillar inside the room */
+						if (count % 4 == 0) adj_to_feat(y, x, 0, FEAT_PILLAR, 2);
+					}
 				}
-
-				if ((f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)) && 
-					(cave_feat[y][x] != FEAT_SECRET))
+				else if (p_ptr->dungeon_flags & (DUNGEON_UNDERWOOD))
 				{
-					/* always ask whether the doors are near a tree, then morph them into web */
-					if ((cave_feat[y+1][x] == FEAT_TREE) ||
-						(cave_feat[y][x+1] == FEAT_TREE) ||
-						(cave_feat[y-1][x] == FEAT_TREE) ||
-						(cave_feat[y][x-1] == FEAT_TREE)) cave_set_feat(y, x, FEAT_WEB);
-					else if (!(cave_info[y][x] & (CAVE_ROOM))) cave_set_feat(y, x, FEAT_WEB);
+					count++;
+					
+					/* make 7 more webs around rooms when in UNDERWOOD */
+					if (count < 8)
+					{
+						/* if there is one adjacent floor-like tile, make a web there often */
+						if (one_in_(2)) adj_to_feat(y, x, 0, FEAT_WEB, 2);
+						
+						if 		(one_in_(4)) cave_set_feat(y, x, FEAT_TREE);
+						else if (one_in_(2)) cave_set_feat(y, x, FEAT_WEB);
+						else 		       { cave_set_feat(y, x, FEAT_FLOOR3);
+											if (one_in_(24)) spread_traps(1, y, x, 0, 0, TRAP_LOOSE_ROCK);
+											/* left a surprise on occasion */ }
+					}
+					else if (count > (14 + rand_int(5)))
+					{
+						/* reset the counter to make some more webbed spots */
+						count = 0;
+					}	
+				}
+				else if (p_ptr->dungeon_flags & (DUNGEON_CAVERNOUS))
+				{
+					count++;
+					
+					/* make 8 more holes in the walls in CAVERNS for irregularity */
+					if (count < 9)
+					{
+						/* if there is one adjacent floor-like tile, make stones there */
+						if      (one_in_(3)) adj_to_feat(y, x, 0, FEAT_WALL_EXTRA, -2);
+						else if (one_in_(3)) adj_to_feat(y, x, 0, FEAT_RUBBLE, 2);
+						else 				 adj_to_feat(y, x, 0, FEAT_FLOOR2, 2);
+						
+						/* also bore holes in the wall */
+						if (one_in_(3)) cave_set_feat(y, x, FEAT_RUBBLE);
+						else 		  { cave_set_feat(y, x, FEAT_FLOOR2);
+										if (one_in_(18)) spread_traps(1, y, x, 0, 0, TRAP_LOOSE_ROCK);
+										/* left a surprise on occasion */ }
+					}
+					else if (count > (20 + rand_int(9)))
+					{
+						/* reset the counter to make some more irregularities */
+						count = 0;
+					}
+				}
+			}
+
+			if (p_ptr->dungeon_flags & (DUNGEON_MAIN_CORRIDOR))
+			{
+				/* --- CORRIDOR --- */
+				/* makes a broad corridor around the entire dungeon */
+				if (((x < 3) || (x > (dungeon_wid - 4))) ||
+				    ((y < 3) || (y > (dungeon_hgt - 4))))
+				{
+					/* do not touch the boundaries */
+					if (((x < 1) || (x > dungeon_wid - 2)) ||
+					   ((y < 1) || (y > dungeon_hgt - 2)))
+					{
+						/* stay silent even though this code is dirty */
+					}
+					
+					else if (f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY))
+					{
+						/* kill all other doors, even the secret ones */
+						cave_set_feat(y, x, FEAT_FLOOR);
+					}
+					
+					else if (cave_wall_bold(y, x))
+					{
+						/* make the CORRIDOR, with some irregularities */
+						if (!one_in_(50)) cave_set_feat(y, x, FEAT_FLOOR);
+						
+						/* look for spot for gate, skip if intersection with a room */
+						if (((x % ((dungeon_wid-1) / 5) == 0) || (y % ((dungeon_hgt-1) / 4) == 0)) && 
+							(!(cave_info[y][x] & (CAVE_ROOM))))
+						{
+							/* make a gate at specific places */
+							cave_set_feat(y, x, FEAT_FLOOR);
+							place_closed_door(y, x);
+						}
+					}
+				}
+			}
+
+
+			/* and finally test if all DOORS fit the given dungeon */
+			if ((f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)) && 
+				(cave_feat[y][x] != FEAT_SECRET))
+			{
+				/* --- DOORS --- */
+				/* always change the doors that are next to a tree */
+				if (adj_to_feat(y, x, FEAT_TREE, 0, 1) > 0) cave_set_feat(y, x, FEAT_WEB);
+				
+				/* corridor doors next to water or abyss are changed */
+				if (!(cave_info[y][x] & (CAVE_ROOM)))
+				{
+					if (adj_to_feat(y, x, FEAT_WATER, 0, 1) > 0) cave_set_feat(y, x, FEAT_FLOOR);
+					if (adj_to_feat(y, x, FEAT_ABYSS, 0, 1) > 0) cave_set_feat(y, x, FEAT_RUBBLE);
+					
+					if (p_ptr->dungeon_flags & (DUNGEON_UNDERWOOD))
+					{
+						/* also change doors in corridors to webs, if in UNDERWOOD */
+						cave_set_feat(y, x, FEAT_WEB);
+					}
+				}
+				else
+				{
+					/* room doors can get changed in some dungeons */
+					if ((p_ptr->dungeon_flags & (DUNGEON_UNDERWOOD)) && (one_in_(3)))
+					{
+						cave_set_feat(y, x, FEAT_WEB);
+					}
 				}
 			}
 		}
 	}
-
-
-
 
 
 	/* Handle destroyed levels */
@@ -9146,14 +9374,14 @@ static void cave_gen(void)
 
 		/* -KN- chance for BONEs in rooms, more bones deeper */
 		if (one_in_(22 - div_round(p_ptr->depth, 5)))
-			alloc_object(ALLOC_SET_ROOM, ALLOC_TYP_BONES, rand_range(3, 5 + div_round(p_ptr->depth, 8)));
+			alloc_object(ALLOC_SET_ROOM, ALLOC_TYP_BONES, rand_range(3, 4 + div_round(p_ptr->depth, 10)));
 		else alloc_object(ALLOC_SET_ROOM, ALLOC_TYP_BONES, rand_range(0, 2));
 
 		/* -KN- chance for more CAULDRONs, more CAULDRONs deeper */
-		if (one_in_(22 - div_round(p_ptr->depth, 5)))
-			alloc_object(ALLOC_SET_ROOM, ALLOC_TYP_CAULDRON, rand_range(3, 4 + div_round(p_ptr->depth, 10)));
+		//if (one_in_(22 - div_round(p_ptr->depth, 5)))
+		//	alloc_object(ALLOC_SET_ROOM, ALLOC_TYP_CAULDRON, rand_range(3, 4 + div_round(p_ptr->depth, 10)));
 		/* (testing) too many cauldrons? */
-		else alloc_object(ALLOC_SET_ROOM, ALLOC_TYP_CAULDRON, rand_range(0, 2));
+		//else alloc_object(ALLOC_SET_ROOM, ALLOC_TYP_CAULDRON, rand_range(0, 2));
 
 		/* -KN- chance for PITs in corridors, more pits deeper */
 		if (one_in_(22 - div_round(p_ptr->depth, 5)))
@@ -10828,7 +11056,7 @@ void generate_cave(void)
 {
 	int y, x;
 	cptr quest_feel;
-
+	int i;
 
 	/* The dungeon is not ready */
 	character_dungeon = FALSE;
@@ -10851,6 +11079,20 @@ void generate_cave(void)
 	p_ptr->dungeon_flags &= ~(DUNGEON_UNDERWOOD);
 	p_ptr->dungeon_flags &= ~(DUNGEON_HALLS);
 	p_ptr->dungeon_flags &= ~(DUNGEON_RIVER);
+	p_ptr->dungeon_flags &= ~(DUNGEON_FOREST);
+	p_ptr->dungeon_flags &= ~(DUNGEON_CHASM);
+	p_ptr->dungeon_flags &= ~(DUNGEON_MAIN_CORRIDOR);
+
+	for (i = 0; i < 8; i++)
+	{
+		/* -KN- empty the environmental arrays */
+		env_river[i] = 0;
+		env_grove[i] = 0;
+	}
+	
+	/* -KN- and zero numbers of environments */
+	env_rivers = 0;
+	env_groves = 0;
 
 	/* -KN- (IDEA) utilize level creation flags with minor rooms, quest vaults etc. */
 
@@ -10862,15 +11104,55 @@ void generate_cave(void)
 
 
 
+	
 
-	/* -KN- (testing) Cavernous feel */
+	/* -KN- (testing) level themes */
 	if (p_ptr->depth > 1)
 	{
-		p_ptr->dungeon_flags |= (DUNGEON_HALLS);
+		int rr = randint(3);
+		int extra = randint(12);
+		env_rivers = MIN(randint(3) - 2, 0);
+		env_groves = MIN(randint(3) - 2, 0);
+		
+		printf("\nPreparing new level... %d \n", extra);
+		
+		if 		(rr == 1) p_ptr->dungeon_flags |= (DUNGEON_HALLS);
+		else if (rr == 2)
+		{
+			p_ptr->dungeon_flags |= (DUNGEON_UNDERWOOD);
+			env_groves += 3;
+		}
+		else if (rr == 3)
+		{
+			p_ptr->dungeon_flags |= (DUNGEON_CAVERNOUS);
+			env_rivers += 3;
+		}
+		
+		if (extra % 2 == 0)
+		{
+			p_ptr->dungeon_flags |= (DUNGEON_RIVER);
+			env_rivers += randint(4);
+			printf("====RVER \n");
+		}
+		if (extra % 3 == 0) { p_ptr->dungeon_flags |= (DUNGEON_MAIN_CORRIDOR); printf("!=!=CRDR \n"); }
+		if (extra % 4 == 0) { p_ptr->dungeon_flags |= (DUNGEON_CHASM); 		   printf("!===CHSM \n"); }
+		if (extra > 4)
+		{
+			p_ptr->dungeon_flags |= (DUNGEON_FOREST);
+			env_groves += randint(4);
+			printf("====FRST \n");
+		}
+		
+		/* set random quadrant or large seam for rivers and groves */
+		for (i = 0; i < env_rivers; i++)
+		{
+			env_river[i] = randint(8);
+		}
+		for (i = 0; i < env_groves; i++)
+		{
+			env_grove[i] = randint(8);
+		}
 	}
-
-
-
 
 
 

@@ -31,12 +31,13 @@ V: 21:i:Magenta-Pink:        0:255:  0:160:12
 V: 22:T:Light Teal:          0: 32:255:220:14
 V: 23:V:Light Violet:        0:184:168:255:10
 V: 24:I:Light Pink:          0:255:128:128:12
-V: 25:M:Mustard:             0:150:170: 10:11
+V: 25:M:Mustard:             0:160:170: 10:11
 V: 26:z:Blue Slate:          0:160:192:208:9
 V: 27:Z:Deep Light Blue:     0:  0:176:255:14
 V: 28:q:Very Dark:           0: 22: 33: 33:0
 V: 29:Q:Very Very Dark:      0:  7: 17: 17:0
 V: 30:O:Rusty:               0:255:222: 88:0
+V: 31:S:Infra:               0: 55: 45: 45:0
 
 # If marked, changes above will be deleted and replaced automatically.
 #

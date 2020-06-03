@@ -3957,6 +3957,15 @@ void play_game(bool new_game)
 				/* Pay the ferryman (unless in wizard mode) */
 				if (!p_ptr->wizard) p_ptr->au = 0;
 
+				/* -KN- also loose one constitution */
+				/* 		or actually die if low on CON */
+				if (p_ptr->stat_cur[A_CON] == 3)
+				{
+					p_ptr->is_dead = TRUE;
+					msg_print("But not this time...");
+				}
+				dec_stat(A_CON, 1, TRUE);
+
 				/* Restore hit points */
 				p_ptr->chp = p_ptr->mhp;
 				p_ptr->chp_frac = 0;

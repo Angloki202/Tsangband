@@ -5246,7 +5246,7 @@
 #define DUNGEON_RIVER                   0x00000100  /* -KN- add a river */
 #define DUNGEON_FOREST                  0x00000200  /* -KN- add a forest */
 #define DUNGEON_MAIN_CORRIDOR           0x00000400  /* -KN- big corridor around */
-#define DUNGEON_XX8	        	        0x00000800
+#define DUNGEON_CHASM        	        0x00000800  /* -KN- add some abyss */
 #define DUNGEON_XX9		                0x00001000
 #define DUNGEON_X10		                0x00002000
 #define DUNGEON_X11	    	            0x00004000

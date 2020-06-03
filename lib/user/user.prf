@@ -205,6 +205,330 @@ P:^D
 # If marked, changes above will be deleted and replaced automatically.
 #
 ### (Automatic deletion marker) ### end Macro dump
+### (Automatic deletion marker) ### begin Options dump
+#
+# If marked, changes below will be deleted and replaced automatically.
+
+
+# Option 'Rogue-like commands'
+X:rogue_like_commands
+
+# Option 'Verify destruction of objects'
+Y:verify_destroy
+
+# Option 'Pick things up by default'
+X:always_pickup
+
+# Option 'Display things before picking them up'
+Y:query_floor
+
+# Option 'Never haggle in stores'
+Y:never_haggle
+
+# Option 'Use old target by default'
+X:use_old_target
+
+# Option 'Ignore stairs when running'
+X:run_ignore_stairs
+
+# Option 'Ignore doors when running'
+X:run_ignore_doors
+
+# Option 'Cut corners when running'
+X:run_cut_corners
+
+# Option 'Allow accents in output files'
+Y:xchars_to_file
+
+# Option 'Merge inscriptions when stacking'
+Y:stack_force_notes
+
+# Option 'Merge discounts when stacking'
+X:stack_force_costs
+
+# Option 'Allow quantity specification'
+Y:allow_quantity
+
+# Option 'Change savefile names'
+X:change_save_names
+
+# Option 'Disturb whenever any monster moves'
+X:disturb_move
+
+# Option 'Disturb whenever map panel changes'
+X:disturb_panel
+
+# Option 'Disturb whenever player state changes'
+Y:disturb_state
+
+# Option 'Disturb whenever minor things happen'
+X:disturb_minor
+
+# Option 'Alert user to critical hitpoints'
+Y:alert_hitpoint
+
+# Option 'Audible bell (on errors, etc)'
+X:ring_bell
+
+# Option 'Activate quick messages'
+Y:quick_messages
+
+# Option 'Compress messages in savefiles'
+X:compress_messages
+
+# Option 'Flush input on various failures'
+Y:flush_failure
+
+# Option 'Flush input whenever disturbed'
+Y:flush_disturb
+
+# Option 'Delay on failure'
+Y:delay_failure
+
+# Option 'Colored messages when hit hard'
+Y:colored_hit_msg
+
+# Option 'Special colors for hurt character'
+Y:colored_hurt_char
+
+# Option 'Map remembers all seen grids'
+Y:remember_seen_grids
+
+# Option 'Use special colors for torch light'
+Y:torch_light
+
+# Option 'Use special colors for field of view'
+Y:sight_light
+
+# Option 'Use special colors for wall grids'
+Y:wall_lighting
+
+# Option 'Use special colors for floor grids'
+Y:floor_lighting
+
+# Option 'Highlight the player with the cursor'
+X:highlight_player
+
+# Option 'Flush output after various things'
+X:fresh_after
+
+# Option 'Don't hide traps when objects pile on them'
+Y:traps_display_on_top
+
+# Option 'Show dungeon level in feet (or meters)'
+X:depth_in_feet
+
+# Option 'Show labels in equipment listings'
+Y:show_labels
+
+# Option 'Show weights in all object listings'
+Y:show_weights
+
+# Option 'Show flavors in object descriptions'
+Y:show_flavors
+
+# Option 'Use metric (SI) measurements'
+X:use_metric
+
+# Option 'Menus pop up when selecting various things'
+Y:always_show_list
+
+# Option 'Move old messages to sub-window automatically'
+X:message_to_window
+
+# Option '(null)'
+X:  
+
+# Option '(null)'
+X:  
+
+# Option 'Know complete monster info'
+X:cheat_know
+
+# Option 'Allow multiple lives'
+X:beginner_play
+
+# Option 'Allow skill increase past power 100'
+X:no_skill_cap
+
+# Window 'Win-1', Flag 'Display visible monsters'
+W:2:4:1
+
+# Window 'Win-2', Flag 'Display messages'
+W:3:6:1
+
+# Window 'Win-3', Flag 'Display monster recall'
+W:4:8:1
+
+# Window 'Win-4', Flag 'Display inventory'
+W:5:0:1
+
+# Window 'Win-5', Flag 'Display equipment'
+W:6:1:1
+
+# Delay
+D:7
+
+# Hitpoint warning (x10%)
+H:2
+
+# Autosave  (autosave, frequency)
+a:0:0
+
+# Screen  (zero, more_tall_display, map_display_precise_fit, y-margin, x-margin)
+t:0:1:1:13:4
+
+
+# If marked, changes above will be deleted and replaced automatically.
+#
+### (Automatic deletion marker) ### end Options dump
+### (Automatic deletion marker) ### begin Feature attr/char definitions
+#
+# If marked, changes below will be deleted and replaced automatically.
+
+
+# nothing
+F:0:Q:3:w:32:w:32
+
+# open floor
+F:1:s:6:Y:6:D:6:torch_only
+
+# open floor
+F:2:s:5:m:5:D:5
+
+# open floor
+F:3:g:6:G:6:t:6
+
+# up shaft
+F:4:U:60:U:60:U:60
+
+# down shaft
+F:5:U:62:U:62:U:62
+
+# open door
+F:6:U:14:U:14:u:14
+
+# broken door
+F:7:u:15:u:15:D:15
+
+# up staircase
+F:8:w:60:w:60:W:60
+
+# down staircase
+F:9:w:62:w:62:W:62
+
+# lava
+F:10:r:4:R:4:r:4
+
+# water
+F:11:b:4:Z:4:b:4
+
+# trees
+F:12:g:-91:G:-91:g:-91
+
+# webs
+F:13:D:12:m:12:q:12
+
+# pit
+F:14:D:15:s:15:q:15
+
+# abyss
+F:16:s:127:D:127:q:127
+
+# bone pile
+F:17:o:11:R:11:u:11
+
+# bones
+F:18:s:5:W:5:D:5
+
+# open floor
+F:21:u:6:U:6:u:6
+
+# open floor
+F:22:t:6:B:6:s:6
+
+# open floor
+F:23:r:6:R:6:r:6
+
+# door
+F:32:U:13:U:13:U:13
+
+# pile of rubble
+F:49:s:11:Y:11:D:11:torch_only
+
+# magma vein
+F:50:s:3:z:3:D:3
+
+# quartz vein
+F:51:W:2:z:2:s:2
+
+# magma vein with treasure
+F:54:u:3:o:3:u:3
+
+# quartz vein with treasure
+F:55:u:2:o:2:u:2
+
+# granite wall
+F:56:s:2:w:2:W:2
+
+# permanent wall
+F:60:s:2:w:2:W:2
+
+# permanent wall
+F:61:z:2:W:2:z:2
+
+# pillar
+F:64:s:-89:w:-89:W:-89
+
+# pillar of gold
+F:65:o:-89:y:-89:o:-89
+
+# cauldron
+F:66:D:-26:s:-26:D:-26
+
+# full cauldron
+F:67:g:-26:G:-26:t:-26:torch_only
+
+# crackling orb
+F:68:v:-26:P:-26:p:-26:torch_only
+
+# crypt
+F:69:D:-58:W:-58:s:-58
+
+# monolith
+F:70:Z:-58:B:-58:D:-58
+
+# the General Store
+F:84:U:49:U:49:U:49
+
+# the Armory
+F:85:s:50:s:50:s:50
+
+# the Weapon Smiths
+F:86:w:51:w:51:w:51
+
+# the Temple
+F:87:B:52:B:52:B:52
+
+# the Alchemy Shop
+F:88:b:53:b:53:b:53
+
+# the Magic Shop
+F:89:r:54:r:54:r:54
+
+# the Bookstore
+F:90:o:55:o:55:o:55
+
+# your home
+F:91:y:56:y:56:y:56
+
+# the Inn
+F:92:u:43:u:43:u:43
+
+
+# If marked, changes above will be deleted and replaced automatically.
+#
+### (Automatic deletion marker) ### end Feature attr/char definitions
 ### (Automatic deletion marker) ### begin Object attr/char definitions
 #
 # If marked, changes below will be deleted and replaced automatically.
@@ -1534,7 +1858,7 @@ K:636:r:96
 K:637:U:96
 
 # boulder
-K:638:s:10
+K:638:s:9
 
 # blanket
 K:639:D:126
@@ -1564,7 +1888,7 @@ K:647:W:37
 K:648:z:37
 
 # ancient skeleton
-K:649:w:96
+K:649:u:37
 
 # [apprentice magic]
 K:650:R:191
@@ -1650,6 +1974,12 @@ K:685:v:191
 # [necronomicon]
 K:686:v:191
 
+# underwood twig
+K:696:g:96
+
+# wilted leaf
+K:697:G:96
+
 # copper
 K:700:u:36
 
@@ -1713,7 +2043,7 @@ K:734:y:126
 # arkenstone
 K:735:y:126
 
-# palantr
+# palantír
 K:736:y:126
 
 # amulet
@@ -1852,327 +2182,3 @@ K:799:B:126
 # If marked, changes above will be deleted and replaced automatically.
 #
 ### (Automatic deletion marker) ### end Object attr/char definitions
-### (Automatic deletion marker) ### begin Options dump
-#
-# If marked, changes below will be deleted and replaced automatically.
-
-
-# Option 'Rogue-like commands'
-X:rogue_like_commands
-
-# Option 'Verify destruction of objects'
-Y:verify_destroy
-
-# Option 'Pick things up by default'
-X:always_pickup
-
-# Option 'Display things before picking them up'
-Y:query_floor
-
-# Option 'Never haggle in stores'
-Y:never_haggle
-
-# Option 'Use old target by default'
-X:use_old_target
-
-# Option 'Ignore stairs when running'
-X:run_ignore_stairs
-
-# Option 'Ignore doors when running'
-X:run_ignore_doors
-
-# Option 'Cut corners when running'
-X:run_cut_corners
-
-# Option 'Allow accents in output files'
-Y:xchars_to_file
-
-# Option 'Merge inscriptions when stacking'
-Y:stack_force_notes
-
-# Option 'Merge discounts when stacking'
-X:stack_force_costs
-
-# Option 'Allow quantity specification'
-Y:allow_quantity
-
-# Option 'Change savefile names'
-X:change_save_names
-
-# Option 'Disturb whenever any monster moves'
-X:disturb_move
-
-# Option 'Disturb whenever map panel changes'
-X:disturb_panel
-
-# Option 'Disturb whenever player state changes'
-Y:disturb_state
-
-# Option 'Disturb whenever minor things happen'
-X:disturb_minor
-
-# Option 'Alert user to critical hitpoints'
-Y:alert_hitpoint
-
-# Option 'Audible bell (on errors, etc)'
-X:ring_bell
-
-# Option 'Activate quick messages'
-Y:quick_messages
-
-# Option 'Compress messages in savefiles'
-X:compress_messages
-
-# Option 'Flush input on various failures'
-Y:flush_failure
-
-# Option 'Flush input whenever disturbed'
-Y:flush_disturb
-
-# Option 'Delay on failure'
-Y:delay_failure
-
-# Option 'Colored messages when hit hard'
-Y:colored_hit_msg
-
-# Option 'Special colors for hurt character'
-Y:colored_hurt_char
-
-# Option 'Map remembers all seen grids'
-Y:remember_seen_grids
-
-# Option 'Use special colors for torch light'
-Y:torch_light
-
-# Option 'Use special colors for field of view'
-Y:sight_light
-
-# Option 'Use special colors for wall grids'
-Y:wall_lighting
-
-# Option 'Use special colors for floor grids'
-Y:floor_lighting
-
-# Option 'Highlight the player with the cursor'
-X:highlight_player
-
-# Option 'Flush output after various things'
-X:fresh_after
-
-# Option 'Don't hide traps when objects pile on them'
-Y:traps_display_on_top
-
-# Option 'Show dungeon level in feet (or meters)'
-X:depth_in_feet
-
-# Option 'Show labels in equipment listings'
-Y:show_labels
-
-# Option 'Show weights in all object listings'
-Y:show_weights
-
-# Option 'Show flavors in object descriptions'
-Y:show_flavors
-
-# Option 'Use metric (SI) measurements'
-X:use_metric
-
-# Option 'Menus pop up when selecting various things'
-Y:always_show_list
-
-# Option 'Move old messages to sub-window automatically'
-X:message_to_window
-
-# Option '(null)'
-X:  
-
-# Option '(null)'
-X:  
-
-# Option 'Know complete monster info'
-X:cheat_know
-
-# Option 'Allow multiple lives'
-X:beginner_play
-
-# Option 'Allow skill increase past power 100'
-X:no_skill_cap
-
-# Window 'Win-1', Flag 'Display visible monsters'
-W:2:4:1
-
-# Window 'Win-2', Flag 'Display messages'
-W:3:6:1
-
-# Window 'Win-3', Flag 'Display monster recall'
-W:4:8:1
-
-# Window 'Win-4', Flag 'Display inventory'
-W:5:0:1
-
-# Window 'Win-5', Flag 'Display equipment'
-W:6:1:1
-
-# Delay
-D:7
-
-# Hitpoint warning (x10%)
-H:2
-
-# Autosave  (autosave, frequency)
-a:0:0
-
-# Screen  (zero, more_tall_display, map_display_precise_fit, y-margin, x-margin)
-t:0:1:1:13:4
-
-
-# If marked, changes above will be deleted and replaced automatically.
-#
-### (Automatic deletion marker) ### end Options dump
-### (Automatic deletion marker) ### begin Feature attr/char definitions
-#
-# If marked, changes below will be deleted and replaced automatically.
-
-
-# nothing
-F:0:Q:3:w:32:w:32
-
-# open floor
-F:1:s:6:Y:6:D:6:torch_only
-
-# open floor
-F:2:s:5:m:5:D:5
-
-# open floor
-F:3:g:6:G:6:t:6
-
-# up shaft
-F:4:U:60:U:60:U:60
-
-# down shaft
-F:5:U:62:U:62:U:62
-
-# open door
-F:6:U:14:U:14:u:14
-
-# broken door
-F:7:u:15:u:15:D:15
-
-# up staircase
-F:8:w:60:w:60:W:60
-
-# down staircase
-F:9:w:62:w:62:W:62
-
-# lava
-F:10:r:4:R:4:r:4
-
-# water
-F:11:b:4:Z:4:b:4
-
-# trees
-F:12:g:-91:G:-91:g:-91
-
-# webs
-F:13:D:12:m:12:q:12
-
-# pit
-F:14:D:15:s:15:q:15
-
-# abyss
-F:16:s:127:D:127:q:127
-
-# bone pile
-F:17:o:11:R:11:u:11
-
-# bones
-F:18:s:5:W:5:D:5
-
-# open floor
-F:21:u:6:U:6:u:6
-
-# open floor
-F:22:t:6:B:6:s:6
-
-# open floor
-F:23:r:6:R:6:r:6
-
-# door
-F:32:U:13:U:13:U:13
-
-# pile of rubble
-F:49:s:11:Y:11:D:11:torch_only
-
-# magma vein
-F:50:s:3:z:3:D:3
-
-# quartz vein
-F:51:W:2:z:2:s:2
-
-# magma vein with treasure
-F:54:u:3:o:3:u:3
-
-# quartz vein with treasure
-F:55:u:2:o:2:u:2
-
-# granite wall
-F:56:s:2:w:2:W:2
-
-# permanent wall
-F:60:s:2:w:2:W:2
-
-# permanent wall
-F:61:z:2:W:2:z:2
-
-# pillar
-F:64:s:-89:w:-89:W:-89
-
-# pillar of gold
-F:65:o:-89:y:-89:o:-89
-
-# cauldron
-F:66:D:-26:s:-26:D:-26
-
-# full cauldron
-F:67:g:-26:G:-26:t:-26:torch_only
-
-# crackling orb
-F:68:v:-26:P:-26:p:-26:torch_only
-
-# crypt
-F:69:D:-58:W:-58:s:-58
-
-# monolith
-F:70:Z:-58:B:-58:D:-58
-
-# the General Store
-F:84:U:49:U:49:U:49
-
-# the Armory
-F:85:s:50:s:50:s:50
-
-# the Weapon Smiths
-F:86:w:51:w:51:w:51
-
-# the Temple
-F:87:B:52:B:52:B:52
-
-# the Alchemy Shop
-F:88:b:53:b:53:b:53
-
-# the Magic Shop
-F:89:r:54:r:54:r:54
-
-# the Bookstore
-F:90:o:55:o:55:o:55
-
-# your home
-F:91:y:56:y:56:y:56
-
-# the Inn
-F:92:u:43:u:43:u:43
-
-
-# If marked, changes above will be deleted and replaced automatically.
-#
-### (Automatic deletion marker) ### end Feature attr/char definitions
