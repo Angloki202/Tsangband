@@ -11,7 +11,7 @@ V:  1:w:White:               0:233:233:233:1
 V:  2:s:Slate:               0:144:155:144:2
 V:  3:o:Orange:              0:255:128:  0:3
 V:  4:r:Red:                 0:192:  0:  0:4
-V:  5:g:Green:               0:  0:110:  0:5
+V:  5:g:Green:               0:  0:120:  0:5
 V:  6:b:Blue:                0: 44: 33:250:6
 V:  7:u:Umber:               0:144: 64:  0:7
 V:  8:D:Light Dark:          0: 77: 77: 77:8
@@ -28,9 +28,9 @@ V: 18:t:Teal:                0: 14:144:104:6
 V: 19:m:Mud:                 0:108:108: 48:5
 V: 20:Y:Light Yellow:        0:255:255:144:11
 V: 21:i:Magenta-Pink:        0:255:  0:160:12
-V: 22:T:Light Teal:          0: 32:255:220:14
+V: 22:T:Light Teal:          0: 32:199:177:14
 V: 23:V:Light Violet:        0:184:168:255:10
-V: 24:I:Light Pink:          0:255:128:128:12
+V: 24:I:Light Pink:          0:255:145:115:12
 V: 25:M:Mustard:             0:160:170: 10:11
 V: 26:z:Blue Slate:          0:160:192:208:9
 V: 27:Z:Deep Light Blue:     0:  0:176:255:14
@@ -38,6 +38,9 @@ V: 28:q:Very Dark:           0: 22: 33: 33:0
 V: 29:Q:Very Very Dark:      0:  7: 17: 17:0
 V: 30:O:Rusty:               0:255:222: 88:0
 V: 31:S:Infra:               0: 55: 45: 45:0
+V: 32:c:Dark Red:            0:111: 55: 55:0
+V: 33:n:Dark Green:          0: 27: 47: 37:0
+V: 34:e:Dark Blue:           0: 24: 24: 84:0
 
 # If marked, changes above will be deleted and replaced automatically.
 #

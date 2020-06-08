@@ -1778,6 +1778,11 @@ static void display_entry(int item)
 		/* Get inventory color */
 		attr = tval_to_attr[o_ptr->tval % N_ELEMENTS(tval_to_attr)];
 
+		/* -KN- add few dots for better orientation (QOL) */
+		if (y % 2 == 0) c_put_str(28, ".......................................", y, 22);
+		else			c_put_str(8,  ".......................................", y, 22);
+		/*                            "......... ......... ......... ........."          */
+		
 		/* Display the object */
 		c_put_str(attr, o_name, y, 3);
 
@@ -1812,6 +1817,10 @@ static void display_entry(int item)
 
 		/* Get inventory color */
 		attr = tval_to_attr[o_ptr->tval % N_ELEMENTS(tval_to_attr)];
+
+		/* -KN- add few dots for better orientation (QOL) */
+		if (y % 2 == 0) c_put_str(28, ".......................................", y, 22);
+		else			c_put_str(8,  ".......................................", y, 22);
 
 		/* Display the object */
 		c_put_str(attr, o_name, y, 3);

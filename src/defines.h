@@ -1193,11 +1193,13 @@
  * using "rval", "mval" pairs instead of indexes.
  */
 
-/* -KN- added 60, 126, 152, 306 for FUNKY_DEATH */
+/* -KN- added 60, 105, 126, 152, 306 for FUNKY_DEATH */
 
 #define MON_TOWN_THIEF         7
+#define MON_WHIRLWIND         26
 #define MON_ANIM_TORCH        41
 #define MON_LOUSY_LARVA       60
+#define MON_WHIRLING_SANDS   105
 #define MON_BLOATED_LEMURE   126
 #define MON_PULSATING_LARVA  152
 #define MON_MAGIC_MUSHROOM   204
@@ -5239,15 +5241,15 @@
 #define DUNGEON_CAVERNOUS               0x00000002	/* -KN- cavern feel */
 #define DUNGEON_UNDERWOOD               0x00000004	/* -KN- woody feel */
 #define DUNGEON_HALLS  	                0x00000008	/* -KN- deephalls feel */
-#define DUNGEON_XX1		                0x00000010
-#define DUNGEON_XX2		                0x00000020
+#define DUNGEON_IRON_PITS               0x00000010  /* -KN- iron pits */
+#define DUNGEON_ELDRITCH                0x00000020  /* -KN- endless depths */
 #define DUNGEON_XX3	    	            0x00000040
 #define DUNGEON_XX4	        	        0x00000080
 #define DUNGEON_RIVER                   0x00000100  /* -KN- add a river */
 #define DUNGEON_FOREST                  0x00000200  /* -KN- add a forest */
 #define DUNGEON_MAIN_CORRIDOR           0x00000400  /* -KN- big corridor around */
 #define DUNGEON_CHASM        	        0x00000800  /* -KN- add some abyss */
-#define DUNGEON_XX9		                0x00001000
+#define DUNGEON_HOLLOW                  0x00001000  /* -KN- hollowed caves */
 #define DUNGEON_X10		                0x00002000
 #define DUNGEON_X11	    	            0x00004000
 #define DUNGEON_X12	        	        0x00008000
@@ -5302,8 +5304,14 @@
 #define TERM_MUSTARD    25	/* 'i' */
 #define TERM_BLUE_SLATE 26	/* 'z' */
 #define TERM_DEEP_L_BLUE 27	/* 'Z' */
-
-
+/* -KN- new colors */
+#define TERM_V_DARK     28	/* 'q' */
+#define TERM_VV_DARK    29	/* 'Q' */
+#define TERM_CREAM      30	/* 'O' */
+#define TERM_DIM_RED    31	/* 'S' */
+#define TERM_DARK_RED   32	/* 'c' */
+#define TERM_DARK_GREEN 33	/* 'n' */
+#define TERM_DARK_BLUE  34	/* 'e' */
 
 /*
  * Message indexes (used to generate sounds, and sometimes to color the

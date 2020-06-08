@@ -2952,7 +2952,8 @@ int summon_specific(int y1, int x1, bool scattered, int lev, int type, int num)
 	/* Allow groups in most cases */
 	bool grp = ((type == SUMMON_ORC && rand_int(5)) ? FALSE : TRUE);
 
-	/* -KN- hack: if called with num=0, we try to summon one solitary monster only */
+	/* -KN- hack: if called with num = 0, */
+	/*		we try to summon one solitary monster only, even if it normally has freinds */
 	if (num == 0)
 	{
 		num = 1;
@@ -3869,6 +3870,19 @@ void mon_death_effect(int m_idx)
 
 		/* Drop the torch */
 		drop_near(i_ptr, 0, fy, fx, DROP_HERE);
+	}
+
+	/* -KN- Whirling Sands (for cascading effect) */	
+	else if (m_ptr->r_idx == MON_WHIRLING_SANDS)
+	{
+		/* kill one, and spawn up to three small ones */
+		//summon_index_type = 24;
+		summon_index_type = MON_WHIRLWIND;
+		if (summon_specific(fy, fx, FALSE, MAX_DEPTH, SUMMON_INDEX, rand_range(2,3)))
+		{
+			/* tell the tale */
+			if (player_can_see_bold(fy, fx)) msg_print("The whirlwind continues... ");
+		}
 	}
 
 	/* -KN- Lousy Larva */
