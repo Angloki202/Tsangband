@@ -1,0 +1,276 @@
+init1.c 	// loads flags etc from files; needed for new flags
+
+monster2.c
+3825: mon_death		// new FUNKY_DEATH monsters (needs to be defined)
+
+cmd3.c / cmd4.c
+1985: modified monster list / 6000: modified list for groups
+
+cmd6.c
+can add new potions, scrolls, etc.
+
+attack.c
+1436: consider adding 'sharp monsters' that cut when attacked bare-handed
+249: bonus when attacking from rubble (added water cover for res_water)
+
+generate.c
+7312: alloc_object(ALLOC_SET_CORR, ALLOC_TYP_RUBBLE, randint(6)); 	// put rubble
+1447: cave_set_feat(y, x, FEAT_RUBBLE);
+3106: collapsed room, lake/forest room
+
+add = div_round(add, 3);
+
+if (one_in_(22 - div_round(p_ptr->depth, 5))) feat = FEAT_PIT1;			// raising prob. with depth
+
+Y	possible to hack webs away with alterations (swords and axes do better job)
+Y	add search print message for 's' command
+Y	look into summoning code, make flag or smthng to reduce number of summoned (?) // with "0" number
+Y	creature shrieking make into colored messages
+Y	make selling less effective to get closer to no-shopping-game
+Y	added webs, pits and floor variation to corridor (and general) generation
+Y	special description for monsters in webs/pits/woods
+Z	where is effect of darmantle CLOUD_SURROUND ? it produces webs, but otherwise is not seen (IS_LIT?)
+Z	cmd1.c 1586: fix needed so that giants, wraithform and featherfallers can explore pits
+Y	disable web creation in weak dark effects
+
+x	ultimate goal: have ascii small graphics for each monster to be displayed in window side-bar
+x	partial goal: show your weapon in ascii graphics (add ego mods) in side-bar
+x	charisma-based new school of magic, huuge quest
+x	hybrid books
+x	add gloves for karate/wrestling to improve the attacks a bit (balance?)
+x	print screen recording (possible?)
+x	one-dice (1dX) weapons are quite much weaker in the beginning (solution?)
+x	make funky_death default effect without hard-coding (using LASH as example)
+x	forbid macros in names and other inputs (HARD)
+x	add minor minor effects to junk/food/ale (cmd6.c)
+x	shovels could remove pits (on alteration) to improve their appeal
+x	add some love for werewolves
+x	using new function similar to search() to activate pits with SHRIEK etc.
+x	spitting frogs etc should have some dmg (?)
+x	add TV_ definitions for all the new objects
+x	sometimes allow very strong acid/fire to melt basic walls
+x	move creatures from from 'M' colour for better visual clue of webbed monsters
+x	look what can be done interesting with quest storyline
+x	color also creatures in the trees? probably
+x	how about far jump as new spell & talent for karate/dodge?
+x	failed to correctly assign effect of CLOUD_SURROUND (immunity detection is stupid)
+B	some weird occurence keep deleting my webs on rare occassions  (happens when monsters retreat?)
+x	add web trap (seek TRAP_ALTER_DUNGEON; time ball trap )
+x	ABYSSAL + S_ flags would make a perfect pit MIMIC (continuous summoning)
+x	yeeks described as Tolien's badgerfolk to boost lore (elven name oryapin) // PLAN
+x	original creature-specific vaults are boring as hell (no reward)
+x	differentiate knobble-stick and tengu or put them further away from each other
+x	reduce light radius and limit range for ranged attks for monsters in PIT/ABYSS
+x	mommove.c 4000: idea for break ceiling if monster broke a pillar (haha)
+x	(IDEA) think of a 1 turn mass confusion (or pause) distraction effect
+x	explore types.h for clues for interesting variables
+x	starburst room code evades my room variation code
+x	leave some means of poetic texts in some rooms
+x	bone piles, what to do? certainly not put them in corridors
+x	can use CAVE_XX13 for cave_info; expanding the generation of rooms(1)
+x	make some use of found bones
+x	some rooms can have text from file (plaques, crypt texts, ...)
+x	trap and some other fun with BONEPILE, maybe add new effect?
+x	add monster with FUNKY_DEATH that creates BONEPILES and other one that explodes in GF_MAKE_WEB
+x	add monster that transforms into skeletal version of itself and then leaves a BONEPILE
+x	possible swamp terrain as green water...
+x	good treasures from DROPs are way too good
+x	add some ac bonus to creatures in walls
+x	investigate double-room code, I love them!
+x	what to do with unused artifacts?
+x	(IDEA) mushroom basket?
+x	some space in files.c for more verbal terms for abilities
+x	more durable ammo for deeper levels (?)
+x	mrknout na XTRA_XXX1 pro zajímavost nějakých itemů, případně zkusit přidat XTRA_SUSTAIN
+x	explore void mad_mon_melee(int m_idx, monster_type *m_ptr, int ty, int tx)
+x	elder tree that summons branches or tentacles
+x	(BIG FT) stamina levels to spend on ctrl (alteration) attacks
+x	attack.c 1450: static bool contact_danger_check(monster_race *r_ptr) use sub-type for control
+	
+#define XTRA_SUSTAIN           0x0001   /* Sustain one stat */
+	
+			likert_color = TERM_L_GREEN;
+			if (p_ptr->image) return ("Froody");
+			else              return ("Excellent");
+
+	if (cave_info[y][x] & (CAVE_EFFT))			// investigate
+	if ((cave_info[y][x] & (CAVE_ROOM))
+
+object_type *o_ptr;
+o_ptr = &inventory[INVEN_WIELD];  // 24 is wielded
+
+		y = p_ptr->py + nearby_grids_y[i];
+		x = p_ptr->px + nearby_grids_x[i];				// look at nearby
+		
+		"CAVE_GLOW"				// can be used to provoke things from pits1
+
+				/* Make the object */
+				if (make_object(i_ptr, FALSE, FALSE, FALSE))
+				{
+					/* Drop the object */
+					drop_near(i_ptr, 0, y, x, DROP_HERE);
+				}
+
+msg_format("Your %s make%s no impression on the trees.",
+			buf, inventory[INVEN_WIELD].k_idx ? "s" : "");
+
+msg_print("There is a high pitched humming noise.");	// difference? = no color, sound or spec. delay
+message(MSG_L_BLUE, 4, "Out of darkness, light!        ");		//  MSG_SLATE for web info etc.
+
+printf("The temperature is %d degrees\n", b);			// debug screen input
+
+
+struct monster_type
+{
+	s16b r_idx;					/* Monster race index */
+	byte fy;					/* Y location on map */
+	etc....
+
+
+pause_for(50);
+typ = GF_DO_SLOW;
+typ = GF_POIS;
+(void)explosion(0, 4, y, x, o_ptr->pval / 2, GF_FIRE);
+if (cave_feat[y][x] == FEAT_PIT1)  		//   if use with == 
+			/* Turn off the light */
+			cave_info[y][x] &= ~(CAVE_GLOW);
+			/* Turn on the light */
+			cave_info[y][x] |= (CAVE_GLOW);
+	((r_ptr->flags1) & RF1_UNIQUE ?	"minions" : "kin"));		// true / false example
+	//summon_specific(fy, fx, FALSE, 3, SUMMON_ANT, 2);
+	//place_monster_aux(y, x, m_ptr->r_idx, FALSE, FALSE);
+
+(void)summon_specific(y, x, FALSE, summon_level, SUMMON_DEMON, rand_range(3, 6));
+	extern int summon_specific(int y1, int x1, bool scattered, int lev, int type, int num);
+
+(void)project(-1, rad, y, x, y, x, dam, typ, flg, 0, 0);
+if (strchr("ejmvwQ", r_ptr->d_char)) 		// detection of char
+
+if (blind) msg_print("You hear a soft sound."); else...
+message_add(format("========= %s the %s is born ===========", op_ptr->full_name, rp_ptr->title), MSG_GENERIC);
+
+#define CAVE_XX13         0x2000  /*  */
+#define CAVE_XX14         0x4000  /*  */
+#define CAVE_XX15         0x8000  /*  */
+
+
+
++	expanded monster list (l,u,U,N,Y)
+		u,U,N defined as non-living archetypes to make the game feel like tarot reading
+		Y not yeti, as they don't exist; now as vile trees (same logic as J for snakes)
++	revisited monsters (i,y,S/K)
+		ickies are insectoids and are no longer dangerous for bare-handed
+		yeeks described as Tolien's badgerfolk to boost lore (elven name oryapin) // PLAN
+		scorpions moved (to make spiders more specific) to killer beetles + lash support
++	added exploding larvae and other creatures with surprises (FUNKY_DEATH)
++	added more support for CLOUD_SURROUND, identifying various elements (monattk.c)
++	updated WAIL attack message for non-undead for some interesting twists
++	updated STING attack to be used as whips for scorpions (LASH + STING)
++	ac bonus for water-based monsters while in water (RES_WATER)
++	web features added
+		webs take 2 turns to cross (as trees) and can slow player down if encumbered
+		webs can be torn down by player and monster; can be burned or forced down
+		spiders benefit while in webs, raising their ac (noted as 'lurking')
+		some love for spiders in generation process with spider-infested areas
+		added new innate ranged attack: WEB1, combination of extended LASH and BEAM
+		added new innate ranged attack: WEB2 to produce balls of web creating mess
+		added new GF_MAKE_WEB effect, along with new "scroll of weave"
++	pits and abyss terrain features added
+		pit traps will change into climbable terrain feature, 2 turns to cross
+		pits are generated either full or empty (player won't know unless he explores)
+		full pits can spawn solitary monsters or other surprises
+		as with pits, the abyss reduces light radius plus some other adjustments
++	new creature flag ABYSSAL for interactions with PITs (they also cross without penalty)
++	verbal clue for monsters being targetted inside PITs, ABYSS, WEBs or TREEs
++	objects and creatures (incl. player) are colored if inside PITs, ABYSS, WEBs or TREEs
++	several new types of floor (mainly for variance and differentiation of deeper floors)
++	bone pits terrain feature added
+		as with trees, takes 2 turns to cross with exception for dark arts users
+		new function make_skeleton to reveal bones in piles of bones
+		undead (and troll) interactions, plus some surprises
++	heavily altered variance for dungeon generation
+		revisited fallen ceiling rooms and some other rooms
+		destroyed level also has some love for webs and pits
+		variance for ordinary rooms with support of all the new terrain and more
+			= 6 new types of classic rooms (cavernous, broken, wild, guard, cobwebs, boneyard)
+			= these types are further varied depending on depth and other factors
+			= aim was also to give different feeling to different depth levels
+			= roughly it is divided as a dungeon until level 15, caverns up to level 30,
+			  underground forest until level 45, deep halls to 60, iron pits to 75,
+			  balrog hell to level 90 and final 10 levels as ultimate catacombs
+			= the deeper you are, the more often you will get to visit all-new places
+		update to vaults.txt with new symbols for pits and webs
+		added several new interesting rooms and a few lesser vaults with new terrain
++	summoning a bit revisited, less creatures created on lower levels generally
++	shrieking creatures produce umber-colored messages now
++	selling items produces only 1/3 of original reduced price to focus less on collecting
+
+
+
+
+	depths divisions
+	--------------------	primary		|	secondary	|	special			|	dominant (1)	| (2 / 3,4)
+	--------------------	FEAT_FLOOR  |	FEAT_FLOOR	|	FEATures		|	MONSTER RACEs	| secondary
+	-------------------------------------------------------------------------------------------------------
+	1-5		1-15	1-20	FLOOR			FLOOR3 grn		RUBBLE	dungeon
+	6-10					FLOOR			FLOOR3 grn		RUBBLE	--
+	11-15					FLOOR			FLOOR3 grn		WATER	--
+	16-20	16-30			FLOOR2			FLOOR3 grn		WATER	caves
+	21-25			21-40	FLOOR2			FLOOR4			WEB		--
+	26-30					FLOOR2			FLOOR4			WEB		--
+	31-35	31-45			FLOOR3 grn		FLOOR4			TREE	underwoods
+	36-40					FLOOR3 grn		FLOOR4			TREE	--
+	41-45			41-60	FLOOR3 grn		FLOOR			PIT0	--
+	46-50	46-60			FLOOR4			FLOOR			PIT0	deep halls
+	51-55					FLOOR4			FLOOR			PILLAR	--
+	56-60					FLOOR4			FLOOR			PILLAR	--
+	61-65	61-75	61-80	FLOOR5 blu		FLOOR_B			ABYSS	iron pits
+	66-70					FLOOR5 blu		FLOOR_B			ABYSS	--
+	71-75					FLOOR5 blu		FLOOR_B			PIT1	--
+	76-80	76-90			FLOOR6 red		FLOOR_B			PIT1	burn pits
+	81-85			81-100	FLOOR6 red		FLOOR2			LAVA	--
+	86-90					FLOOR6 red		FLOOR2			LAVA	--
+	91-95	91-105			FLOOR_B			FLOOR2			BONEPILE	necro
+	96-100					FLOOR_B			FLOOR2			BONEPILE	--
+	
+	
+	
+	//cave_info[y][x] |= (CAVE_XX13); for further shaeninngas
+	//place_gold(y, x);
+	//make_food(y, x);
+	//place_object(y, x, FALSE, FALSE, FALSE);
+	//make_boulder(y, x, p_ptr->depth);
+	//place_trap(y, x, -1, p_ptr->depth);
+	//place_trap(y, x, TRAP_LOOSE_ROCK, p_ptr->depth);
+	//spread_monsters('S', monster_level, rand_range(2, 4),	y0, x0, height, width);
+	//generate_draw(y1, x1, y2, x2, FEAT_WALL_OUTER);
+	
+	
+					/* this should build a border around the room */
+					if (((x == x2) || (x == x1) || (y == y2) || (y == y1)) && (!one_in_(16)))
+					{
+						feat = FEAT_ABYSS;
+					}
+					
+					/* this should place corners with space */
+					if ((((x == x1 + 1) && (y == y1 + 1)) || ((x == x2 - 1) && (y == y1 + 1)) ||
+						((x == x1 + 1) && (y == y2 - 1)) || ((x == x2 - 1) && (y == y2 - 1))) &&
+						(!one_in_(16)))
+					{
+						
+					}
+					
+					/* this should place only corners */
+					if ((((x == x1) && (y == y1)) || ((x == x2) && (y == y1)) ||
+						((x == x1) && (y == y2)) || ((x == x2) && (y == y2))) &&
+						(!one_in_(16)))
+					{
+						
+					}
+					
+					/* chessboard */
+					if ((((x % 2 == 0) && (y % 2 == 1)) || ((x % 2 == 1) && (y % 2 == 0))) &&
+						(!one_in_(16)))
+					{
+						
+					}
