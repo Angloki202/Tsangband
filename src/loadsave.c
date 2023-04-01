@@ -2037,6 +2037,13 @@ static errr do_dungeon(void)
 
 	u16b limit;
 
+	/* -KN- save minor room description */
+	s16b num;
+	char buf[DESC_LEN];
+	//do_string(dun->minors.describe, 80);
+
+
+
 
 	/*** Basic info ***/
 
@@ -2090,7 +2097,7 @@ static errr do_dungeon(void)
 			{
 				/* Extract the important cave_info flags */
 				tmp16u = (cave_info[y][x] & (SAVE_CAVE_FLAGS));
-
+				
 				/* If the run is broken, or too full, flush it */
 				if ((tmp16u != prev_int) || (count == MAX_UCHAR))
 				{
@@ -2149,7 +2156,7 @@ static errr do_dungeon(void)
 		}
 
 		do_u16b(&tmp16u);
-		if (tmp16u != 0xFFFF) quit("cave_feat sentinel failed!");
+		if (tmp16u != 0xFFFF) quit("cave_info sentinel failed!");
 	}
 
 
@@ -2232,7 +2239,163 @@ static errr do_dungeon(void)
 		}
 
 		do_byte(&tmp8u);
-		if (tmp8u != 0xFF) quit("cave_info sentinel failed!");
+		if (tmp8u != 0xFF) quit("cave_feat sentinel failed!");
+	}
+
+
+
+	/* -KN- saving a file -- run-length encode features */
+	if (!load_file)
+	{
+		/* Note that this will induce two wasted bytes */
+		count = 0;
+		prev_char = 0;
+
+		/* Dump the cave */
+		for (y = 0; y < dungeon_hgt; y++)
+		{
+			for (x = 0; x < dungeon_wid; x++)
+			{
+				/* Extract a byte */
+				tmp8u = cave_desc[y][x];
+
+				/* If the run is broken, or too full, flush it */
+				if ((tmp8u != prev_char) || (count == MAX_UCHAR))
+				{
+					do_byte(&count);
+					do_byte(&prev_char);
+					prev_char = tmp8u;
+					count = 1;
+				}
+
+				/* Continue the run */
+				else
+				{
+					count++;
+				}
+			}
+		}
+
+		/* Flush the data (if any) */
+		if (count)
+		{
+			do_byte(&count);
+			do_byte(&prev_char);
+		}
+
+		prev_char = 0xFF;
+		do_byte(&prev_char);
+	}
+
+	/* -KN- Loading a file -- run-length decode features */
+	if (load_file)
+	{
+		/* Load the dungeon data */
+		for (x = y = 0; y < dungeon_hgt;)
+		{
+			/* Grab RLE info */
+			do_byte(&count);
+			do_byte(&tmp8u);
+
+			/* Apply the RLE info */
+			for (i = count; i > 0; i--)
+			{
+				/* Extract "feat" */
+				cave_desc[y][x] = tmp8u;
+
+				/* Advance/Wrap */
+				if (++x >= dungeon_wid)
+				{
+					/* Wrap */
+					x = 0;
+
+					/* Advance/Wrap */
+					if (++y >= dungeon_hgt) break;
+				}
+			}
+		}
+
+		do_byte(&tmp8u);
+		if (tmp8u != 0xFF) quit("cave_desc sentinel failed!");
+	}
+
+
+	/* -KN- Saving a file -- run-length encode cave_mark flags */
+	if (!load_file)
+	{
+		/*** Simple "Run-Length-Encoding" of cave ***/
+
+		/* Note that this will induce two wasted bytes */
+		count = 0;
+		prev_int = 0;
+
+		/* Dump the cave */
+		for (y = 0; y < dungeon_hgt; y++)
+		{
+			for (x = 0; x < dungeon_wid; x++)
+			{
+				/* Extract the important cave_info flags */
+				tmp16u = (cave_mark[y][x] & (SAVE_CAVE_MARKS));
+				
+				/* If the run is broken, or too full, flush it */
+				if ((tmp16u != prev_int) || (count == MAX_UCHAR))
+				{
+					do_byte(&count);
+					do_u16b(&prev_int);
+					prev_int = tmp16u;
+					count = 1;
+				}
+
+				/* Continue the run */
+				else
+				{
+					count++;
+				}
+			}
+		}
+
+		/* Flush the data (if any) */
+		if (count)
+		{
+			do_byte(&count);
+			do_u16b(&prev_int);
+		}
+
+		prev_int = 0xFFFF;
+		do_u16b(&prev_int);
+	}
+
+
+	/* Loading a file -- run-length decode cave_info flags */
+	if (load_file)
+	{
+		/* Load the dungeon data */
+		for (x = y = 0; y < dungeon_hgt;)
+		{
+			/* Grab RLE info */
+			do_byte(&count);
+			do_u16b(&tmp16u);
+
+			/* Apply the RLE info */
+			for (i = count; i > 0; i--)
+			{
+				/* Extract "info" */
+				cave_mark[y][x] = tmp16u;
+
+				/* Advance/Wrap */
+				if (++x >= dungeon_wid)
+				{
+					/* Wrap */
+					x = 0;
+
+					/* Advance/Wrap */
+					if (++y >= dungeon_hgt) break;
+				}
+			}
+		}
+
+		do_u16b(&tmp16u);
+		if (tmp16u != 0xFFFF) quit("cave_mark sentinel failed!");
 	}
 
 

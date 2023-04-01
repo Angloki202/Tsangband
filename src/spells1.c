@@ -419,7 +419,7 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 		{
 		
 			/* (testing) was rand_range(20,80) */
-			if ((cave_feat[y][x] == FEAT_CAULDRON_X) && (dam > rand_range(8, 16)))
+			if ((cave_feat[y][x] == FEAT_CAULDRON_X) && (dam > rand_range(5, 15)))
 			{
 				/* forget the cauldron */
 				if (one_in_(4)) cave_set_feat(y, x, FEAT_RUBBLE);
@@ -432,7 +432,7 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 				/* make some big noise (thrice of tunnel noise) */
 				add_wakeup_chance += 3000;
 			}
-			else if ((cave_feat[y][x] == FEAT_ORB) && (dam > rand_range(4, 8)))
+			else if ((cave_feat[y][x] == FEAT_ORB) && (dam > rand_range(2, 8)))
 			{
 				/* forget the orb */
 				if (one_in_(4)) cave_set_feat(y, x, FEAT_PIT0);
@@ -481,6 +481,11 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 			{
 				/* -KN- chill the ground a bit */
 				cave_set_feat(y, x, FEAT_FLOOR5);
+			}
+			else
+			{
+				/* -KN- (DESC) cover in ice */
+				cave_mark[y][x] |= (MARK_ICE);
 			}
 			break;
 		}

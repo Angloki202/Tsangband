@@ -205,6 +205,8 @@ extern s16b (*cave_o_idx)[DUNGEON_WID_MAX];
 extern s16b (*cave_m_idx)[DUNGEON_WID_MAX];
 extern byte (*cave_cost)[DUNGEON_WID_MAX];
 extern byte (*cave_when)[DUNGEON_WID_MAX];
+extern byte (*cave_desc)[DUNGEON_WID_MAX];			// -KN- (DESC) number of room
+extern u16b (*cave_mark)[DUNGEON_WID_MAX];			// -KN- (DESC) other flags
 extern int scent_when;
 extern int flow_center_y;
 extern int flow_center_x;
@@ -380,6 +382,7 @@ extern bool quiver_carry(object_type *o_ptr, int o_idx);
 extern byte py_pickup(int pickup);
 extern void move_player(int dir, int do_pickup);
 extern void run_step(int dir);
+extern void describe_room(int room);	// -KN- describe foo
 extern void cancel_running();
 
 /* cmd2.c */

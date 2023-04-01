@@ -1,0 +1,1007 @@
+                 [Sangband 1.0.3a1 Character Dump]
+
+       Bublikor          Age    :             78  STR:      18
+    the Adventurer       Height :     4 ft, 4 in  INT:      17
+                         Weight :         115 lb  WIS:       9
+Gender : Male            Social Class :       67  DEX:      11
+Race   : Dwarf                                    CON:      17
+                                                  CHR:      10
+
+Max Hitpoints        14  Power                 1  Gold              386
+Cur Hitpoints        -1  Score                 0  dark secrets        0
+Max Mana              0  Unspent Exp          19  mythic clues        0
+Cur Mana              0  Max Depth         Lev 1  deep mysteries      0
+
+Blows per Round       2  Turns             14904  Shots per round     0
+Hit Rate             68  Active Turns       1493  + to Skill          0
+Average Damage        4  Resting Turns         1  Deadliness (%)       14
+
+                        (Character Abilities)
+Melee     : Bad        Saving Throw: Iffy       Magic Device: Very Bad
+Shooting  : Poor       Stealth     : Awful      Dodging     : Bad
+Throwing  : Poor       Perception  : Bad        Fame        : Unknown
+
+   Speed       : normal
+   Armor      : 3
+   Kills       : 10
+   Time Elapsed: 0 days, 3 hours, 34 minutes   (14904 turns)
+
+
+  [Character Attributes]
+
+      abcdefghijkl@        Stat Intrnl abcdefghijkl@ Adjust
+Stlth:.............        STR:     16 ............2     18
+Invis:.............        INT:     15 ............2     17
+Aware:.............        WIS:     11 ............2      9
+Disar:.............        DEX:     13 ............2     11
+Devic:.............        CON:     15 ............2     17
+Speed:.............        CHR:     12 ............2     10
+
+      abcdefghijkl@                           abcdefghijkl@
+Infra:............4                     NFuel:.............
+Tunnl:.............                     Steal:.............
+Save :.............                     NoMag:.............
+Mana :.............                     Telep:.............
+Light:.....2.......                     Aggra:.............
+                                        Drain:.............
+
+                                        Curse:.............
+
+      abcdefghijkl@       abcdefghijkl@       abcdefghijkl@
+Acid :............. Light:............. Food :.............
+Elec :............. Dark :............. Feath:.............
+Fire :............. Sound:............. Shine:.............
+Cold :............. Shard:............. Regen:.............
+Pois :............. Nexus:............. ESP  :.............
+Fear :............. Nethr:............. SeeIn:.............
+Blind:............+ Chaos:............. FrAct:.............
+Confu:............. Disen:............. HLife:.............
+
+
+  [Last Messages]
+
+You dig in the rubble. <25x>
+You have a faint uneasy feeling.
+Hmm.  There was something under this rock.
+You feel something roll beneath your feet.
+You see a Robe [2] {unknown}.
+You see 2 Flasks of oil.
+You have 2 Flasks of oil (c).
+Everyone is keeping a lookout for you.  Are you sure you want to steal again so soon?  n
+You are not good enough at Stealth to sneak effectively.
+Everyone is keeping a lookout for you.  Are you sure you want to steal again so soon?  n
+You hit the Small kobold.
+You miss the Small kobold.
+The Small kobold hits you.
+You hit the Small kobold.
+You have killed the Small kobold.
+You sense that the Pits are slowly beginning to calm down about your thievery.
+Your torch fades.
+You see a Canine skeleton.
+You hit the Spitting lizard.
+You have killed the Spitting lizard.
+You combine the torches.
+Your torch glows more brightly.
+You have no more Wooden Torches [2] <Fuel: 3082> (g).
+The Grey mold hits you.
+You feel the Robe (g) you are wearing on your body is actually average...
+You dodge the Grey mold.
+You hit the Grey mold.
+You have killed the Grey mold.
+The Grey mold misses you.
+The Grey mold hits you.
+You hit the Grey mold.
+You have killed the Grey mold.
+You see a Wooden Torch [2] <Fuel: 1214>.
+You have a Wooden Torch [2] <Fuel: 1214> (h).
+This spot is covered in webs. <2x>
+You tore down the web.   
+This spot is covered in webs. <3x>
+You remain stuck in the pit. <2x>
+You leap out of the pit.
+You remain stuck in the pit.
+You clamber out of the pit.
+You have found 41 gold pieces worth of copper.
+This spot is covered in webs.
+You see a boulder.
+You remain stuck in the pit.
+You leap out of the pit.
+An Animated torch appears.
+The Outcast warrior wakes up.
+You fail to steal anything, but luckily avoid detection.
+The Animated torch hits you.  You are enveloped in flames!
+The Outcast warrior hits you.
+You dodge the Outcast warrior.
+You hit the Animated torch.
+You miss the Animated torch.
+The Animated torch hits you.  You are enveloped in flames!
+You dodge the Outcast warrior.
+The Outcast warrior hits you.
+You hit the Outcast warrior. <2x>
+The Outcast warrior flees in terror!
+You hit the Animated torch. <2x>
+You have killed the Animated torch.
+You see a Wooden Torch (lit) [2] <Fuel: 3805>.
+You throw a Throwing Knife (1d3) (+0,+0) (1) (7 left).
+The Throwing Knife hits the Outcast warrior.
+The Outcast warrior dies.
+You see a Sling (x2) {unknown}.
+You are shooting with a Sling (x2) {unknown} (b).
+You reorganize your quiver.
+You see a Wooden Torch (lit) [2] <Fuel: 3797>.
+You have a Wooden Torch (lit) [2] <Fuel: 3797> (g).
+You have 8 Throwing Knives (1d3) (+0,+0) (2).
+You see a Dark Green Potion of Confusion. <2x>
+You have a Dark Green Potion of Confusion (e).
+You dodge the Icky insectoid. <2x>
+The Icky insectoid reacts quickly, and you are caught red-handed!
+You hear hunting parties scouring the area for a notorious burglar.
+The Kobold Caveman senses you are a cunning foe.
+The Kobold Caveman magically summons its kin.
+The Icky insectoid touches you.
+The Icky insectoid nips you.
+You hit the Icky insectoid.
+You pummel the Icky insectoid.
+You have killed the Icky insectoid.
+You hit the Kobold Caveman.
+You miss the Kobold Caveman.
+You dodge the Small kobold.
+The Kobold Caveman hits you.
+Everyone is keeping a lookout for you.  Are you sure you want to steal again so soon?  n
+You hit the Kobold Caveman. <2x>
+You have killed the Kobold Caveman.
+You hit the Small kobold. <2x>
+You dodge the Small kobold.
+You miss the Small kobold. <2x>
+You dodge the Small kobold.
+You hit the Small kobold. <2x>
+You have killed the Small kobold.
+The Icky insectoid is no longer hasted.
+You hit the Icky insectoid.
+You miss the Icky insectoid.
+The Icky insectoid touches you.
+The Icky insectoid nips you.
+You hit the Icky insectoid.
+You pummel the Icky insectoid.
+You have killed the Icky insectoid.
+You have found 30 gold pieces worth of copper.
+You see a Cloak [1] {unknown}.
+You see a chunk of Copper.
+You sense that the Pits are slowly beginning to calm down about your thievery.
+The Floating eye gazes at you.
+You resist the paralyzation!
+The Floating eye gazes at you.
+You resist the paralyzation!
+You miss the Floating eye.
+You hit the Floating eye.
+You have killed the Floating eye.
+Searching...  <11x>
+You have found a secret door.
+Searching...  <2x>
+You hit the Crawling insectoid.
+You miss the Crawling insectoid.
+The Crawling insectoid flees in terror!
+You miss the Crawling insectoid. <2x>
+You hit the Crawling insectoid.
+You have killed the Crawling insectoid.
+The Crawling insectoid reacts quickly, and you are caught red-handed!
+You hear hunting parties scouring the area for a notorious burglar.
+The Crawling insectoid crawls on you.
+You are poisoned!
+You've been slimed!
+You hit the Crawling insectoid. <2x>
+You have killed the Crawling insectoid.
+You are no longer poisoned.
+You enter a maze of down staircases.
+To fulfill your task, you must kill 9 Outcast rangers.
+The Sewer jackal nips you.
+You miss the Sewer jackal.
+You hit the Sewer jackal.
+The Sewer jackal nips you.
+You hit the Sewer jackal. <2x>
+The Sewer jackal flees in terror!
+You hit the Sewer jackal.
+You have killed the Sewer jackal.
+You hit the Sewer jackal. <2x>
+You have killed the Sewer jackal.
+You hit the Sewer jackal.
+You have killed the Sewer jackal.
+You hit the Sewer jackal. <2x>
+You have killed the Sewer jackal.
+You stumble upon a trap!
+You are enveloped in a cloud of smoke!
+The Pulsing green jelly touches you.  You are covered in acid! <2x>
+You hit the Cavern python.
+You miss the Cavern python.
+The Pulsing green jelly touches you.  You are covered in acid!
+The Cavern python squeezes you.
+The Pulsing green jelly touches you.  You are covered in acid!
+Everyone is keeping a lookout for you.  Are you sure you want to steal again so soon?  n
+You miss the Pulsing green jelly. <2x>
+The Pulsing green jelly touches you.  You are covered in acid!
+You dodge the Cavern python.
+The Pulsing green jelly touches you.  You are covered in acid!
+You pummel the Pulsing green jelly.
+The monster is acidic!
+The Cavern python squeezes you.
+The Pulsing green jelly touches you.  You are covered in acid!
+You hit the Pulsing green jelly.
+The monster is acidic!
+The Pulsing green jelly touches you.  You are covered in acid!
+You miss the Pulsing green jelly.
+You hit the Pulsing green jelly.
+The monster is acidic!
+The Cavern python squeezes you!
+The Pulsing green jelly touches you!  You are covered in acid! <2x>
+*** LOW HITPOINT WARNING! ***
+You hit the Pulsing green jelly.
+The monster is acidic!
+You die.
+ 
+  
+========= Ight the Gnome is born ===========
+  
+ 
+That command does not work in the Inn.
+You have nothing that I want.
+That command does not work in stores.
+You bought a Tome of Necromancy [Beginner's Curses] (a) for 49 gold.
+You have a Tome of Necromancy [Beginner's Curses] (a).
+You bought a Scroll titled "na gafmor" of Phase Door (b) for 23 gold.
+You have a Scroll titled "na gafmor" of Phase Door (c).
+You enter an unexplored new region of Angband.
+Your light source is a Wooden Torch (lit) [2] <Fuel: 2500> (f).
+The Small kobold wakes up.
+You miss the Small kobold.
+You hit the Small kobold.
+The Small kobold flees in terror!
+You perform Magic Bolt.
+The Small kobold dies.
+You see a Cobalt Potion.
+You quaff a Cobalt Potion.
+The potion makes you vomit!
+You are getting faint from hunger!
+You are paralyzed!
+You realize that you have quaffed a Potion of Salt Water.  Your experience rises.
+You see no more Cobalt Potions of Salt Water.
+You can move again.
+You eat a Ration of Food.
+That tastes good.
+You are no longer hungry.
+You have 5 Rations of Food (b).
+You have found 34 gold pieces worth of copper.
+You see a Robe [2] {unknown}.
+You are wearing a Robe [2] {unknown} (g).
+Searching...  <5x>
+You hear a door burst open!
+Searching...  <2x>
+You have found a secret door.
+You hear a door burst open!
+You failed to pick the lock.
+You have picked the lock.
+The Whirlwind engulfs you. <2x>
+You cannot harm the Whirlwind with martial arts unless blessed.
+You perform Magic Bolt.
+You perform the ritual incorrectly!
+The Whirlwind engulfs you.
+You perform Magic Bolt.
+The Whirlwind is destroyed.
+Note: ...resting
+Searching...  <6x>
+You have found a secret door.
+Searching... 
+This place seems reasonably safe.
+You failed to pick the lock. <5x>
+You have picked the lock.
+This spot is covered in webs.
+You cleaned the webs ahead.
+You try to sweep the webs, but with little progress. <2x>
+You cleaned the webs ahead.
+This spot is covered in webs.
+You tore down the web.   
+You hear a door burst open!
+You are clearing the pile of bones. <2x>
+You have cleared the pile of bones.
+You can make no alterations here.
+You are clearing the pile of bones. <5x>
+You perform Magic Bolt.
+The Whirlwind is destroyed.
+The Whirlwind envelops you.
+You cannot harm the Whirlwind with martial arts unless blessed. <2x>
+You perform Magic Bolt.
+The Whirlwind keens feebly.
+The Whirlwind engulfs you.
+You have been stunned.
+You cannot harm the Whirlwind with martial arts unless blessed.
+You perform Magic Bolt.
+The Whirlwind is destroyed.
+Note: ...resting
+You are no longer stunned.
+Note: ...resting
+You perform Magic Bolt.
+The Albino snake writhes about - and flees in terror!
+You perform Magic Bolt.
+The Albino snake dies.
+You perform Magic Bolt.
+You perform the ritual incorrectly!
+You perform Magic Bolt.
+The Monstrous centipede writhes in agony - and flees!
+You hit the Monstrous centipede.
+You have killed the Monstrous centipede.
+You see a Short Bow (x2) {unknown}.
+You are shooting with a Short Bow (x2) {unknown} (b).
+Shooting missiles with: a Short Bow (x2) (+2,+3) (b).
+Cancelled.
+Note: nice bow!
+You perform Magic Bolt.
+The Grey mold jerks limply.
+You perform Magic Bolt.
+You perform the ritual incorrectly!
+You do not have enough mana to perform this ritual.
+Attempt it anyway?  
+The Grey mold hits you! <2x>
+You hit the Grey mold.
+You have killed the Grey mold.
+Note: ...resting
+You see a Scroll titled "mugop".
+You read a Scroll titled "mugop".
+Wearing on your body: a Robe [2] {average} (g).
+You realize that you have read a Scroll of Learn Magic.  Your experience rises.
+You see no more Scrolls titled "mugop" of Learn Magic.
+Hmm.  There was something under this rock.
+You feel something roll beneath your feet.
+You see a Filthy Rag [1] {unknown}.
+You failed to pick the lock. <26x>
+You hit the Blue yeek. <2x>
+The Blue yeek flees in terror!
+You perform Magic Bolt.
+You perform the ritual incorrectly!
+Target Aborted.
+You perform Magic Bolt.
+The Blue yeek dies.
+You see a Greenish Potion.
+You quaff a Greenish Potion.
+You are confused!
+You realize that you have quaffed a Potion of Confusion.  Your experience rises.
+You see no more Greenish Potions of Confusion.
+You are confused. <14x>
+There is a wall in the way.
+You are confused.
+You have found a trap.
+You are confused. <4x>
+You feel less confused now.
+You have found 48 gold pieces worth of copper.
+There is a wall in the way.
+You hear a door burst open!
+You dodge the Monstrous centipede.
+The Monstrous centipede stings you.
+You hit the Monstrous centipede. <2x>
+You have killed the Monstrous centipede.
+You perform Magic Bolt.
+You perform the ritual incorrectly!
+You perform Magic Bolt.
+The Whirlwind is destroyed.
+You cleaned the webs ahead.
+You failed to pick the lock. <2x>
+You have picked the lock.
+You see a Tawny Potion.
+You quaff a Tawny Potion.
+You feel yourself moving faster!
+You realize that you have quaffed a Potion of Speed.  Your experience rises.
+You see no more Tawny Potions of Speed.
+There is a wall in the way.
+You see a Greenish Potion of Confusion.
+You have a Greenish Potion of Confusion (c).
+You failed to pick the lock. <4x>
+You have picked the lock.
+You feel yourself slow down.
+There is a wall in the way.
+Searching...  <6x>
+You have found a secret door.
+Searching...  <2x>
+The Floating eye wakes up.
+The Floating eye gazes at you.
+You are unaffected!
+The Floating eye gazes at you.
+You are unaffected!
+You hit the Floating eye.
+You have killed the Floating eye.
+You miss the Monstrous centipede. <2x>
+The Monstrous centipede nips you.
+You dodge the Monstrous centipede.
+You focus on your attacks.
+You hit the Monstrous centipede. <2x>
+The Monstrous centipede nips you.
+The Monstrous centipede stings you.
+You focus on your attacks.
+You hit the Monstrous centipede.
+You have killed the Monstrous centipede.
+You see a boulder.
+You have a boulder (f).
+Note: ...resting
+You enter a maze of down staircases.
+Your torch fades.
+The Outcast warrior wakes up.
+You perform Magic Bolt.
+The Outcast warrior grunts with pain.
+You perform Magic Bolt.
+The Outcast warrior cries out in pain.
+You perform Magic Bolt.
+The Outcast warrior dies.
+You see a Scroll titled "na gafmor" of Phase Door.
+You have 2 Scrolls titled "na gafmor" of Phase Door (d).
+Note: ...resting
+You failed to pick the lock.
+You have picked the lock.
+You have found 43 gold pieces worth of copper.
+You have found 36 gold pieces worth of copper.
+You are clearing the pile of bones. <22x>
+You perform Magic Bolt.
+The Kobold Caveman dies.
+This seems a quiet, peaceful place.
+You see 5 Scrolls titled "arthgad dudulkal".
+You read a Scroll titled "arthgad dudulkal".
+Out of darkness, light!        
+You are surrounded by white light.
+You realize that you have read a Scroll of Light.  Your experience rises.
+You see 4 Scrolls titled "arthgad dudulkal" of Light.
+You remain stuck in the pit.
+You leap out of the pit. <2x>
+You remain stuck in the pit.
+You leap out of the pit.
+You clamber out of the pit.
+You leap out of the pit.
+There is a wall in the way.
+You remain stuck in the pit.
+You clamber out of the pit.
+You leap out of the pit. <3x>
+You remain stuck in the pit.
+You leap out of the pit. <4x>
+You remain stuck in the pit.
+You leap out of the pit. <2x>
+You remain stuck in the pit.
+You leap out of the pit.
+You clamber out of the pit.
+You remain stuck in the pit. <2x>
+You leap out of the pit.
+You hit the Slime mold.
+You are poisoned!
+You hit the Slime mold.
+You have killed the Slime mold.
+Searching...  <2x>
+You are no longer poisoned.
+Searching...  <5x>
+You have found a secret door.
+Searching...  <2x>
+There is a wall in the way.
+You see a Sling (x2) {unknown}.
+You have a Sling (x2) {unknown} (f).
+You are clearing the pile of bones. <31x>
+You have cleared the pile of bones.
+There is a wall in the way.
+You dig in the rubble. <10x>
+You have removed the rubble.
+The Fruit bat wakes up.
+Something appears lost in the pit!
+You see a boulder.
+You have 2 boulders (g).
+You have nothing to fire.
+You throw a boulder (g) (1 left).
+The Fruit bat cries out feebly - and flees in terror!
+You throw a boulder (g) (none left).
+The Floating eye dies.
+You see a boulder.
+You have a boulder (g).
+You see a boulder.
+You perform Magic Bolt.
+The Blue yeek dies.
+You see a Leather Cap [2] {good}.
+You are wearing a Leather Cap [2] {good} (j).
+You see a boulder.
+You have 2 boulders (g).
+You hit the White jelly.
+You are poisoned!
+The White jelly touches you.
+You perform Magic Bolt.
+The White jelly flinches.
+You perform Magic Bolt.
+The White jelly flinches.
+You are no longer poisoned.
+Note: ...resting
+You perform Magic Bolt.
+The White jelly quivers in pain.
+You perform Magic Bolt.
+The White jelly writhes about.
+You miss the Fruit bat. <2x>
+The Fruit bat nips you. <2x>
+You miss the Fruit bat. <2x>
+The Fruit bat nips you. <2x>
+You miss the Fruit bat. <2x>
+The Fruit bat nips you. <2x>
+You focus on your attacks.
+You miss the Fruit bat.
+You hit the Fruit bat.
+The Fruit bat flees in terror!
+Note: ...resting
+You perform Magic Bolt.
+The Fruit bat dies.
+Note: ...resting
+You are getting hungry.
+Note: ...resting
+There is a wall in the way.
+You see 2 Scrolls titled "lokdar peelash".
+You read a Scroll titled "lokdar peelash".
+You sense the presence of doors!
+You realize that you have read a Scroll of Door/Stair Location.  Your experience rises.
+You see a Scroll titled "lokdar peelash" of Door/Stair Location.
+You perform Magic Bolt.
+The White jelly quivers in pain.
+You perform Magic Bolt.
+The White jelly dies.
+You perform Magic Bolt.
+You perform the ritual incorrectly!
+You do not have enough mana to perform this ritual.
+Attempt it anyway?  
+You focus on your attacks.
+You hit the Albino snake.
+You miss the Albino snake.
+The Albino snake nips you.
+The Albino snake squeezes you.
+You focus on your attacks.
+You hit the Albino snake.
+You miss the Albino snake.
+The Albino snake flees in terror!
+You miss the Albino snake. <2x>
+You hit the Albino snake.
+You miss the Albino snake.
+You hit the Albino snake.
+You have killed the Albino snake.
+There is a wall in the way.
+Note: ...resting
+You focus on your attacks.
+You hit the Outcast rogue. <2x>
+You dodge the Outcast rogue.
+The Outcast rogue touches you.
+You quickly protect your money pouch!
+There is a puff of smoke!
+You leap out of the pit.
+You combine the torches.
+Your torch glows more brightly.
+You have 2 Wooden Torches [2] <Fuel: 2500> (e).
+You remain stuck in the pit.
+You leap out of the pit. <2x>
+You remain stuck in the pit. <3x>
+You leap out of the pit.
+You clamber out of the pit.
+You leap out of the pit.
+You remain stuck in the pit. <2x>
+You leap out of the pit. <3x>
+You clamber out of the pit.
+You leap out of the pit.
+You see a Purple Potion.
+You quaff a Purple Potion.
+A veil of darkness surrounds you.
+You realize that you have quaffed a Potion of Blindness.  Your experience rises.
+You feel no more Purple Potions of Blindness.
+Note: ...resting
+You can see again.
+You dig in the rubble. <11x>
+You have removed the rubble.
+You see a boulder.
+You have 3 boulders (g).
+You can make no alterations here.
+You cannot cross cauldron.
+You see a blank Parchment (Paper).
+You see 3 Scrolls titled "oth g-buno nuth-n".
+You read a Scroll titled "oth g-buno nuth-n".
+You feel righteous!
+You realize that you have read a Scroll of Blessing.  Your experience rises.
+You see 2 Scrolls titled "oth g-buno nuth-n" of Blessing.
+You have 2 Scrolls titled "oth g-buno nuth-n" of Blessing (e).
+There is a wall in the way. <2x>
+Searching...  <3x>
+You failed to pick the lock. <5x>
+The blessing has expired.
+You failed to pick the lock.
+You have picked the lock.
+The Blue ooze crawls on you.  You are covered with frost!
+You perform Magic Bolt.
+The Blue ooze writhes in agony.
+You perform Magic Bolt.
+You perform the ritual incorrectly!
+You focus on your attacks.
+You hit the Blue ooze.
+You feel very cold!
+You have killed the Blue ooze.
+You see a Tawny Potion of Speed.
+You have a Tawny Potion of Speed (d).
+There is a wall in the way.
+You are clearing the pile of bones. <17x>
+You are getting weak from hunger!
+You are clearing the pile of bones. <5x>
+You have cleared the pile of bones.
+You eat a Ration of Food.
+That tastes good.
+You are no longer hungry.
+You have 4 Rations of Food (b).
+You see a Scroll titled "lokdar peelash" of Door/Stair Location. <2x>
+You read a Scroll titled "lokdar peelash" of Door/Stair Location.
+You sense the presence of doors!
+You see no more Scrolls titled "lokdar peelash" of Door/Stair Location.
+You failed to pick the lock. <2x>
+You have picked the lock.
+You see a Scroll titled "othmud".
+You read a Scroll titled "othmud".
+You sense the presence of traps!
+You realize that you have read a Scroll of Trap Location.  Your experience rises.
+You see no more Scrolls titled "othmud" of Trap Location.
+You perform Magic Bolt.
+Grip, Farmer Maggot's dog yelps in pain.
+Grip, Farmer Maggot's dog nips you.
+You dodge Grip, Farmer Maggot's dog.
+You perform Magic Bolt.
+You perform the ritual incorrectly!
+Grip, Farmer Maggot's dog misses you.
+Grip, Farmer Maggot's dog nips you.
+You perform Magic Bolt.
+You perform the ritual incorrectly!
+Grip, Farmer Maggot's dog nips you!
+You dodge Grip, Farmer Maggot's dog.
+You read a Scroll titled "na gafmor" of Phase Door.
+You have a Scroll titled "na gafmor" of Phase Door (e).
+You throw a boulder (i) (2 left).
+You throw a boulder (i) (1 left).
+Grip, Farmer Maggot's dog howls in pain - and flees!
+You throw a boulder (i) (none left).
+You see a boulder.
+You have a boulder (i).
+You see a boulder.
+You have 2 boulders (i).
+You see a boulder.
+You have 3 boulders (i).
+You clamber out of the pit.
+You miss Grip, Farmer Maggot's dog.
+You miss Grip.
+Grip, Farmer Maggot's dog nips you! <2x>
+You die.
+ 
+  
+========= Bublikor the Dwarf is born ===========
+  
+ 
+You bought a Scroll titled "munwurm" of Phase Door (d) for 20 gold.
+You have a Scroll titled "munwurm" of Phase Door (b).
+You push past the Aimless-looking merchant.
+The Singing, happy drunk begs you for money.
+You push past the Singing, happy drunk.
+The Aimless-looking merchant shows you a pretty ring.
+There is a wall in the way.
+That command does not work in stores. <2x>
+You have nothing that I want.
+The Village idiot drools on you. <2x>
+You push past the Village idiot.
+You enter an unexplored new region of Angband.
+You are not wielding a light.
+Your light source is a Wooden Torch (lit) [2] <Fuel: 3500> (f).
+You clamber out of the pit.
+You dig in the rubble. <2x>
+You miss the Blue yeek. <2x>
+The Blue yeek hits you.
+You focus on your attacks.
+You hit the Blue yeek.
+You miss the Blue yeek.
+The Blue yeek hits you.
+You miss the Blue yeek. <2x>
+The Blue yeek hits you.
+You focus on your attacks.
+You hit the Blue yeek. <2x>
+The Blue yeek flees in terror!
+You have no missile launcher equipped.
+Cancelled.
+You miss the Blue yeek.
+You hit the Blue yeek.
+You have killed the Blue yeek.
+You failed to pick the lock. <10x>
+You have picked the lock.
+The Slime mold wakes up.
+You hit the Slime mold.
+You are poisoned!
+You are no longer poisoned.
+You miss the Slime mold.
+You hit the Slime mold.
+You are poisoned!
+You have killed the Slime mold.
+You are no longer poisoned.
+You hit the Slime mold.
+You are poisoned!
+You have killed the Slime mold.
+You are no longer poisoned.
+You see a Scroll titled "gavgav".
+You read a Scroll titled "gavgav".
+You see no more Scrolls titled "gavgav" {tried}.
+You try to sweep the webs, but with little progress.
+You tore down the web.   
+The Floating eye wakes up.
+The Floating eye gazes at you.
+You are paralyzed!
+The Floating eye gazes at you.
+You resist the paralyzation!
+The Floating eye gazes at you. <2x>
+You resist the paralyzation!
+The Floating eye gazes at you. <7x>
+You resist the paralyzation!
+You can move again.
+The Floating eye gazes at you.
+You resist the paralyzation!
+The Floating eye gazes at you.
+You are paralyzed!
+The Floating eye gazes at you. <2x>
+You resist the paralyzation!
+The Floating eye gazes at you. <4x>
+You hear a door burst open!
+The Floating eye gazes at you. <3x>
+You can move again.
+The Floating eye gazes at you.
+You are paralyzed!
+The Floating eye gazes at you. <2x>
+You resist the paralyzation!
+The Floating eye gazes at you.
+You resist the paralyzation!
+The Floating eye gazes at you. <3x>
+You resist the paralyzation!
+You have a faint uneasy feeling.
+The Floating eye gazes at you. <4x>
+You resist the paralyzation!
+The Floating eye gazes at you.
+You resist the paralyzation!
+You can move again.
+The Floating eye gazes at you.
+You resist the paralyzation!
+You focus on your attacks.
+You hit the Floating eye.
+You have killed the Floating eye.
+The Whirlwind engulfs you.
+You have been stunned.
+You focus on your attacks.
+You cannot harm the Whirlwind with martial arts unless blessed.
+The Whirlwind engulfs you. <2x>
+You are no longer stunned.
+You remain stuck in the pit. <2x>
+You clamber out of the pit.
+You enter a maze of up staircases.
+You have nothing that I want.
+You bought a Spear (1d6) (+0,+0) [1,+0] (h) for 78 gold.
+You have a Spear (1d6) (+0,+0) [1,+0] (d).
+You are wielding a Spear (1d6) (+0,+0) [1,+0] (a).
+You enter a maze of down staircases.
+You failed to pick the lock. <4x>
+You have picked the lock.
+You failed to pick the lock. <10x>
+You have picked the lock.
+There is a wall in the way.
+You see a boulder.
+You have a boulder (d).
+You throw a boulder (d) (none left).
+You see a boulder.
+You have a boulder (d).
+Searching...  <4x>
+This place seems reasonably safe.
+Searching...  <2x>
+There is a wall in the way.
+Searching... 
+You have found a secret door.
+Searching...  <2x>
+There is a wall in the way.
+Searching...  <21x>
+You have found a secret door.
+Searching...  <11x>
+You failed to pick the lock. <13x>
+You have picked the lock.
+You miss the Spitting lizard. <2x>
+The Spitting lizard nips you.
+You hit the Spitting lizard. <2x>
+You have killed the Spitting lizard.
+You see a Rosy Potion.
+You quaff a Rosy Potion.
+You are confused!
+You realize that you have quaffed a Potion of Confusion.  Your experience rises.
+You see no more Rosy Potions of Confusion.
+You are confused. <4x>
+There is a wall in the way.
+You are confused. <5x>
+There is a wall in the way.
+You are confused. <2x>
+There is a wall in the way.
+You are confused. <3x>
+There is a wall in the way.
+You are confused.
+There is a wall in the way.
+You are confused. <3x>
+There is a wall in the way.
+You are confused.
+You feel less confused now.
+You dig in the rubble. <29x>
+You have removed the rubble.
+You see a Copper Wand.
+You aim a Copper Wand.
+You realize that you are using a Wand of Magic Missile.  Your experience rises.
+You have a Copper Wand of Magic Missile (c).
+There is a wall in the way.
+You dig in the rubble. <5x>
+You have removed the rubble.
+You see a Clear Potion.
+You quaff a Clear Potion.
+You feel less thirsty.
+You realize that you have quaffed a Potion of Water.  Your experience rises.
+You see no more Clear Potions of Water.
+You dig in the rubble. <9x>
+You miss the Small kobold.
+You hit the Small kobold.
+The Small kobold flees in terror!
+You hit the Small kobold.
+You have killed the Small kobold.
+You see a Pair of Sandals [1] {unknown}.
+You are wearing a Pair of Sandals [1] {unknown} (l).
+Wearing on your feet: a Pair of Sandals [1,+2] (l).
+You see a Slime Mold.
+You eat a Slime Mold.
+That tastes ... slimy.
+You are full!
+You see no more Slime Molds.
+You tore down the web.   
+There is a wall in the way.
+You can make no alterations here. <2x>
+You see a Pair of Leather Boots [2] {unknown}.
+You were wearing a Pair of Sandals [1,+2] (e).
+You are wearing a Pair of Leather Boots [2] {unknown} (l).
+You dig in the rubble.
+You have removed the rubble.
+There is a wall in the way. <2x>
+The Monstrous centipede wakes up.
+You miss the Monstrous centipede. <2x>
+The Monstrous centipede nips you.
+The Monstrous centipede stings you.
+You miss the Monstrous centipede. <2x>
+The Monstrous centipede nips you.
+The Monstrous centipede stings you.
+The Monstrous centipede nips you.
+The Monstrous centipede stings you.
+You focus on your attacks.
+You hit the Monstrous centipede. <2x>
+You have killed the Monstrous centipede.
+You focus on your attacks.
+You hit the Albino snake.
+You miss the Albino snake.
+The Albino snake nips you.
+The Albino snake squeezes you.
+You focus on your attacks.
+You hit the Albino snake.
+You miss the Albino snake.
+You focus on your attacks.
+You hit the Albino snake.
+You miss the Albino snake.
+The Albino snake nips you.
+The Albino snake squeezes you.
+You are out of breath at the moment.
+You miss the Albino snake. <4x>
+The Albino snake misses you.
+The Albino snake squeezes you.
+You are out of breath at the moment.
+You miss the Albino snake. <4x>
+The Albino snake nips you.
+The Albino snake misses you.
+You miss the Albino snake. <10x>
+Catching breath... 
+You miss the Albino snake. <4x>
+Catching breath... 
+You miss the Albino snake. <2x>
+You are no longer full.
+You have found 37 gold pieces worth of copper.
+Note: ...resting
+You focus on your attacks.
+You miss the Albino snake. <2x>
+The Albino snake nips you.
+The Albino snake squeezes you.
+You focus on your attacks.
+You miss the Albino snake. <2x>
+You focus on your attacks.
+You miss the Albino snake. <2x>
+The Albino snake misses you.
+The Albino snake squeezes you.
+You miss the Albino snake. <2x>
+Catching breath...  <5x>
+There is a wall in the way.
+Hmm.  There was something under this rock.
+You feel something roll beneath your feet.
+You see a Light Brown Potion. <2x>
+You quaff a Light Brown Potion.
+You feel less thirsty.
+You realize that you have quaffed a Potion of Apple Juice.  Your experience rises.
+You are full!
+You see no more Light Brown Potions of Apple Juice.
+You are no longer full.
+Searching...  <18x>
+You have found a secret door.
+Searching...  <10x>
+You hit the Icky insectoid.
+You miss the Icky insectoid.
+The Icky insectoid touches you.
+The Icky insectoid nips you.
+You hit the Icky insectoid. <2x>
+You have killed the Icky insectoid.
+You hit the Icky insectoid. <2x>
+You have killed the Icky insectoid.
+The Icky insectoid misses you.
+The Icky insectoid nips you.
+The Icky insectoid touches you.
+The Icky insectoid nips you.
+You hit the Icky insectoid. <2x>
+You have killed the Icky insectoid.
+There is a wall in the way.
+The Monstrous centipede wakes up.
+You see a Purple Potion.
+You quaff a Purple Potion.
+You see no more Purple Potions {tried}.
+The Monstrous centipede nips you.
+The Monstrous centipede stings you.
+The Monstrous centipede nips you.
+The Monstrous centipede stings you.
+The Monstrous centipede nips you.
+The Monstrous centipede stings you.
+The Monstrous centipede nips you.
+The Monstrous centipede stings you.
+The Monstrous centipede misses you.
+The Monstrous centipede stings you.
+The Monstrous centipede nips you.
+The Monstrous centipede stings you.
+The Monstrous centipede nips you.
+The Monstrous centipede stings you!
+*** LOW HITPOINT WARNING! ***
+The Monstrous centipede nips you!
+The Monstrous centipede stings you!
+You die.
+
+
+  [Skills]
+
+
+
+
+  [Quests]
+
+   To fulfill your task, you must kill 7 Outcast paladins on dungeon
+   level 3.
+   
+   You have finished no quests yet.
+
+
+  [Character Equipment]
+
+A Spear (1d6) (+0,+0) [1,+0]
+A Wooden Torch (lit) [2] <Fuel: 2093>
+A Pair of Leather Boots [2,+0]
+
+
+  [Character Inventory]
+
+3 Rations of Food
+a Scroll titled "munwurm" of Phase Door
+a Copper Wand of Magic Missile (13 charges)
+3 Wooden Torches [2] <Fuel: 3500>
+a Pair of Sandals [1,+2]
+a boulder
+     Does 2d5 thrown damage
+
+
+  [Special Advantages and Disadvantages]
+
+(none)
+
+============================================================
+                   CHAR.  
+|   TURN  | DEPTH |LEVEL| EVENT
+============================================================
+         0      0'    1   Swore a blood oath to defeat Morgoth.
+     11630     50'    1   Note: ...resting
+     14904     50'    1   Killed by a Monstrous centipede
+============================================================

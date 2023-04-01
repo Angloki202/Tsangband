@@ -112,6 +112,7 @@ static void regenmana(int amount)
 	}
 }
 
+
 /*
  * As certain events occur, the character is told parts of a story.
  *
@@ -714,6 +715,11 @@ static s16b base_noise(void)
 static void process_world(void)
 {
 	int i, temp;
+	
+	/* -KN- for nearby grid prompt */
+	int x;
+	int y;
+	int ii;
 
 	/* Remember old hitpoint and mana recovery */
 	int old_life_recovery_value = p_ptr->life_recovery_value;
@@ -1680,6 +1686,62 @@ static void process_world(void)
 		}
 	}
 
+	/* -KN- IDEA: add the turn counter to test for:
+			spiders jumping from WEBS
+			demons jumping from ABYSS 
+			etc. ... */
+	//if ((cave_feat[y][x] == FEAT_WEB)
+	/* use similar FEAT detection as in 'SEARCH' */
+	/* now even better with (desc) addendum */
+	
+	/* check around every 3 game turns and on each 9th turn, check in greater radius */
+	if (!(turn % 3))
+	{
+		ii = 2;
+		if (!(turn % 9)) ii = 3;
+		
+		for (i = 0; i < grids_in_radius[ii]; i++)
+		{
+			y = p_ptr->py + nearby_grids_y[i];
+			x = p_ptr->px + nearby_grids_x[i];
+			
+			if (cave_mark[y][x] & (MARK_SMOKE))
+			{
+				if (one_in_(6))
+				{
+					cave_set_feat(y, x, FEAT_SMOKE);
+				}
+				else if (one_in_(5))
+				{
+					cave_set_feat(y, x, FEAT_FLOOR);
+				}
+				else
+				{
+					cave_set_feat(y, x, FEAT_SMOKE_X);
+				}
+			}
+			
+			if (cave_mark[y][x] & (MARK_BROKEN))
+			{
+				/* testing - collapse should be triggered by LARGE creatures and damage AOE */
+				if (cave_floor_bold(y, x))
+				{
+					if (one_in_(8))
+					{
+						cave_set_feat(y, x, FEAT_PIT0);
+					}
+				}
+				else if (cave_wall_bold(y, x))
+				{
+					if (one_in_(18))
+					{
+						cave_set_feat(y, x, FEAT_RUBBLE);
+					}
+				}
+			}
+		}
+	}
+
 	/* loose any focus/knockback */
 	p_ptr->special_attack &= ~(ATTACK_FOCUS);
 	p_ptr->special_attack &= ~(ATTACK_KNOCK);
@@ -1695,7 +1757,7 @@ static void process_world(void)
 	}
 
 	/* when fully exhausted, you will probably wait longer */
-	/* when better AC display, add some penalty associated with exhaust */
+	/* IDEA: when better AC display, add some penalty associated with exhaust */
 	if ((p_ptr->cstam == 0) && (one_in_(4))) p_ptr->ixstam -= 1;
 
 	if ((p_ptr->ixstam >= p_ptr->restam) && (p_ptr->cstam < p_ptr->mstam))

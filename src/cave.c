@@ -753,6 +753,9 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 
 	bool lighting;
 
+	/* -KN- quick random value (ICI change one_in_x to rr %) */
+	int rr;
+	rr = randint(100);
 
 	/* Monster/Player */
 	m_idx = cave_m_idx[y][x];
@@ -853,65 +856,61 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 	/* -KN- dungeon looks more like halls of the mountain king */
 	if (p_ptr->dungeon_flags & (DUNGEON_HALLS))
 	{
-		if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
+		/* only modify half of the level if on HALF_VERTI */
+		if (((y > (dungeon_hgt / 2)) && (p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL)))
+			|| ((y > 0) && !(p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL))))
 		{
-			/* infra-seen walls dark */
-			a = 31;
-			if ((feat > 53) && (feat < 56)) a = 27;
-		}
-		else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
-		{
-			if (info & (CAVE_GLOW))
+			if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
 			{
-				/* brighter walls */				
-				if (!one_in_(8)) a = 20;
-				else 			  a = 1;
-				
-				/* reveal quartz and treasure seams */
-				if ((feat > 53) && (feat < 56)) a = 14;
-				if (feat < 53) a = 30;
-				//a = f_ptr->x_attr_lit + 10;
-			}
-			else
-			{
-				a = 9;
+				/* infra-seen walls dark */
+				a = 31;
 				if ((feat > 53) && (feat < 56)) a = 27;
-				if (feat < 53) a = 19;
-				//a = f_ptr->x_attr + 11;
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
+			{
+				if (info & (CAVE_GLOW))
+				{
+					/* brighter walls */				
+					if (!one_in_(8)) a = 20;
+					else 			  a = 1;
+					
+					/* reveal quartz and treasure seams */
+					if ((feat > 53) && (feat < 56)) a = 14;
+					if (feat < 53) a = 30;
+					//a = f_ptr->x_attr_lit + 10;
+				}
+				else
+				{
+					a = 9;
+					if ((feat > 53) && (feat < 56)) a = 27;
+					if (feat < 53) a = 19;
+					//a = f_ptr->x_attr + 11;
+				}
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
+			{
+				/* walls in EXPLORED darkness */
+				a = 28;
+				if (feat < 56) a = 8;
+				if ((feat > 53) && (feat < 56)) a = 26;
+			}
+			
+			if ((cave_feat[y][x] == FEAT_ABYSS) && (info & (CAVE_MARK)))
+			{
+				/* make abyss more menacing */
+				if 		(info & (CAVE_SEEN)) a =  4;
+				else if (info & (CAVE_INFR)) a = 12;
+				else 						 a = 28;
+			}
+			
+			if ((cave_feat[y][x] != FEAT_BROKEN) &&
+				(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
+				(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
+			{
+				/* iron doors */
+				a = 26;
 			}
 		}
-		else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
-		{
-			/* walls in EXPLORED darkness */
-			a = 28;
-			if (feat < 56) a = 8;
-			if ((feat > 53) && (feat < 56)) a = 26;
-		}
-		
-		if ((cave_feat[y][x] == FEAT_ABYSS) && (info & (CAVE_MARK)))
-		{
-			/* make abyss more menacing */
-			if 		(info & (CAVE_SEEN)) a =  4;
-			else if (info & (CAVE_INFR)) a = 12;
-			else 						 a = 28;
-		}
-		
-		/* some problems with 1st turn after teleport (didn't mark it yet) */
-		//if ((info & (CAVE_MARK)) && (cave_feat[y][x] == FEAT_FLOOR))
-		//{
-			/* modify color of basic floor lit by character */
-		//	if (info & (CAVE_LITE)) a = 20;
-		//	else 					a = 8;
-		//}
-		
-		if ((cave_feat[y][x] != FEAT_BROKEN) &&
-			(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
-			(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
-		{
-			/* iron doors */
-			a = 26;
-		}
-		//if (!(info & (CAVE_MARK))) a = 4;			// fog of war (dark red for lvl 75+?)
 	}
 
 	/* -KN- dungeon looks more like real Angband, the Iron Pits */
@@ -1147,6 +1146,33 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 	}
 
 
+	/* -KN- (DESC) color modifier */
+	if (((cave_floor_bold(y,x)) || (cave_wall_bold(y, x))) && (info & (CAVE_SEEN)))
+	{
+		// open floor tiles can have its appearance modified by MARK_ flags
+		if (cave_mark[y][x] & (MARK_ICE))
+		{
+			// cover in ice
+			a = 14;
+			if (!(rr % 3)) a = 27;
+		}
+		
+		if (cave_mark[y][x] & (MARK_SMOKE))
+		{
+			// somehow I cannot use cave_set_feat;
+			// terrain change is handled when nearby ((!(turn % 3) @ dungeon.c))
+			
+			// and modify colour
+			a = 31;
+			if (!(rr % 3)) a = 8;
+		}
+		
+		if ((cave_mark[y][x] & (MARK_BROKEN)) && (info & (CAVE_GLOW)))
+		{
+			// when under illumination, you see broken floor / wall
+			a = 32;
+		}
+	}
 
 	/* Save the terrain info (will be used as a background if transparency is enabled) */
 	(*tap) = get_color(a);
@@ -1202,6 +1228,10 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 				{
 					/* darker shade of blue for sunken objects */
 					a = TERM_BLUE;
+				}
+				else if ((cave_feat[y][x] == FEAT_SMOKE) || (cave_feat[y][x] == FEAT_SMOKE_X))
+				{
+					a = TERM_SLATE;
 				}
 				else a = object_attr(o_ptr);
 
@@ -1335,6 +1365,11 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 			(cave_feat[y][x] == FEAT_PIT1) || (cave_feat[y][x] == FEAT_ABYSS))
 			{
 				a = TERM_L_DARK;
+			}
+			else if ((cave_feat[y][x] == FEAT_SMOKE) || (cave_feat[y][x] == FEAT_SMOKE_X))
+			{
+				/* darker shade of blue for sunken objects */
+				a = TERM_SLATE;
 			}
 		}
 	}
@@ -1712,7 +1747,7 @@ bool lite_search(int y1, int x1, int col)
 
 	for (ii = 0; ii < grids_in_radius[2]; ii++)
 	{
-		if (one_in_(3)) continue;
+		if (one_in_(4)) continue;
 		y = p_ptr->py + nearby_grids_y[ii];
 		x = p_ptr->px + nearby_grids_x[ii];
 		
@@ -1741,7 +1776,7 @@ bool lite_search(int y1, int x1, int col)
 		
 		move_cursor_relative(y, x);
 		(void)Term_fresh();
-		//pause_for(1);
+		//pause_for(1);		
 		lite_spot(y, x);
 		(void)Term_fresh();
 		if (cave_info[y][x] & (CAVE_QADV))

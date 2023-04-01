@@ -138,7 +138,7 @@ D:more time to cross.  Unknown dangers may lurk there.
 
 ## added terrain -KN- bone pile
 N:17:bone pile
-G:::s
+G:::R
 C:14
 F:TF_ROCK | TF_PASSABLE | TF_OBJECT | TF_LOS
 D:A pile of bones.  Some small, some big.  Takes some careful steps to 
@@ -322,14 +322,14 @@ G:#:W
 C:11
 F:TF_WALL | TF_ROCK | TF_NO_SCENT
 
-# magma vein + hidden treasure  (this feature is actually never used)
+# magma vein + hidden treasure  (-KN- used as placeholder in generate; FEAT_MAGMA_H)
 N:52:magma vein
 G:#:s
 M:50
 C:11
 F:TF_WALL | TF_ROCK | TF_NO_SCENT
 
-# quartz vein + hidden treasure  (this feature is actually never used)
+# quartz vein + hidden treasure  (-KN- used as placeholder in generate; FEAT_QUARTZ_H)
 N:53:quartz vein
 G:#:W
 M:51
@@ -449,11 +449,34 @@ C:10
 F:TF_INTERESTING | TF_NO_SCENT
 D:Tall obelisk-like menhir gleams in arcane light rays, coming from above.
 
+
+## added terrain -KN- corpse pile not-implemented
+N:72:corpse pile
+G:::r
+C:20
+F:TF_ROCK | TF_PASSABLE | TF_OBJECT | TF_LOS
+D:A pile of hacked creatures.  They have no crypto.
+
 #
 #
 # space for more terrain here
 #
 #
+
+## added terrain -KN- not-implemented
+N:74:heavy smoke
+G:+:w
+C:15
+F:TF_PASSABLE | TF_OBJECT | TF_TRAP | TF_PROJECT | TF_FLOOR | TF_NO_SCENT
+D:Thick layer of heavy smoke.
+
+## added terrain -KN- not-implemented
+N:75:smoke
+G:+:s
+C:10
+F:TF_PASSABLE | TF_OBJECT | TF_TRAP | TF_LOS | TF_PROJECT | TF_FLOOR
+D:Smoking ground.
+
 
 N:84:the General Store
 G:1:U
@@ -499,6 +522,8 @@ N:92:the Inn
 G:+:u
 C:30
 F:TF_SHOP | TF_PASSABLE | TF_PERMANENT | TF_INTERESTING
+
+
 
 #
 # New shops should go here.

@@ -260,14 +260,17 @@
  * OPTION: Maximum number of messages to remember (see "util.c")
  * Default: assume maximal memorization of 2048 total messages
  */
-#define MESSAGE_MAX    2048
+//#define MESSAGE_MAX    2048	-KN- 16 times more lines saved for ML
+#define MESSAGE_MAX		32768
 
 /*
  * OPTION: Maximum space for the message text buffer (see "util.c")
  * Default: assume that each of the 2048 messages is repeated an
  * average of three times, and has an average length of 48
  */
-#define MESSAGE_BUF    32768
+ 
+/* -KN- also multiplied the original value by 16 */
+#define MESSAGE_BUF    524288
 
 
 /*
@@ -1289,6 +1292,13 @@
 #define FEAT_ORB	       68
 #define FEAT_CRYPT	       69
 #define FEAT_MONOLITH      70
+
+/* -KN- added corpse pile */
+#define FEAT_CORPSES       72
+
+/* -KN- added smoke (modified by MARK flags) */
+#define FEAT_SMOKE         74
+#define FEAT_SMOKE_X       75
 
 /* Shops */
 #define FEAT_SHOP_HEAD     84
@@ -3215,6 +3225,7 @@
 #define QADV_QUESTBOX      0x8000		// found Quest box (?)
 
 /* -KN- added CRYPTIC rewards flags */
+/* needs reworking... */
 #define CY_KNOCK     	   0x0001
 #define CY_KNOCK2   	   0x0002
 #define CY_SEE      	   0x0004
@@ -3342,6 +3353,36 @@
  */
 #define SAVE_CAVE_FLAGS (CAVE_MARK | CAVE_GLOW | CAVE_ICKY | CAVE_QADV | CAVE_TYP1 | \
 						 CAVE_ROOM | CAVE_LOS | CAVE_EFFT | CAVE_TRAP)
+
+
+/* -KN-
+ * Special cave grid marks (for DESC and some monster interaction)
+ */
+#define MARK_SEEN         0x0001  /* mark the room spot as seen, not triggering desc. */
+#define MARK_0002         0x0002  /*  */
+#define MARK_0004         0x0004  /*  */
+#define MARK_0008         0x0008  /*  */
+#define MARK_0010         0x0010  /*  */
+#define MARK_0020         0x0020  /*  */
+#define MARK_0040         0x0040  /*  */
+#define MARK_SMOKE        0x0080  /* smoke, that alternates terrain btw. light and heavy */
+
+#define MARK_ICE          0x0100  /* icy nuisance cover on the tile (wall / tile) */
+#define MARK_BROKEN       0x0200  /* susceptible for collapse */
+#define MARK_0400         0x0400  /*  */
+#define MARK_0800         0x0800  /*  */
+#define MARK_1000         0x1000  /*  */
+#define MARK_2000         0x2000  /*  */
+#define MARK_4000         0x4000  /*  */
+#define MARK_8000         0x8000  /*  */
+
+/*
+ * Cave grid marks that get saved in the savefile (all, atm)
+ */
+#define SAVE_CAVE_MARKS (MARK_SEEN | MARK_0002 | MARK_0004 | MARK_0008 | \
+						 MARK_0010 | MARK_0020 | MARK_0040 | MARK_SMOKE | \
+						 MARK_ICE | MARK_BROKEN | MARK_0400 | MARK_0800 | \
+ 						 MARK_1000 | MARK_2000 | MARK_4000 | MARK_8000)
 
 
 /*** Trap defines ***/
@@ -3949,7 +3990,7 @@
 #define MFLAG_WARY         0x0800  /* Monster is wary of stealing & traps */
 #define MFLAG_TURN         0x1000  /* Monster will lose a turn */
 #define MFLAG_BLBR         0x2000  /* Monster has the Black Breath */
-#define MFLAG_TAIL         0x4000  /* -KN- its only part of a monster */
+#define MFLAG_TAIL         0x4000  /* -KN- its only part of a monster; flawed(!) */
 #define MFLAG_XXX6         0x8000  /*  */
 
 
@@ -5252,7 +5293,7 @@
 #define DUNGEON_HOLLOW                  0x00001000  /* -KN- hollowed caves */
 #define DUNGEON_X10		                0x00002000
 #define DUNGEON_X11	    	            0x00004000
-#define DUNGEON_X12	        	        0x00008000
+#define DUNGEON_HALF_CORRIDOR  	        0x00008000	/* -KN- dungeon is split by a corridor */
 #define DUNGEON_HALF_VERTICAL           0x00010000  /* -KN- features are up/down */
 #define DUNGEON_HALF_HORIZONTAL         0x00020000  /* -KN- features are left/right */
 #define DUNGEON_X15	    	            0x00040000
@@ -5505,18 +5546,18 @@
 #define MSG_DARK           200
 #define MSG_WHITE          201
 #define MSG_SLATE          202			// -KN- combat descriptive, webs
-#define MSG_ORANGE         203				// -KN- (orig) INN quest fail, hunger
-#define MSG_RED            204				// -KN- (orig) danger, super-hunger
-#define MSG_GREEN          205				// -KN- (orig) classic INN quest complete
-#define MSG_BLUE           206					// -KN-   --- free ---
+#define MSG_ORANGE         203			// -KN- (orig) INN quest fail, hunger
+#define MSG_RED            204			// -KN- (orig) danger, super-hunger
+#define MSG_GREEN          205			// -KN- (orig) classic INN quest complete
+#define MSG_BLUE           206			// -KN-   --- free ---
 #define MSG_UMBER          207			// -KN- voice of sounds ie. 'Waorrrgh!'
 #define MSG_L_DARK         208			// -KN- sort of tutorial, explanatory
 #define MSG_L_WHITE        209
-#define MSG_L_PURPLE       210				// -KN- (orig) player ghost feeling
-#define MSG_YELLOW         211				// -KN- (orig) warning bell
-#define MSG_L_RED          212				// -KN- (orig) bbreath, other nasties
-#define MSG_L_GREEN        213					// -KN-   --- free ---
-#define MSG_L_BLUE         214				// -KN- (orig) priestly, commending
+#define MSG_L_PURPLE       210			// -KN- (orig) player ghost feeling
+#define MSG_YELLOW         211			// -KN- (orig) warning bell
+#define MSG_L_RED          212			// -KN- (orig) bbreath, other nasties
+#define MSG_L_GREEN        213			// -KN-   --- free ---
+#define MSG_L_BLUE         214			// -KN- (orig) priestly, commending
 #define MSG_L_UMBER        215			// -KN- related to GATE, QUESTS, QADV rewards
 /* Insert new colors here */
 

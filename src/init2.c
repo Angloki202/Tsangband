@@ -970,6 +970,10 @@ static errr init_other(void)
 	/* Flow arrays */
 	C_MAKE(cave_cost, DUNGEON_HGT_MAX, byte_wid);
 	C_MAKE(cave_when, DUNGEON_HGT_MAX, byte_wid);
+	
+	/* -KN- (DESC) descriptive arrays */
+	C_MAKE(cave_desc, DUNGEON_HGT_MAX, byte_wid);
+	C_MAKE(cave_mark, DUNGEON_HGT_MAX, byte_wid);
 
 	/*** Prepare "vinfo" array ***/
 
@@ -1618,6 +1622,10 @@ void cleanup_angband(void)
 	/* Flow arrays */
 	FREE(cave_when);
 	FREE(cave_cost);
+	
+	/* -KN- (DESC) descriptive arrays */
+	FREE(cave_desc);
+	FREE(cave_mark);
 
 	/* Free the cave */
 	FREE(cave_o_idx);

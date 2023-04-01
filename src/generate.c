@@ -46,6 +46,8 @@
 /*
  * Dungeon tunnel generation values
  */
+ 
+ /* -KN- CARE could change depending on dungeon type (?) -ICI- */
 #define DUN_TUN_RND          30  /* 1 in # chance of random direction */
 #define DUN_TUN_ADJ          10  /* 1 in # chance of adjusting direction */
 #define DUN_TUN_PEN          50  /* Chance of doors at room entrances */
@@ -105,7 +107,7 @@
 #define TUNN_MAX            300
 #define STAIR_MAX            30
 /* -KN- minor room max details */
-#define MINOR_MAX            18
+#define MINOR_MAX            99
 
 
 /* -KN- variables to determine certain global placement specifics */
@@ -236,7 +238,7 @@ static room_data room[ROOM_MAX] =
    /* Overlap */  {{70, 120, 150, 190, 200, 200, 200, 200, 200, 200, 200},  1},
    /* Large */    {{ 0,  30,  60,  80,  90,  95, 100, 100, 100, 100, 100},  3},
    /* Large */    {{ 0,  30,  60,  80,  90,  95, 100, 100, 100, 100, 100},  3},
-   /* Pit */      {{ 0,   5,  10,  15,  20,  20,  25,  25,  30,  30,  35},  7},
+   /* Pit */      {{ 0,   5,  10,  10,  15,  15,  20,  20,  25,  25,  30},  7},
    /* Chambers */ {{ 0,   2,   6,  12,  15,  18,  19,  20,  20,  20,  20},  7},
    /* I. Room */  {{40,  60,  70,  80,  80,  75,  70,  67,  65,  62,  60},  0},
    /* L. Vault */ {{ 0,   1,   4,   9,  16,  27,  40,  55,  70,  80,  90},  7},
@@ -1444,7 +1446,7 @@ static void alloc_stairs(int feat, int num, int walls)
 				cave_set_feat(y, x, pick_up_stairs());
 			}
 
-			/* unseen Quest Vault - must go up */
+			/* -KN- unseen Quest Vault - must go up */
 			else if ((p_ptr->depth % XTH_VAULT == 0) && (p_ptr->max_depth == p_ptr->depth))
 			{
 				/* player had not been deeper and has to encounter QUEST_VAULT */
@@ -1562,7 +1564,7 @@ static void alloc_object(int set, int typ, int num)
 				break;
 			}
 
-			/* -KN- added web support */
+			/* -KN- added bone piles support */
 			case ALLOC_TYP_BONES:
 			{
 				if (one_in_(12 - div_round(p_ptr->depth, 10))) cave_set_feat(y, x, FEAT_BONEPILE);
@@ -2464,7 +2466,7 @@ static bool generate_pool(int y1, int x1, int y2, int x2, int feat)
 }
 
 /*
- * -KN- terrain feature groups
+ * -KN- terrain feature groups - 'wells'
  */
 static void generate_well(int y, int x, int shape, int feat1, int feat2)
 {
@@ -2574,18 +2576,21 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 	int zz = 0;
 	int rr = 0;
 	int dd = 0;
-	int advanced = FALSE;
+	int advanced = FALSE;	// boool? ICI
 	int floor;
 	int floor_sec;
 	int floor_plus;
+	
+	/* (DESC) */
+	int desc = 0;
 
 	/* -KN- sometimes generate less plain rooms, but not on town level */
 	if ((feat == FEAT_FLOOR) && (p_ptr->depth > 0))
 	{
-		/* type 1 is default */
+		/* type 1 is default plain-old-room */
 		zz = 1;
 
-		/* random one direction */
+		/* random direction */
 		dd = rand_int(4);
 
 		/* primary floor type by depth (each 15 floors a new one) */
@@ -2649,72 +2654,103 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 			floor_plus = FEAT_RUBBLE;
 		}
 
+		/* save minor rooms */
+		if((dun->minor_n) < MINOR_MAX)
+		{
+			/* coordinates in the middle of the room */
+			dun->minors[dun->minor_n].y = y1 + (y2 - y1) / 2;
+			dun->minors[dun->minor_n].x = x1 + (x2 - x1) / 2;
+			dun->minors[dun->minor_n].zz = zz;
+			
+			/* get size in number of blocks 3x3 */
+			dun->minors[dun->minor_n].size = ((y2 - y1) * (x2 - x1)) / 9;
+			dun->minor_n++;
+		}
+
 		/* increasing chance for advanced features */
-		if (one_in_(16 - div_round(p_ptr->depth, 8))) advanced = TRUE;
+		if (one_in_(15 - div_round(p_ptr->depth, 8))) advanced = TRUE;
 
 		/* ever-raising chance for more varied and dangerous themes */
-		if (one_in_(7 - div_round(p_ptr->depth, 18)))
+		if (one_in_(MIN(5 - div_round(p_ptr->depth, 18), 2)))
 		{
-			zz = rand_range(2, 17);
-
 			/* type (zz) of spec. room dependent on dungeon environment */
-
-
-
-
-			/* still testing (ICI) */
+			zz = rand_range(2, 19);
+			
+			
+			//	( - - - ICI - - - )
+			
+			
+			
+			/* still testing (ICI), want to see advanced rooms 1/3 of the time */
 			if (one_in_(3)) advanced = TRUE;
 			else advanced = FALSE;
+
+
 
 			if ((zz == 2) || (zz == 3))
 			{
 				printf("=%d x%d/y%d  cavernous room- ", zz, x1, y1);
+				desc = rand_range(20, 29);
 			}
 			if ((zz == 4) || (zz == 5))
 			{
 				printf("=%d x%d/y%d  broken walls room- ", zz, x1, y1);
+				desc = rand_range(40, 49);
 			}
 			if ((zz == 6) || (zz == 7))
 			{
 				printf("=%d x%d/y%d  wild room- ", zz, x1, y1);
+				desc = rand_range(60, 69);
 			}
 			if ((zz == 8) || (zz == 9))
 			{
 				printf("=%d x%d/y%d  guard room- ", zz, x1, y1);
+				desc = rand_range(80, 89);
 			}
 			if ((zz == 10) || (zz == 11))
 			{
 				printf("=%d x%d/y%d  boneyard room- ", zz, x1, y1);
+				desc = rand_range(100, 109);
 			}
 			if ((zz == 12) || (zz == 13))
 			{
 				printf("=%d x%d/y%d  cobweb room - ", zz, x1, y1);
+				desc = rand_range(120, 129);
 			}
 			if ((zz == 14) || (zz == 15))
 			{
 				printf("=%d x%d/y%d  laboratory room - ", zz, x1, y1);
+				desc = rand_range(140, 149);
 			}
 			if ((zz == 16) || (zz == 17))
 			{
 				printf("=%d x%d/y%d  stalagmite room - ", zz, x1, y1);
+				desc = rand_range(160, 169);
 			}
-
-			/* save first 18 minor rooms */
-			if((dun->minor_n) < MINOR_MAX)
+			if ((zz == 18) || (zz == 19))
 			{
-				dun->minors[dun->minor_n].y = y1 + (y2 - y1) / 2;
-				dun->minors[dun->minor_n].x = x1 + (x2 - x1) / 2;
-				dun->minors[dun->minor_n].zz = zz;
-				/* get size in number of blocks 3x3 */
-				dun->minors[dun->minor_n].size = ((y2 - y1) * (x2 - x1)) / 9;
-				dun->minor_n++;
+				printf("=%d x%d/y%d  basin room - ", zz, x1, y1);
+				desc = rand_range(180, 189);
 			}
 
-			/* note if more interesting */
-			if (zz % 2 == 1) printf("--better-- ");
+			if (zz % 2 == 1)
+			{
+				/* note if more interesting */
+				/* odd rooms have different description, also depending on depth */
+				printf("--better-- ");
+				desc += 10;
+			}
+			
 			if (dun->minors[dun->minor_n - 1].size > 1)
 				printf("(size =%d)", dun->minors[dun->minor_n - 1].size);
 			if (advanced == TRUE) printf("--- ADVANCED! \n"); else printf(" \n");
+		}
+		else
+		{
+			/* (DESC) general random range of variance */
+			/* 0 == corridor/wall, 1 == reserved */
+			desc = rand_range(2, 19);
+			zz = 1;
 		}
 	}
 
@@ -2738,8 +2774,9 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					/* main depth-based floor type stays at (one_in_4) */
 					else if (rr > 135) feat = floor;
 
-					/* original floor stays */
+					/* or the original floor */
 					else feat = FEAT_FLOOR;
+					
 					break;
 				}
 				case 2:
@@ -2824,6 +2861,9 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 							feat = FEAT_WALL_EXTRA;
 							if (p_ptr->depth > 45) feat = FEAT_PILLAR;
 						}
+						
+						/* and make some parts unstable */
+						if (one_in_(18)) cave_mark[y][x] |= (MARK_BROKEN);
 					}
 					else
 					{
@@ -2908,6 +2948,9 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 							feat = FEAT_RUBBLE;
 							if ((p_ptr->depth > 60) && (rr % 4 == 0)) feat = FEAT_ABYSS;
 						}
+						
+						/* and make some parts unstable */
+						if (one_in_(12)) cave_mark[y][x] |= (MARK_BROKEN);
 					}
 					else
 					{
@@ -3620,6 +3663,133 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					if ((feat == FEAT_FLOOR) && (rr % 4 != 0)) feat = FEAT_FLOOR2;
 					break;
 				}
+				case 18:
+				case 19:
+				{
+					/* --- BASIN ROOM --- */
+					/* pools or fountains */
+					if (rr > 190) feat = floor_sec;
+					else if (rr > 188) feat = floor_plus;
+					else if (rr > 130) feat = floor;
+					else feat = FEAT_FLOOR;
+
+					if (p_ptr->depth > 60)
+					{
+						/* iron pits ... abyss ditches and pattern */
+						if (one_in_(35)) feat = FEAT_WATER;
+						else if ((((x % 2 == 0) && (y % 2 == 1)) ||
+                                ((x % 2 == 1) && (y % 2 == 0))))
+						{
+							/* uneven pillared chessboard */
+							if (rr % 5 == 0) feat = FEAT_PILLAR;
+							else feat = floor_plus;
+						}
+						if (((one_in_(3)) && (zz == 19)) &&
+							((x == x2) || (x == x1) || (y == y2) || (y == y1))) feat = FEAT_ABYSS;
+					}
+					if (p_ptr->depth > 45)
+					{
+						/* deep halls ... pillars, webs and water patterns */
+						if (one_in_(40)) feat = FEAT_WEB;
+						else if (one_in_(30)) feat = FEAT_PILLAR;
+						else if (one_in_(20)) feat = FEAT_WATER;
+						if (((((x % 2 == 0) && (y % 2 == 1)) || ((x % 2 == 1) && (y % 2 == 0))) &&
+							(one_in_(4))) && (zz == 19))
+						{
+							/* each odd room will have a water pattern */
+							feat = FEAT_WATER;
+						}
+					}
+					else if (p_ptr->depth > 30)
+					{
+						/* underwoods ... more trees & water */
+						if (one_in_(40)) feat = FEAT_TREE;
+						else if ((one_in_(25)) &&
+								((x != x2) || (x != x1) || (y != y2) || (y != y1))) feat = FEAT_WATER;
+						else if (rr % 5 == 0) feat = floor_plus;
+						else if (rr % 9 == 0) feat = FEAT_WEB;
+					}
+					else if (p_ptr->depth > 15)
+					{
+						/* caves ... water spots or a whole belt */
+						if (one_in_(60)) feat = FEAT_WEB;
+						else if (one_in_(45)) feat = FEAT_WATER;
+						if (((x == x2 - 1) || (x == x1 + 1) || (y == y2 - 1) ||
+							(y == y1 - 1)) && (one_in_(3)))
+						{
+							/* irregular belt of water on odd rooms (with correction) */
+							if (((x == x1 + 1) && (y == y1)) ||
+								((x == x1 + 1) && (y == y2)) ||
+								((x == x1) && (y == y + 1)) ||
+								((x == x1) && (y == y2 - 1)) ||
+								((x == x2 - 1) && (y == y1)) ||
+								((x == x2 - 1) && (y == y2)) ||
+								((x == x2) && (y = y1 + 1)) ||
+								((x == x2) && (y = y2 - 1))) feat = floor_sec;
+							else if (zz == 19) feat = FEAT_WATER;
+							else feat = FEAT_FLOOR2;
+						}
+					}
+					else
+					{
+						/* dungeon ... water ditches */
+						if (one_in_(70)) feat = FEAT_RUBBLE;
+						else if ((one_in_(12)) &&
+						((x == x2) || (x == x1) || (y == y2) || (y == y1)))	feat = FEAT_WATER;
+						else if ((zz == 19) && ((x % 6 == 0) || (y % 6 == 0)))
+						{
+							/* each odd room could have a ditch running through */
+							feat = FEAT_WATER;
+						}
+					}
+
+					/* center of the room has a water feature (rewrites at last moment) */
+					if ((advanced == TRUE) || ((zz == 19) && (p_ptr->depth > 15)))
+					{
+						if (((x == x2) && (y == y2)) && (p_ptr->depth > 75))
+						{
+							/* a infernal lake if deeper */
+							generate_starburst_room(y1, x1, y2, x2, FALSE, FEAT_LAVA, FALSE);
+						}
+						else if ((x == x2) && (y == y2))
+						{
+							/* a water lake otherwise */
+							generate_starburst_room(y1, x1, y2, x2, FALSE, FEAT_WATER, FALSE);
+						}
+					}
+					else
+					{
+						/* more commonly, especially early on */
+						if (((x == x2) && (y == y2)) && (rr % 3 == 0))
+						{
+							/* make four basins, one is missing */
+							if (dd != 0) generate_well(y1 + 1, x1 + 1, 2, floor_sec, FEAT_WATER);
+							if (dd != 1) generate_well(y1 + 1, x2 - 1, 2, floor_sec, FEAT_WATER);
+							if (dd != 2) generate_well(y2 - 1, x1 + 1, 2, floor_sec, FEAT_WATER);
+							if (dd != 3) generate_well(y2 - 1, x2 - 1, 2, floor_sec, FEAT_WATER);
+						}
+						else if ((x == x2) && (y == y2))
+						{
+							/* make four fountains if large enough */
+							if (dun->minors[dun->minor_n - 1].size > 4)
+							{
+								generate_well(y1 + 2, x1 + 2, 3, floor_sec, FEAT_WATER);
+								generate_well(y1 + 2, x2 - 2, 3, floor_sec, FEAT_WATER);
+								generate_well(y2 - 2, x1 + 2, 3, floor_sec, FEAT_WATER);
+								generate_well(y2 - 2, x2 - 2, 3, floor_sec, FEAT_WATER);
+							}
+							else
+							{
+								/* make all four smaller basins */
+								generate_well(y1 + 1, x1 + 1, 2, floor_sec, FEAT_WATER);
+								generate_well(y1 + 1, x2 - 1, 2, floor_sec, FEAT_WATER);
+								generate_well(y2 - 1, x1 + 1, 2, floor_sec, FEAT_WATER);
+								generate_well(y2 - 1, x2 - 1, 2, floor_sec, FEAT_WATER);
+							}
+						}
+					}
+					break;
+				}
 				default:
 				{
 					/* empty */
@@ -3634,7 +3804,25 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 
 			/* draw the fill with variance */
 			cave_set_feat(y, x, feat);
-
+			
+			/* (DESC) all the tiles have the same room description */
+			cave_desc[y][x] = desc;
+			
+			/* use FLAGS to distribute description "drivers" */
+			/* zz and size can drive some new mark FLAGS */
+			
+			//cave_mark[y][x] |= (MARK_SEEN);
+			
+			
+			
+			
+			
+			/* (testing) */
+			if ((zz == 2) || (zz == 3)) cave_mark[y][x] |= (MARK_0002);
+			if ((zz == 4) || (zz == 5)) cave_mark[y][x] |= (MARK_0004);
+			
+			
+			
 			/* change door to closed doors */
 			if ((p_ptr->depth > 10) && (feat == FEAT_OPEN))
 			{
@@ -3643,9 +3831,11 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					cave_set_feat(y, x, FEAT_FLOOR);
 					place_closed_door(y, x);
 				}
-			}
+			}			
 		}
 	}
+	
+	printf("\n R O O M %d ========== desc. %d \n", dun->minor_n - 1, desc);
 }
 
 
@@ -9180,17 +9370,157 @@ static void cave_gen(void)
 		build_seam(FEAT_QUARTZ, DUN_STR_QC);
 	}
 
-	/* -KN- Add four smaller placeholder seams last */
+	/* -KN- Add four smaller placeholder (_H) seams last */
 	for (i = 0; i < env_groves; i++)
 	{
 		build_seam(FEAT_QUARTZ_H, env_grove[i]);
 	}
 
-
 	int count = 0;
 	int rr = 0;
+	
+	int x3 = 0;
+	int y3 = 0;
 
 	/* -KN- scanning the whole dungeon for environmental changes */
+	
+	/* first place division waters, if halved dungeon */
+	if (p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR))
+	{
+		if ((p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL)) && (p_ptr->dungeon_flags & (DUNGEON_HALF_HORIZONTAL)))
+		{
+			// 1, 1           X
+			// lower right   XX
+			x3 = dungeon_wid - (dungeon_wid / 3);
+			y3 = dungeon_hgt - (dungeon_hgt / 3);
+		}
+		else if (!(p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL)) && (p_ptr->dungeon_flags & (DUNGEON_HALF_HORIZONTAL)))
+		{
+			// 0, 1         XX
+			// upper right   X
+			x3 = dungeon_wid - (dungeon_wid / 3);
+			y3 = (dungeon_hgt / 3);
+		}
+		else if ((p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL)) && !(p_ptr->dungeon_flags & (DUNGEON_HALF_HORIZONTAL)))
+		{
+			// 1, 0        X
+			// lower left  XX
+			x3 = (dungeon_wid / 3);
+			y3 = dungeon_hgt - (dungeon_hgt / 3);
+		}
+		else if (!(p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL)) && !(p_ptr->dungeon_flags & (DUNGEON_HALF_HORIZONTAL)))
+		{
+			// 0, 0         XX
+			// upper left   X
+			x3 = (dungeon_wid / 3);
+			y3 = (dungeon_hgt / 3);
+		}
+		
+		for (y = 0; y < dungeon_hgt; y++)
+		{
+			// correct for L shape
+			if ((y3 < dungeon_hgt / 2) && (y < dungeon_hgt / 3))
+			{
+				y = y + dungeon_hgt / 3;
+			}
+			else if ((y3 > dungeon_hgt / 2) && (y > (dungeon_hgt - (dungeon_hgt / 3))))
+			{
+				continue;
+			}
+			
+			count++;
+			if (count > (8 + randint(3)))
+			{
+				// very light meandering
+				rr = 1;
+				if (count > 14) count = 0;
+			}
+			else
+			{
+				rr = 0;
+			}
+			
+			for (x = (x3 - 1 + rr); x < x3 + (2 + rr); x++)
+			{
+				if ((cave_wall_bold(y, x)) || (cave_floor_bold(y, x)))
+				{
+					if (f_info[cave_feat[y][x]].flags & (TF_PERMANENT))
+					{
+						/* skip any permanent terrain */
+						continue;
+					}
+					
+					/* make the RIVER, with some irregularities */
+					if (!one_in_(60))
+					{
+						if (x == x3 + rr)
+						{
+							cave_set_feat(y, x, FEAT_WATER);
+						}
+						else
+						{
+							cave_set_feat(y, x, FEAT_FLOOR);
+						}
+					}
+					else cave_set_feat(y, x, FEAT_RUBBLE);
+				}
+			}
+		}
+
+		count = 0;
+		for (x = 0; x < dungeon_wid; x++)
+		{
+			// correct for L shape
+			if ((x3 < dungeon_wid / 2) && (x < dungeon_wid / 3))
+			{
+				x = x + dungeon_wid / 3;
+			}
+			else if ((x3 > dungeon_wid / 2) && (x > (dungeon_wid - (dungeon_wid / 3))))
+			{
+				continue;
+			}
+			
+			count++;
+			if (count > (8 + randint(3)))
+			{
+				// very light meandering
+				rr = 1;
+				if (count > 14) count = 0;
+			}
+			else
+			{
+				rr = 0;
+			}
+			
+			for (y = (y3 - 1 + rr); y < y3 + (2 + rr); y++)
+			{
+				if ((cave_wall_bold(y, x)) || (cave_floor_bold(y, x)))
+				{
+					if ((f_info[cave_feat[y][x]].flags & (TF_PERMANENT)) ||
+										(cave_info[y][x] & (CAVE_ICKY)))
+					{
+						/* skip any permanent and vaulted terrain */
+						continue;
+					}
+					
+					/* make the RIVER, with some irregularities */
+					if (!one_in_(60))
+					{
+						if (y == y3 + rr)
+						{
+							cave_set_feat(y, x, FEAT_WATER);
+						}
+						else
+						{
+							cave_set_feat(y, x, FEAT_FLOOR);
+						}
+					}
+					else cave_set_feat(y, x, FEAT_RUBBLE);
+				}
+			}
+		}
+	}
+
 	for (y = 0; y < dungeon_hgt; y++)
 	{
 		for (x = 0; x < dungeon_wid; x++)
@@ -9238,7 +9568,7 @@ static void cave_gen(void)
 					if ((((x % 2 == 0) && (y % 2 == 0)) || ((x % 2 == 1) && (y % 2 == 1))) &&
 							(rr % 4 == 0))	cave_set_feat(y, x, FEAT_WEB);
 					else if (rr % 3 == 0) 	cave_set_feat(y, x, FEAT_TREE);
-					else 					cave_set_feat(y, x, FEAT_FLOOR);
+					else 					cave_set_feat(y, x, FEAT_FLOOR2);
 				}
 				else if (p_ptr->dungeon_flags & (DUNGEON_IRON_PITS))
 				{
@@ -9248,7 +9578,8 @@ static void cave_gen(void)
 					else if (rr % 2 == 0) 	cave_set_feat(y, x, FEAT_PIT0);
 					else 					cave_set_feat(y, x, FEAT_FLOOR);
 				}
-				else if (p_ptr->dungeon_flags & (DUNGEON_FOREST)) cave_set_feat(y, x, FEAT_TREE);
+				
+				if (p_ptr->dungeon_flags & (DUNGEON_FOREST)) cave_set_feat(y, x, FEAT_TREE);
 				else
 				{
 					/* even if not defined as forest level, there can still be some groves */
@@ -9261,7 +9592,6 @@ static void cave_gen(void)
 			/* test room-defining walls for any changes */
 			if (cave_feat[y][x] == FEAT_WALL_OUTER)
 			{
-				/* --- ROOM WALLS --- */
 				/* modify some walls in rooms to fit the given dungeon */
 				if (p_ptr->dungeon_flags & (DUNGEON_HALLS))
 				{
@@ -9297,7 +9627,7 @@ static void cave_gen(void)
 
 					else
 					{
-						/* sometimes rise pillar inside the room */
+						/* sometimes raise pillar inside the room */
 						if ((count % 3 == 0) && (count < 16)) adj_to_feat(y, x, 0, FEAT_PILLAR, 2);
 						else if (count > (35 + rand_int(15))) count = 0;
 					}
@@ -9330,6 +9660,9 @@ static void cave_gen(void)
 				else if (p_ptr->dungeon_flags & (DUNGEON_CAVERNOUS))
 				{
 					count++;
+					
+					/* mark some walls as unstable */
+					if (one_in_(16)) cave_mark[y][x] |= (MARK_BROKEN);
 					
 					/* make 8 more holes in the walls in CAVERNS for irregularity */
 					if (count < 9)
@@ -9411,6 +9744,10 @@ static void cave_gen(void)
 					{
 						cave_set_feat(y, x, FEAT_WEB);
 					}
+					if ((p_ptr->dungeon_flags & (DUNGEON_CAVERNOUS)) && (rr % 4 == 0))
+					{
+						cave_set_feat(y, x, FEAT_RUBBLE);
+					}					
 				}
 			}
 
@@ -9419,24 +9756,25 @@ static void cave_gen(void)
 			{
 				/* --- CORRIDOR --- */
 				/* makes a broad corridor around the entire dungeon */
-				if (((x < 3) || (x > (dungeon_wid - 4))) ||
-				    ((y < 3) || (y > (dungeon_hgt - 4))))
+				/* -ICI- add lit walls around, it looks weird now on the edges */
+				if (((x < 4) || (x > (dungeon_wid - 5))) ||
+				    ((y < 4) || (y > (dungeon_hgt - 5))))
 				{
 					/* do not touch the boundaries */
-					if (((x < 1) || (x > dungeon_wid - 2)) ||
-					   ((y < 1) || (y > dungeon_hgt - 2)))
+					if (((x < 2) || (x > dungeon_wid - 3)) ||
+					   ((y < 2) || (y > dungeon_hgt - 3)))
 					{
 						/* stay silent even though this code is dirty */
 						continue;
 					}
 					
-					else if (cave_info[y][x] & (CAVE_ICKY))
+					if (cave_info[y][x] & (CAVE_ICKY))
 					{
 						/* and skip all the real vaults */
 						continue;
 					}
 					
-					else if (f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY))
+					if (f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY))
 					{
 						/* kill all other doors, even the secret ones */
 						cave_set_feat(y, x, FEAT_FLOOR);
@@ -9451,24 +9789,36 @@ static void cave_gen(void)
 						}
 						
 						/* make the CORRIDOR, with some irregularities */
-						if (!one_in_(50)) cave_set_feat(y, x, FEAT_FLOOR);
+						if (!one_in_(45))
+						{
+							cave_set_feat(y, x, FEAT_FLOOR);
+						}
+						else cave_set_feat(y, x, FEAT_RUBBLE);
 						
 						/* look for spot for gate, skip if intersection with a room */
-						if ((y % ((dungeon_hgt-1) / 4) == 0) &&
-							(!(cave_info[y][x] & (CAVE_ROOM))) && (y > 2) && (y < dungeon_hgt - 3))
+						if ((y % ((dungeon_hgt - 1) / 4) == 0) &&
+							(!(cave_info[y][x] & (CAVE_ROOM))) && (y > 3) && (y < dungeon_hgt - 4))
 						{
-							/* make a horizontal gate at specific places + mark it TEMP */
+							/* make a horizontal gate at specific places + mark as TEMP */
 							cave_set_feat(y, x, FEAT_FLOOR);
 							cave_info[y][x] |= (CAVE_TEMP);
 							place_closed_door(y, x);
+							
+							/* FIX add a permawall above or under the 2nd door */
+							if (x == 2) cave_set_feat(y, 3, FEAT_PERM_INNER);
+							if (x == (dungeon_wid - 3)) cave_set_feat(y, (dungeon_wid - 4), FEAT_PERM_INNER);
 						}
-						else if ((x % ((dungeon_wid-1) / 5) == 0) &&
-								(!(cave_info[y][x] & (CAVE_ROOM))) && (x > 2) && (x < dungeon_wid - 3))
+						else if ((x % ((dungeon_wid - 1) / 5) == 0) &&
+								(!(cave_info[y][x] & (CAVE_ROOM))) && (x > 3) && (x < dungeon_wid - 4))
 						{
-							/* make a vertical gate at specific places + mark it TEMP */
+							/* make a vertical gate at specific places + mark as TEMP */
 							cave_set_feat(y, x, FEAT_FLOOR);
 							cave_info[y][x] |= (CAVE_TEMP);
 							place_closed_door(y, x);
+							
+							/* FIX add a permawall above or under the 2nd door */
+							if (y == 2) cave_set_feat(3, x, FEAT_PERM_INNER);
+							if (y == (dungeon_hgt - 3)) cave_set_feat((dungeon_hgt - 4), x, FEAT_PERM_INNER);
 						}
 					}
 				}
@@ -9484,13 +9834,19 @@ static void cave_gen(void)
 		if (place_ghost()) destroy_level(TRUE);
 	}
 
-
 	/* Place some traps in the dungeon. */
 	alloc_object(ALLOC_SET_BOTH, ALLOC_TYP_TRAP,
 		randint(2 + div_round(p_ptr->depth, 15)));
 
 	if (!p_ptr->special_quest)
 	{
+		/*
+			-KN- (ICI) (CARE)
+			This should be reflecting DUNGEON_TYPE(?)
+			to add water/rubble/web to appropriate levels when defined @ p_ptr->dungeon_flags		
+		*/
+		
+		
 		/* Put some rubble in corridors. */
 		alloc_object(ALLOC_SET_CORR, ALLOC_TYP_RUBBLE, randint(6));
 
@@ -9616,9 +9972,8 @@ static void cave_gen(void)
 	for (mm = 0; mm < (dun->minor_n); mm++)
 	{
 		/* at L1 and sometimes deeper, skip the extras */
-		if ((one_in_(3)) || (p_ptr->depth < 2))
+		if ((one_in_(4)) || (p_ptr->depth < 2))
 		{
-			printf("room %d extras skipped...\n", dun->minors[mm].zz);
 			continue;
 		}
 
@@ -9633,8 +9988,18 @@ static void cave_gen(void)
 		x1 = rand_spread(dun->minors[mm].x, 1);
 		y1 = rand_spread(dun->minors[mm].y, 1);
 
+		/*
+			-KN- (CARE)
+			more details, more care
+		*/
+
 		switch (dun->minors[mm].zz)
 		{
+			case 1:
+			{
+				/* ---- no extras for now ---- */
+				break;
+			}
 			case 2:
 			case 3:
 			{
@@ -10020,6 +10385,12 @@ static void cave_gen(void)
 				}
 				else printf(" \n");
 				break;
+			}
+			case 18:
+			case 19:
+			{
+				/* ---- BASIN room ---- */
+				printf("[y%d/x%d] ...basin (not-yet)... ", y1, x1);
 			}
 			default :
 			{
@@ -11216,6 +11587,10 @@ void generate_cave(void)
 	p_ptr->dungeon_flags &= ~(DUNGEON_CHASM);
 	p_ptr->dungeon_flags &= ~(DUNGEON_MAIN_CORRIDOR);
 	p_ptr->dungeon_flags &= ~(DUNGEON_HOLLOW);
+	
+	p_ptr->dungeon_flags &= ~(DUNGEON_HALF_CORRIDOR);
+	p_ptr->dungeon_flags &= ~(DUNGEON_HALF_VERTICAL);
+	p_ptr->dungeon_flags &= ~(DUNGEON_HALF_HORIZONTAL);
 
 	for (i = 0; i < 8; i++)
 	{
@@ -11232,33 +11607,66 @@ void generate_cave(void)
 	if (p_ptr->depth > 1)
 	{
 		int rr = randint(5);
+		int rrr = randint(4);
 		int extra = randint(15);
 		env_rivers = MIN(randint(3) - 2, 0);
 		env_groves = MIN(randint(3) - 2, 0);
 		
 		printf("\nPreparing new level... (%d) \n", extra);
 		
-		if 		(rr == 1) p_ptr->dungeon_flags |= (DUNGEON_HALLS);
+		
+
+		/* these needs rework, in cave.c to blend two styles of dungeon */
+		
+		/* handle 4 kinds of halving */
+		p_ptr->dungeon_flags |= (DUNGEON_HALF_CORRIDOR);
+		
+		if (rrr == 2)
+		{
+			p_ptr->dungeon_flags |= (DUNGEON_HALF_VERTICAL);
+		}
+		else if (rrr == 3)
+		{
+			p_ptr->dungeon_flags |= (DUNGEON_HALF_HORIZONTAL);
+		}
+		else if (rrr == 4)
+		{
+			p_ptr->dungeon_flags |= (DUNGEON_HALF_VERTICAL);
+			p_ptr->dungeon_flags |= (DUNGEON_HALF_HORIZONTAL);
+		}
+		
+		
+		
+	
+		if 		(rr == 1)
+		{
+			p_ptr->dungeon_flags |= (DUNGEON_HALLS);
+			printf("--> deep halls  ");			
+		}
 		else if (rr == 2)
 		{
 			p_ptr->dungeon_flags |= (DUNGEON_UNDERWOOD);
+			printf("--> underwood  ");
 			env_groves += 3;
 		}
 		else if (rr == 3)
 		{
 			p_ptr->dungeon_flags |= (DUNGEON_CAVERNOUS);
+			printf("--> caverns  ");
 			env_rivers += 3;
 		}
 		else if (rr == 4)
 		{
 			p_ptr->dungeon_flags |= (DUNGEON_IRON_PITS);
 			env_rivers += 1;
+			printf("--> iron pits  ");
 			if (extra < 13) extra += 5;
 			/* 6  7  8  9  10  11  12  13  14  15  16  17  13  14  15 */
 		}
 		else if (rr == 5)
 		{
 			p_ptr->dungeon_flags |= (DUNGEON_ELDRITCH);
+			printf("--> infernal  ");
 			env_rivers += 1;
 		}		
 		
@@ -11276,14 +11684,14 @@ void generate_cave(void)
 			p_ptr->dungeon_flags |= (DUNGEON_RIVER);
 			env_rivers += randint(4);
 			if (env_rivers > 8) env_rivers = 8;
-			printf("====RVER \n");
+			printf("===RIVER \n");
 		}
 		if (extra % 4 == 0)
 		{
 			p_ptr->dungeon_flags |= (DUNGEON_FOREST);
 			env_groves += randint(4);
 			if (env_groves > 8) env_groves = 8;
-			printf("====FRST \n");
+			printf("==FOREST \n");
 		}
 		
 		/* set random quadrant or large seam for rivers and groves */
@@ -11296,8 +11704,6 @@ void generate_cave(void)
 			env_grove[i] = randint(8);
 		}
 	}
-
-
 
 
 	/* Hack -- jump to a special quest level */
@@ -11315,7 +11721,6 @@ void generate_cave(void)
 	{
 		p_ptr->max_depth = p_ptr->depth;
 	}
-
 
 	/* Generate */
 	while (TRUE)
@@ -11345,6 +11750,11 @@ void generate_cave(void)
 				/* No flow */
 				cave_cost[y][x] = 0;
 				cave_when[y][x] = 0;
+				
+				/* -KN- (DESC) */
+				/* no descriptive details, 0 == corridor/wall */
+				cave_desc[y][x] = 0;
+				cave_mark[y][x] = 0;
 			}
 		}
 

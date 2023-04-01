@@ -971,7 +971,7 @@ Definition of "great":
 '9' both good object + 15 and monster + 10
 '0' both great object + 20 and monster + 15
 
-'I'	added as pillar (no support for golden one)
+'I' added as pillar (no support for golden one)
 'U' added as abyss
 '`' added as web
 '/' added as pit; 1/16 chance to be full

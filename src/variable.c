@@ -614,7 +614,9 @@ s16b(*cave_o_idx)[DUNGEON_WID_MAX];
  */
 s16b(*cave_m_idx)[DUNGEON_WID_MAX];
 
-
+/* -KN- (DESC) descriptives */
+byte (*cave_desc)[DUNGEON_WID_MAX];
+u16b (*cave_mark)[DUNGEON_WID_MAX];
 
 /*
  * Array[DUNGEON_HGT_MAX][DUNGEON_WID_MAX] of cave grid flow "cost" values
@@ -627,6 +629,7 @@ byte (*cave_cost)[DUNGEON_WID_MAX];
  * Used to store character scent trails.
  */
 byte (*cave_when)[DUNGEON_WID_MAX];
+
 
 /*
  * Current scent age marker.  Counts down from 250 to 0 and then loops.

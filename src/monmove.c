@@ -4666,7 +4666,20 @@ static void process_move(monster_type *m_ptr, int ty, int tx, bool bash)
 			}
 		}
 	}
-
+	
+	/* -KN- allow icy trails from very cold monsters */
+	if (r_ptr->flags0 & (RF0_FROSTY))
+	{
+		if (cave_floor_bold(oy,ox))
+		{
+			/* Change to ice at 25% chance */
+			if (one_in_(4))
+			{
+				cave_mark[oy][ox] |= (MARK_ICE);
+			}
+		}
+	}
+	
 	/* Notice changes in view */
 	if (do_view)
 	{

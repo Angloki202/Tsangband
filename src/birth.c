@@ -888,6 +888,11 @@ void player_wipe(bool full)
 			/* No flow */
 			cave_cost[y][x] = 0;
 			cave_when[y][x] = 0;
+
+			/* -KN- (DESC) */
+			/* No descriptive */
+			cave_desc[y][x] = 100;
+			cave_mark[y][x] = 0;
 		}
 	}
 
@@ -2040,7 +2045,7 @@ static void init_stomach(void)
 
 	/* Hack -- Well fed player */
 	p_ptr->food = p_ptr->food_full - 1;
-	
+
 	/* -KN- (STA) set starting stamina (same for all atp) */
 	p_ptr->mstam = 3;
 	p_ptr->cstam = 3;

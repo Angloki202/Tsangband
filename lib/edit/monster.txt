@@ -287,7 +287,7 @@ D:A thin, flea-ridden mutt, growling as you get close.
 
 N:19:Bill Ferny
 G:p:w
-I:110:350:40:10:3:1
+I:105:350:40:10:3:1
 W:0:4:0:0
 B:SNEER
 F:UNIQUE | FIXED_HPS | EVIL | 
@@ -295,7 +295,7 @@ F:MALE | OPEN_DOOR | BASH_DOOR |
 F:ONLY_ITEM | DROP_1D2 | DROP_GOOD | 
 F:SMART | FORCE_DEPTH
 D:He looks for oportunities to make trouble, and would sell anything to 
-D:anyone.
+D:anyone.  Thankfully, he's old and slow now.
 
 ## empty space (available for town monsters) ##
 
@@ -851,7 +851,7 @@ W:4:1:0:11
 B:TOUCH:COLD:1d6
 F:EMPTY_MIND | COLD_BLOOD | NEVER_MOVE | 
 F:HURT_LITE | IM_COLD | NO_FEAR | NO_CONF | NO_SLEEP | 
-F:STUPID
+F:STUPID | FROSTY
 D:A large pile of pulsing blue flesh.
 
 N:75:Creeping copper coins
@@ -1085,7 +1085,7 @@ W:6:3:0:2
 B:CRAWL:COLD:1d4
 F:MULTIPLY | WEIRD_MIND | COLD_BLOOD | 
 F:RAND_25 | RAND_50 | ANIMAL | HURT_LITE | IM_COLD | 
-F:NO_FEAR | STUPID
+F:NO_FEAR | STUPID | FROSTY
 D:A mass of large freezing worms.
 
 # modified, experimental
@@ -1669,8 +1669,7 @@ F:WEIRD_MIND | SMART | ANIMAL | FLYING | FRIEND |
 F:NO_FEAR | NO_STUN | RES_NETHR | EVIL | SUMMON_ONE
 S:1_IN_6 | POW_4 | 
 S:BLINK | SHRIEK | SCARE | S_KIN
-D:A animated human femur painted bright florescent pink.  It dances about 
-D:you and hits you every time you make a mistake.
+D:Wrathful and vile bird of dark feather.  Rarely will you see only one crebain.
 
 N:158:Lost soul
 G:G:s
@@ -2708,7 +2707,7 @@ W:21:1:10:60
 B:ENGULF:COLD:3d3
 F:FORCE_SLEEP | EMPTY_MIND | COLD_BLOOD | 
 F:RAND_50 | BASH_DOOR | HURT_FIRE | IM_COLD | 
-F:NO_FEAR | NO_CONF | NO_SLEEP
+F:NO_FEAR | NO_CONF | NO_SLEEP | FROSTY
 S:1_IN_2 | POW_0 | 
 S:BRTH_COLD
 D:A twisting whirlpool of frost.
@@ -5456,7 +5455,7 @@ B:HIT:COLD:3d9
 F:FORCE_SLEEP | EMPTY_MIND | COLD_BLOOD | 
 F:BASH_DOOR | KILL_BODY | KILL_ITEM | 
 F:HURT_FIRE | IM_ELEC | IM_COLD | IM_POIS | 
-F:NO_FEAR | NO_CONF | NO_SLEEP
+F:NO_FEAR | NO_CONF | NO_SLEEP | FROSTY
 S:1_IN_5 | POW_36 | 
 S:BALL_COLD | BOLT_ICE | ADD_MANA
 D:A towering glacier of ice.
@@ -6990,7 +6989,7 @@ F:FORCE_SLEEP | FIXED_HPS | CLOUD_SURROUND |
 F:ATTR_MULTI | COLD_BLOOD | BASH_DOOR | FLYING | 
 F:DROP_90 | DROP_3D2 | DROP_4D2 | DROP_GOOD | 
 F:DRAGON | EVIL | IM_COLD | NO_CONF | NO_SLEEP | 
-F:SMART | POWERFUL
+F:SMART | POWERFUL | FROSTY
 S:1_IN_5 | POW_26 | 
 S:BRTH_COLD | SCARE | BLIND | CONF | SLOW | HOLD
 D:An immense dragon capable of awesome destruction.  You have never felt such 
@@ -7136,7 +7135,7 @@ B:STING:LOSE_CON:3d9
 B:STING:PARALYZE:3d9
 F:WEIRD_MIND | BASH_DOOR | RAND_25 | RAND_50 | 
 F:IS_LIT | PASS_WALL | STUPID | FRIENDS | ABYSSAL | 
-F:IM_COLD | IM_ACID | RES_WATER | HURT_FIRE
+F:IM_COLD | IM_ACID | RES_WATER | HURT_FIRE | FROSTY
 D:This shining worm-like centipede makes little tunnels above 
 D:your head. It emanates aura of chill and leaves behind 
 D:stinky slime.

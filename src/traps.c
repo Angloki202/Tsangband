@@ -510,6 +510,22 @@ bool cave_trap_allowed(int y, int x)
 	 */
 	if (cave_trap(y, x)) return (FALSE);
 
+	/* -KN- no traps on trees and pits outside of rooms */
+	if (!(cave_info[y][x] & (CAVE_ROOM)))
+	{
+		if (cave_feat[y][x] == FEAT_TREE)
+		{
+			printf(" ..no trap on a tree.. \n");
+			return (FALSE);
+		}
+		
+		if (cave_feat[y][x] == FEAT_ABYSS)
+		{
+			printf(" ..no trap inside an abyss.. \n");
+			return (FALSE);
+		}		
+	}
+
 	/* Check the feature trap flag */
 	return ((f_info[cave_feat[y][x]].flags & (TF_TRAP)) != 0);
 }

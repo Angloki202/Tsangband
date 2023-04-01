@@ -310,6 +310,19 @@ void do_cmd_search(void)
 
 	/* Search */
 	search();
+	
+	/* (DESC) test descriptions */
+	if (cave_desc[p_ptr->py][p_ptr->px] > 1)
+	{
+		
+		if (cave_mark[p_ptr->py][p_ptr->px] & (MARK_SEEN))
+		{
+			message(MSG_GREEN, 0, "Room desc = ");
+			printf("room: %d \n", cave_mark[p_ptr->py][p_ptr->px]);
+		}
+		
+		describe_room(cave_desc[p_ptr->py][p_ptr->px]);
+	}
 
 	/* Search for essences; note, infusion or alchemy required */
 	search_essence(TRUE);
@@ -1876,6 +1889,18 @@ void move_player(int dir, int do_pickup)
 		/* Handle "leaving" */
 		if (p_ptr->leaving) return;
 
+		/* -KN- (DESC) */
+		/* describe a new room when entering from corridor (< 2)*/
+		if (cave_desc[py][px] < 2)
+		{
+			/* into a room, not visited from this tile yet */
+			if (cave_desc[y][x] > 0 && !(cave_mark[y][x] & (MARK_SEEN)))
+			{
+				describe_room(cave_desc[y][x]);
+				cave_mark[y][x] |= (MARK_SEEN);
+			}
+		}
+
 		/* New location */
 		y = py = p_ptr->py;
 		x = px = p_ptr->px;
@@ -2610,4 +2635,63 @@ void run_step(int dir)
 
 	/* Move the player.  Never pick up objects */
 	move_player(p_ptr->run_cur_dir, FALSE);
+}
+
+/* -KN-
+ * Show a message, describing entered room or while searching
+ */
+void describe_room(int room)
+{
+	cptr desc;
+	
+	if (room < 20)
+	{
+		if (room ==  2) desc = "plain room";
+		if (room ==  3) desc = "interesting room";
+		if (room ==  4) desc = "smelly room";
+		if (room ==  5) desc = "suspicious room";
+		if (room ==  6) desc = "vague room";
+		if (room ==  7) desc = "room with lower ceiling";
+		if (room ==  8) desc = "room with arched ceiling";
+		if (room ==  9) desc = "room with dark corners";
+		if (room == 10) desc = "room that smells with blood";
+		if (room == 11) desc = "room with uneven floor";
+		if (room == 12) desc = "dusty room";
+		if (room == 13) desc = "cold room";
+		if (room == 14) desc = "stone-carved room";
+		if (room == 15) desc = "dirty room, covered in moss";
+		if (room == 16) desc = "decorated chamber";
+		if (room == 17) desc = "oddly smelling chamber";
+		if (room == 18) desc = "chamber with arched hallway";
+		if (room == 19) desc = "black chamber";
+	}
+	else if (room < 40)
+	{
+		if (room == 20) desc = "";
+		if (room == 21) desc = "";
+		if (room == 22) desc = "";
+		if (room == 23) desc = "";
+		if (room == 24) desc = "";
+		if (room == 25) desc = "";
+		if (room == 26) desc = "";
+		if (room == 27) desc = "";
+		if (room == 28) desc = "";
+		if (room == 29) desc = "";
+		if (room == 30) desc = "";
+		if (room == 31) desc = "";
+		if (room == 32) desc = "";
+		if (room == 33) desc = "";
+		if (room == 34) desc = "";
+		if (room == 35) desc = "";
+		if (room == 36) desc = "";
+		if (room == 37) desc = "";
+		if (room == 38) desc = "";
+		if (room == 39) desc = "";
+	}
+	else
+	{
+		desc = "Nevim, dal...";
+	}
+	
+	message_format(MSG_YELLOW, 10, "You are in %s.", desc);	
 }

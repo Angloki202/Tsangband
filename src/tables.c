@@ -2540,7 +2540,8 @@ cptr option_desc[OPT_MAX] =
 	"Do not create artifacts",                /* OPT_birth_no_artifacts */
 	"No stairs back the way you came",        /* OPT_birth_no_return_stair */
 	"Monsters exploit your weaknesses",       /* OPT_birth_smart_cheat */
-	"Not a game of shopping",                 /* OPT_birth_stores_only_sell */
+//	"Not a game of shopping",                 /* OPT_birth_stores_only_sell */
+	"Shops don't buy loot",       	          /* OPT_birth_stores_only_sell */
 	NULL,
 	NULL
 };
@@ -2677,7 +2678,7 @@ const bool option_norm[OPT_MAX] =
 	FALSE,		/* OPT_birth_no_artifacts */
 	FALSE, 		/* OPT_birth_no_return_stair */
 	FALSE,		/* OPT_birth_smart_cheat */
-	TRUE,		/* OPT_birth_stores_only_sell */
+	FALSE,		/* OPT_birth_stores_only_sell -KN- changed from TRUE */
 	FALSE,
 	FALSE
 };

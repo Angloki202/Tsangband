@@ -1,96 +1,94 @@
 #charattr - this file uses the char/attr parsing system
 #fulldisplay - use the full display (46+ lines) to show this file
-  ******  *         High adventure in a   *  world of magic and cold steel   *
- ***   ****                             ***                                ***
-***      **                              **                                 ** 
-****      *   *****     *  **     ***    ** ****    *****     *  **    **** **
- *******     *** ***  ********  **   ** ,***, ***  *** ***  ********  ***  ***
-   *******       ***   **   **  **   ** $,* $, **  ,   ***   **   **  **    **
-*      ****   *** **   **   **  **   ** "ss.$ss.*.s' ** **   **   **  **    **
-**      ***  **   **   **   **  ,**** .ss$$$$$$$$$$s,   **   **   **  **    **
-****   ***   *** ***   **   **  $.*s$$$$$$$$$$$$$$`$$ss***   **   **  ***  ***
-*  ******     ***  ** **** **** "$$$$$$$$$$$$$$$$$$o$$$  ** **,* ****  ****  **
-                               s$$$$$$$$$$$$$$$$$$$$$$$$s,  ,s
-   Version 1.0.3*             s$$$$$$$$$"$$$$$$""""$$$$$$"$$$$$,
-                              s$$$$$$$$$$s""$$$$ssssss"$$$$$$$$"
-                             s$$$$$$$$$$'         `"""ss"$"$s""
-                             s$$$$$$$$$$,              `"""""$  .s$$s
-                             s$$$$$$$$$$$$s,...               `s$$'  `
-                         `ssss$$$$$$$$$  $$$$$$$$$####s.     .$$"$.   , s-
-                           `""""$$$$$$ /\ $$$$$$$$$$#####$$$$$$"     $.$'
-   ___                           " ___/  \___ $$$$$$$$$####s""     .$$$|  ___
-  |   \________              _____/          \_____ $$$$$$$##s   ________/   |
-  \            \____________/                      \____________/            /
-   \                                                                        /
-    \       Based on Moria:   Copyright (c) 1985 Robert Alan Koeneke       /
-    |           and Umoria:   Copyright (c) 1989 James E. Wilson           |
-     \                                                                    /
-      |                            Angband by:                           |
-       \            Alex Cutler, Andy Astrand, Sean Marsh,              /
-       |          Geoff Hill, Charles Teague, Charles Swiger,           |
-       |            Ben Harrison, and Robert R["u]hlmann                   |
-      /                                                                  \
-     /                             Sangband by:                           \ 
-    /              Chris Petit, Michael Gorse, Julian Lighton,             \
-   /                    Leon Marrick, Joshua Middendorf                     \
-  /                                                                          \
- |               Visit the website "http://runegold.org/sangband/"            |
- |              Browse the Forum at "http://angband.oook.cz/forum/"           |
- \           _________________                   __________________           /
- {\     ____/$"   $$$$$$$$$$$$\_____        ____/         .###$$$$$\____     /
- ) \___/\.         "$$$$$$$$$$$$$###\__  __/      -TX ..####$$$$$$$$$$$"\___/
-(   )$ )  )        ,$$$$$$$$$$$$$$$$$$#\/#################$$$$$$$$$$$"
-(   ($$  ( \     _s$"  `"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$,
- )  )$$$s ) )  .      .   `$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"'  `$$
-  (   $$$$s/  .$,    .$,,s$$$$$$##$$$$$$$$$$$$$$$$$$$$$$$$$$""        '
-    \)_$$$$$$$$$$$$$$$$$$$$$$$##"  $$        `$$.        `$$.
-        `"$$$$$$$$$$$$$$$$$$#"      $          `$          `$
-            `"""""""""""""'         '           '           '
+      **********:              ...a game that delves deeper than you think      
+      **: **: **: *****:                                                        
+          **:    **:  **:  ***: ***:  **: ***: ***:    ***: ***:  **:****:      
+         *: *:   *:        *:*:  *:*: *: *:  *:*: *:   *:*:  *:*: *: *:  *:     
+         *: *:    *:      *:*:*: *: *:*: *:    *: *:  *:*:*: *: *:*: *:   *:    
+          **:      *:    *: *: *:*:  **: *:    ****: *: *: *:*:  **: *:   *:    
+          **:       **:  *******:*:  **: *:***:*:  *:*******:*:  **: *:   *:    
+         ****:        *: *: *: *:*:  **: *:  *:*:  *:*: *: *:*:  **: *:  **:    
+         ****:   *:   **:*:.*: *:*: .**: **:.*:*: **:*: *: *:*:  **: *: ***:    
+       ********: *:  ***:*: *:'*:*:+:**:.*****:*'***:*: *: *:*:. **: *:***:     
+        *: *: *:  *****:.*:'*::*:*:+x*+::'***: ****:'*:.*: *:*:..*:. ****:      
+         *  *  *:  ***:''*:'*:.*++*+xxx++::*:' ***:.:*:.*:.*:.*:.....***:     ..
+     .....*..*..*:.'*:'''*:.*:.*.'::xUUx+::*:' **:   *::*:.*:.......'**:    ....
+. .......*.':'*.'*:..''..*:.*.'''::xuxu++xx*+..*:    * .*:::'..''''''*:..*:.....
+.........'::''*'''*:'....*:'*'':::+::+++xxx+x+..*:   *  *.:++:'.''':'.***:..''..
+........''.':*''''*......*...'''''':+++:.+'++x+..*:  *     .+++:''::'....:::''''
+::'...::..''''''.*........'':'''::+++xu$...'+:+x'*:         .:++:::':'''':++::''
+::::::'.:'''.'''.........'''::+++++$$$$$:.:Nx+:+*:..         ..+++:'::''':+++:::
+:::++::..'..''''.......'...::+$$$$$$$$xxx''x+++:+*:..         ..+x++::'::+++++:'
+::++:++''...''''.......$$$$$$$$$+++xxx+xx+xx++++:+x:..         ..'+x+:::+++++++:
+:++:+++:::'.'''''''':'''$$$::++++++++xx+x+++++++xxux....      .. .+xx++++x+++++:
+:+:++++++:::u..u'....'':::::xUx+:+++++++x:+++xx+++UU+........... .'xx++xxx++++++
+':':++++:::U.U.U..''':::::'::++++++++++++++++++xxxx+x+.............+uuxxxx+++::+
+++:':+++++u.uUU.u::u++:':'::::++++++++++++++++++xu+++x:... ........+uuuxxx+::::+
+xx+:::+++++u:UUUUuU’++::::'::::++++++++++++++++++x+::++............+uUuxxx+:'::+
+xxx++::::+++uuUUUUux+:':::::::':::+++++++++++++++xu:++x'...........:UUuxx+::::::
+xxx+xx+'.::++:uu::++::::::::::':::+++++++++++++++++::+++..........'+UUux+::'::''
++xx+++x+:''::::''::'::::::::::'::::+++++++++++++++x+:+++:.........:+%UU++::::::+
++x++++x++::'''::'''''::'::':::':+:N+++++++++++++++N+:++++:.......':+$%u++:+::++u
+'+++++u+++:::..'::''::'':::::'''::NNNNNN+++++++NNNN%::+++x:...':::+x$ux+++::+xxu
+':':++x+++:::::...::::::++::::.'::++++++NNNNNNN++++%u+++xxu'':'::++x%u+++:++xxuu
+':''::+:+++:::+::...:+++++++::':::+++++++++++u++++++u+x+xxu::::::++xUuxx++xxxxuu
+:++:::+.'::::::+:::...::++xx+::::::::++++++++u++++++%:++xxu+::::+++xuuxxxxxxxxuu
++++++++'....:::++++::'.':xxx+::::::++++++++++u++++++$:::+xux:::+++++UUuuuxxxxxxu
+++++++x+:''...':::++++::::++::::::::++++++++u+++++++U+::+xxx::+x++'+%%%Uuxuxxx+:
+'::+++x+++::'....'::++++++::::::::::::+++++u++++++:+ux::+xUu':xu+''+%%%uuuux++::
+'::'::+::::::::''..'::++::::::::::::::++++u+++:++::++x+:+uUu:xux':xu$%%Uux+++:::
+:++:::+'.'''::::+:::''::':::::::::::++++::+++::::::+:+++u%Nx+ux':+xu%%Uuxxx+:+++
+:+++++x::::'''''::::''::'::::::++++++++++x++::::::+x'++Uuu%xUx::+xuuuuuuxxx+++++
+:+++++x+::::::::::'':::::'::::+::++++++xx+:::::::+xx%N%%uxu%UUu+xu++xxxuxx++++++
+:++:+++:':'::::::'':'::::::::::+++++xxxx:::::::::++uU$N$uUuuU%%%u+:+xx+ux++++++:
+.:::::+:..  ...'::''::++++::::++xuuuxu++::::::::::xx+u$$%%uu$$$$%Uxxuxxxxxx+++++
+'::'''::''''::':'':::::::+++xuuuUUUuxx+:::::::::++xx+%$$$$$$$$%%%%uxuxxuxxxx+xx+
+: based on Moria, Umoria, Angband and Sangband ++xx++U%%$%%$%%%%%Uu+x++xx+++++++
+::::::::'...'.''::::++xu+':::+:+x++++xxxx++x+++xxxxxuUUu%UUU%%UUUUx+++ v.1.0.3 +
 
 #endchar
-  yyyyyy  y                               y                                  y
- yyo   yyyo                             yyy                                yyy
-yyo      yo                              yo                                 yo
-yyyo      y   yyyyy     y  yy     yyy    yo yyyo    yyyyy     y  yy    yyyy yo
- yyyyyyo     yyo yyy  yyyyyyyy  yy   yy uyoyu yyo  yyo yyy  yyyyyyyy  yyo  yyo
-   yyyyyyo       yyo   yo   yo  yo   yo rry rryyo  u   yyo   yo   yo  yo    yo
-y      yyyo   yyy yo   yo   yo  yo   yo rrrrrrrrrrrr yy yo   yo   yo  yo    yo
-yo      yyo  yo   yo   yo   yo  uyyyy urrrrrrrrrrrrrr   yo   yo   yo  yo    yo
-yyyo   yyo   yyo yyy   yo   yo  rryrrrrrrrrrrrrrrrrRrrryyy   yo   yo  yyo  yyo
-y  yyyyyy     yyy  yy yyyy yyyy rrrrrrrrrrrrrrrrrrRwRrr  yy yyuy yyyy  yyyy  yy
-                               rrrrrrrrrrrRrrrrrrrrRrrrrrr  rr
-   UUUUUUUUUUUUUUUUUUUUUUU    rrrrrRrrrRRrrrrrrrrrrrrrrrrrrrrrrRRu
-                              rrrrrrrRRrrrrrrrrrrrrrrrrrrrrrrrrR
-                             rrrrRrrrRrrr         rrrrrrrrrrrrR
-                             rrrRrrrrRrrr              rrrrrrr  rrrrr
-                             rrrRrrrrRRrrrrrrrr               srrrr  s
-                         rrrrrrrrRrrrrr  Rrrrrrrrrrrrrrr     rrrrrs   r rs
-                           rrrrrrrrrrr ww RRrrrrrrrrrrrrrrrrrrrr     rrrr
-   www                           r wwww  wwww RRrrrrrrrrrrrrrr     rrrrr  www
-  w   wwwwwwwww              wwwwww          wwwwww rrrrrrrrrr   wwwwwwwww   w
-  w            wwwwwwwwwwwwww                      wwwwwwwwwwwwww            w
-   w                                                                        w
-    w                                                                      w
-    w                                                                      w
-     w                                                                    w
-      w                                                                  w
-       w                                                                w
-       w                                                                w
-       w                                                                w
-      w                                                                  w
-     w                                                                    w
-    w                                                                      w
-   w                                                                        w
-  w                                                                          w
- w                                 DBBBBBBBBBBBBBBBBBBBBBBBBBBBBBD            w
- w                                  DBBBBBBBBBBBBBBBBBBBBBBBBBBBBBD           w
- w           wwwwwwwwwwwwwwwww                   wwwwwwwwwwwwwwwwww           w
- Rw     wwwwwrr   rrrrRRRRrrrrwwwwww        wwwww         rrrrrrRrrwwwww     w
- R wwwwwRR         rrrrrRRRRRrrrrrrrwww  www      rrr rrrrrrrrRrRrrrrrrrwwwww
-R   Rr R  R        rrrrrrrrRRRRRrrrrrrrwwrrrrrrrrrrrrrrrrrrrrRRrrrrrrr
-R   Rrr  R R     rrrr  rrrrrrrrRRRRRRRrrRrrrrrRrrrrRrrrRRrRRrrrrrrrrrr
- R  Rrrrr R R  r      r   rrrrrrrrrrrrrRrRrRrRrRrRrrRrRrrrrrrrrrrr  rrr
-  R   rrrrrr  rrr    rrrrrrrrrrruurrrrrrrrrrrrrrrrrrrrrrrrrrrr        s
-    RRRrrrrrrrrrrrrrrrrrrrrrrruur  rr        rrrr        rrrr
-        rrrrrrrrrrrrrrrrrrrrur      r          rr          rr
-            rrrrrrrrrrrrrrr         s           s           s
+ssssssYYYYYYYYYYossssssssssssssDDDDDDsDsDsDsDsDsDsDsDsDsDsDsDsDsDsDsDsDsDsDsDsss
+ssssssYYosYYosYYosYYYYYossssssssssssssssssssssssssssssssssssssssssssssssssssssss
+ssssssssssYYossssYYossYYossYYYosYYYossYYosYYYosYYYossssYYYosYYYossYYoYYYYossssss
+sssssssssYosYosssYossssssssYoYossYoYosYosYossYoYosYosssYoYossYoYosYosYossYosssss
+sssssssssYosYossssYossssssYoYoYosYosYoYosYossssYosYossYoYoYosYosYoYosYosssYossss
+ssssssssssYYossssssYossssYosYosYoYossYYosYossssYYYYosYosYosYoYossYYosYosssYossss
+ssssssssssYYosssssssYYossYYYYYYYoYoDDYYosYoYYYoYossYoYYYYYYYoYossYYosYosssYossss
+sssssssssYYYYossssssssYosYoDYoDYoYoDDYYoDYoDDYoYossYoYosYosYoYossYYosYossYYossss
+sssssssssYYYYosssYosssYYoYoDYoDYoYoDDYYoDYYopYoYosYYoYosYosYoYossYYosYosYYYossss
+sssssssYYYYYYYYosYoDDYYYoYoDYoDYoYopDYYoDYYYYYoYoYYYoYosYosYoYossYYosYoYYYosssss
+ssssssssYosYosYosDYYYYYopYosYosYoYoDpYoDDDYYYoDYYYYorYosYosYoYossYossYYYYosssssD
+sssssssssYssYsDYopDYYYossYosYoDYssYoDDpBBBBYoDDYYYorDYopYosYosYosssssYYYossssssy
+ssssssssssYDDYpDYoprYosssYoDYoDYBBbBBBbbbbBYoDDYYoDDDYosYorYossssssssYYossssssyo
+sssssssssYDsDsYprYossssssYoDYbBbbbbbbbBbbbBYwDDYoDDDDYoDYowDrDsssssssYossYosryoo
+ssssssssDpDDrrYsssYosssDDYoDYBbbbbbNbBbbbBBwppDDYoDDDYoDYDsppsrDssssssYYYosDyooo
+ssssssDprprrsYssssYsDDDDDYDbBBbbbbbpbbbBBsusspprDYoDDYDDDDDDsppDDsssssssssDyoooo
+srDDDpDsrrsssssssYDDDDDDDbbbbbbbbbbBBBuuuUUsssppsYoDDDDDDDDDDrppsrsssssssssyoooo
+DyDDDDrrsssssssssDDDDDDDbbbbbbbbBBBuuuuuUUUsDsspYsDDDDDDDDDDDDDppprssssssryooooo
+osoyossssssssssssDDDDDDDbbbBuuuuuuuuuuuDDUUsDssDpYsDDDDDDDDDDDDDDpppDsssryoooooo
+sooowoysssssssssssDDDDDDuuuuuuusuusuuuDDssrrRsssDspsDDDDDDDDDDDDDppppspsyooooooo
+soowooowDDssssssssssDDDDDuurrssssssDDuuDDDRDrrrrRRppsDDDDDDDDDDDDDspppDDyooooooo
+DosoooooywsDUssUsssssDDDDrrsDDDsrsssssDsDDDRDDDrrRRRpsDDDDDDDDDDDDpppDDyooooooss
+ssDsoooossDUUUDUDssssDDsrrrrrsssrsrsDsDrsssDRDDDrrDDRpDDDDDDDDDDDDpopsDyoooooDss
+yyssDoooooUDUUUDUssUsDDrrrrrrrsrDrssDrrsDsDDRsDDrrDsDRsDDDDDDDDDDDpwpsyooooossss
+ooyDDDsooooUDUUUUUUDDDrrrrrrrrrsrDsrrsssDDssRDsDrrrprRpDDDDDDDDDDDDDpyooooosssss
+ooooysDsDooouuuuuUUsDprrrrrrRrprssrDDDDsssrDDRsDrDrDsDRsDDDDDDDDDDpDDyoooossssss
+ooooooyDssDoosuuprsDprrrrrrRsrrssrssDrsswrsrDRsrrrrDrsDRsDDDDDDDDDpsyoooosssssss
+yyooooooDDssDyDprsrrrrrrrrRRsrrrrssrrDDrrsDDsRrrrrrrrssDrDDDDDDDDDpoyoooDssssssy
+ooyoooooyssDssysprrrrrrrRppDDrrssrrsssssDDDssDDDssRRDsssRsDDDDDDDpDyoooyDssssDyo
+DsoyooooowwwDDDsssppRRRRsDDDDDrppRRRRrrRrDDDDrrrrRRDDrssDRDDsssspsyoooossssssyoo
+DDDswooooosyssDsDssDDDDwosDDDDRRRsrrrrrrRRRrrrrrrrrDrrsssDRsssssryoooysrssDyyooo
+sssDssyyooossyssssDsDyoooossDDrrrrsDrrrDrrrrrrrDrrrsDrssssRDsssssyooysoDssyooooo
+yysDDDwsDoooooswysDDDDywoooosrrrrrsssrswrrrDrRssrrssRrrDsswpssssyooysoosoyoooooo
+oooooyyssssyooowoowyDssDyoooDrrrrsssrsssrrDssRssrsssRrrrDsspsssyoowDDssooooooooo
+ooooooooyssDDyrooooooysDDyoDrrrrsssssDssrsDsRDDsrDDDRsrrsDDssDpyoorDDsoyooooooyD
+sssyooooooyDDsDDssoooooyoDrrrrrsssrrrrsrDssRsDrrDDrDRsrrsDwoppyoorrooyooooooysss
+DDDssDoooooossDsDsDrDsosrrrrrrssssrrprrsDsrssrpssrpsRosrrUUopyoorDoyyoooooyDssss
+yyyssDsDsDoooooswsDsssrprrrrssssssrrssDsrrDsDprrrprDRsorUUUUyoossoyoooooyDssssss
+ooooyyywDDDssooooosDrprrrrrssssssrsDsssrDDssrrrrrrDRrsoooyoUoopDwyooooyDDsssssss
+oooooooossDDDDDDoooprrrrrssssssrrsDDDDDDDsrrrrrrpDRooooyyooUooooooooDDDDDDssssss
+sooooooooossDDDDDrprrrrrrrrrrppsDDDDDDsDrrrrrrpprsRoooyyoooUooyooosoDDsssDssssss
+swsDDoooooyyDDDsrprrrrsDssrrprDDDsssssssrrprrrrppRoooyyooyyyoyooooyDDsoyoyoyoyyy
+DsDsssDDssoooosrprrrpppppsDDDssswsssDDDrprprrprrRoooyyyoyYYYooyyoooooooooooooooo
+DsDDDDssDDDDDDrprrrrsrprrDDrsDDDDDDsDssrrrprsssRooooyyyoYoooooYyyooooyoooooooooo
+DwsDDDossssssrpprrrrrsDDrDDsDDDrDDssDDrrrpssrDRoooooyyyooooooooyyooooo YYYYYYY o
