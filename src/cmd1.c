@@ -2667,6 +2667,7 @@ void describe_room(int room)
 	}
 	else if (room < 40)
 	{
+		// cavernous rooms
 		if (room == 20) desc = "";
 		if (room == 21) desc = "";
 		if (room == 22) desc = "";
@@ -2677,6 +2678,7 @@ void describe_room(int room)
 		if (room == 27) desc = "";
 		if (room == 28) desc = "";
 		if (room == 29) desc = "";
+		// adv. cavernous rooms
 		if (room == 30) desc = "";
 		if (room == 31) desc = "";
 		if (room == 32) desc = "";

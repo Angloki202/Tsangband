@@ -2777,6 +2777,16 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					/* or the original floor */
 					else feat = FEAT_FLOOR;
 					
+					
+					// (testing) _SMOKE and _BROKEN
+					
+					if (one_in_(30))
+						{
+							feat = FEAT_SMOKE_X;
+							cave_mark[y][x] |= (MARK_SMOKE);
+						}
+					//if (one_in_(40)) cave_mark[y][x] |= (MARK_BROKEN);
+					
 					break;
 				}
 				case 2:

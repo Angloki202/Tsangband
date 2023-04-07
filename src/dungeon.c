@@ -1705,36 +1705,42 @@ static void process_world(void)
 			y = p_ptr->py + nearby_grids_y[i];
 			x = p_ptr->px + nearby_grids_x[i];
 			
-			if (cave_mark[y][x] & (MARK_SMOKE))
-			{
-				if (one_in_(6))
-				{
-					cave_set_feat(y, x, FEAT_SMOKE);
-				}
-				else if (one_in_(5))
-				{
-					cave_set_feat(y, x, FEAT_FLOOR);
-				}
-				else
-				{
-					cave_set_feat(y, x, FEAT_SMOKE_X);
-				}
-			}
+			
+			// if (cave_mark[y][x] & (MARK_SMOKE))
+			// {
+				// if (one_in_(3))
+				// {
+					// cave_set_feat(y, x, FEAT_SMOKE);
+				// }
+				// else if (one_in_(3))
+				// {
+					// /* (fix) make the code whirl the smoke around a bit */
+					// cave_set_feat(y, x, FEAT_FLOOR);
+				// }
+				// else
+				// {
+					// /* DO NOT Change if it is also _BROKEN (bug) */
+					// cave_set_feat(y, x, FEAT_SMOKE_X);
+				// }
+			// }
+			
 			
 			if (cave_mark[y][x] & (MARK_BROKEN))
 			{
-				/* testing - collapse should be triggered by LARGE creatures and damage AOE */
+				/* (IDEA) collapse should be triggered by LARGE creatures and certain AOE effects */
 				if (cave_floor_bold(y, x))
 				{
-					if (one_in_(8))
+					if (one_in_(5))
 					{
+						message_format(MSG_UMBER, 10, "A floor nearby had just collapsed!");
 						cave_set_feat(y, x, FEAT_PIT0);
 					}
 				}
 				else if (cave_wall_bold(y, x))
 				{
-					if (one_in_(18))
+					if (one_in_(10))
 					{
+						message_format(MSG_UMBER, 10, "A wall close by had just collapsed!");
 						cave_set_feat(y, x, FEAT_RUBBLE);
 					}
 				}

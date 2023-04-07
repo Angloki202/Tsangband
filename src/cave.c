@@ -1159,18 +1159,28 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 		
 		if (cave_mark[y][x] & (MARK_SMOKE))
 		{
-			// somehow I cannot use cave_set_feat;
-			// terrain change is handled when nearby ((!(turn % 3) @ dungeon.c))
-			
-			// and modify colour
+			// (fixed)
 			a = 31;
-			if (!(rr % 3)) a = 8;
+			if (!(rr % 3))
+			{
+				/* switch blocking LOS of the tile */
+				a = 8;
+				if (f_info[cave_feat[y][x]].flags & (TF_LOS) &&
+				   (cave_info[y][x] & (CAVE_LOS)))
+				{
+					cave_info[y][x] &= ~(CAVE_LOS);
+				}
+				else
+				{
+					cave_info[y][x] |= (CAVE_LOS);
+				}
+			}
 		}
 		
 		if ((cave_mark[y][x] & (MARK_BROKEN)) && (info & (CAVE_GLOW)))
 		{
 			// when under illumination, you see broken floor / wall
-			a = 32;
+			a = 8;
 		}
 	}
 
@@ -1368,7 +1378,6 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 			}
 			else if ((cave_feat[y][x] == FEAT_SMOKE) || (cave_feat[y][x] == FEAT_SMOKE_X))
 			{
-				/* darker shade of blue for sunken objects */
 				a = TERM_SLATE;
 			}
 		}
