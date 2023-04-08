@@ -402,7 +402,7 @@ static int death_count;
  * floor to lava and then getting the damage bonuses that accrue to fire
  * spells on lava.  We use "dist" to keep terrain alteration under control.
  */
-/* -KN- added support for webs */
+/* -KN- added support for webs and some smoke */
 static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 {
 	bool obvious = FALSE;
@@ -505,6 +505,12 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 			{
 				/* -KN- burn the ground a bit */
 				cave_set_feat(y, x, FEAT_FLOOR6);
+			}
+			
+			if ((one_in_(6)) && (cave_floor_bold(y,x)))	
+			{
+				/* -KN- also leave some temporal smoke */
+				cave_set_feat(y, x, FEAT_SMOKE_X);
 			}
 
 			break;
@@ -611,6 +617,10 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 				else if (choice < 38) cave_set_feat(y, x, FEAT_FLOOR5);
 				else if (choice < 45) cave_set_feat(y, x, FEAT_FLOOR6);
 				else if (choice < 50) cave_set_feat(y, x, FEAT_WEB);
+				else if (choice < 60)
+				{
+					cave_set_feat(y, x, FEAT_SMOKE_X);
+				}
 			}
 			break;
 		}

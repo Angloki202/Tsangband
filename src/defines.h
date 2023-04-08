@@ -3345,13 +3345,13 @@
 #define CAVE_TRAP         0x0800  /* Has at least one trap */
 #define CAVE_INFR         0x1000  /* Actually seeable by character by infravision */
 #define CAVE_QADV         0x2000  /* -KN- for search in adv. quests */
-#define CAVE_TYP1         0x4000  /* -KN- added for interesting purposes */
-#define CAVE_XX15         0x8000  /*  */
+#define CAVE_QMYT         0x4000  /* -KN- for mythic quests */
+#define CAVE_HIDD         0x8000  /* -KN- hidden & interesting */
 
 /*
  * Cave grid flags that get saved in the savefile
  */
-#define SAVE_CAVE_FLAGS (CAVE_MARK | CAVE_GLOW | CAVE_ICKY | CAVE_QADV | CAVE_TYP1 | \
+#define SAVE_CAVE_FLAGS (CAVE_MARK | CAVE_GLOW | CAVE_ICKY | CAVE_QADV | CAVE_QMYT | CAVE_HIDD | \
 						 CAVE_ROOM | CAVE_LOS | CAVE_EFFT | CAVE_TRAP)
 
 

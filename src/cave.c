@@ -1159,28 +1159,14 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 		
 		if (cave_mark[y][x] & (MARK_SMOKE))
 		{
-			// (fixed)
-			a = 31;
-			if (!(rr % 3))
-			{
-				/* switch blocking LOS of the tile */
-				a = 8;
-				if (f_info[cave_feat[y][x]].flags & (TF_LOS) &&
-				   (cave_info[y][x] & (CAVE_LOS)))
-				{
-					cave_info[y][x] &= ~(CAVE_LOS);
-				}
-				else
-				{
-					cave_info[y][x] |= (CAVE_LOS);
-				}
-			}
+			a = 19;
+			if (!(rr % 3)) a = 25;
 		}
 		
 		if ((cave_mark[y][x] & (MARK_BROKEN)) && (info & (CAVE_GLOW)))
 		{
 			// when under illumination, you see broken floor / wall
-			a = 8;
+			a = 32;
 		}
 	}
 
@@ -1241,7 +1227,7 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 				}
 				else if ((cave_feat[y][x] == FEAT_SMOKE) || (cave_feat[y][x] == FEAT_SMOKE_X))
 				{
-					a = TERM_SLATE;
+					a = TERM_MUD;
 				}
 				else a = object_attr(o_ptr);
 
@@ -1358,7 +1344,7 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 				c = dc;
 			}
 
-			/* -KN- (hack) override color for monsters in webs and pits */
+			/* -KN- (hack) override color for monsters in trees, webs, pits, water and smoke */
 			if (cave_feat[y][x] == FEAT_WEB)
 			{
 				a = TERM_MUSTARD;
@@ -1378,7 +1364,7 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 			}
 			else if ((cave_feat[y][x] == FEAT_SMOKE) || (cave_feat[y][x] == FEAT_SMOKE_X))
 			{
-				a = TERM_SLATE;
+				a = TERM_MUD;
 			}
 		}
 	}
@@ -1409,9 +1395,10 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 			if (warn > 6) warn = 6;
 			if (warn < 2) warn = 2;
 
-			/* -KN- hack? adjust color for webs and pit, incl. wounded players */
+			/* -KN- hack? adjust color for webs/smoke and pit, incl. wounded players */
 			int zz = 0;
-			if (cave_feat[y][x] == FEAT_WEB) zz = 1;
+			if ((cave_feat[y][x] == FEAT_WEB) ||
+				(cave_feat[y][x] == FEAT_SMOKE) || (cave_feat[y][x] == FEAT_SMOKE_X)) zz = 1;
 			else if ((cave_feat[y][x] == FEAT_PIT0) ||
 				(cave_feat[y][x] == FEAT_PIT1) || (cave_feat[y][x] == FEAT_ABYSS)) zz = 2;
 			else if (cave_feat[y][x] == FEAT_TREE) zz = 3;
@@ -1756,15 +1743,15 @@ bool lite_search(int y1, int x1, int col)
 
 	for (ii = 0; ii < grids_in_radius[2]; ii++)
 	{
-		if (one_in_(4)) continue;
+		/* skip some for faster flash */
+		if (one_in_(3)) continue;
+		
 		y = p_ptr->py + nearby_grids_y[ii];
 		x = p_ptr->px + nearby_grids_x[ii];
 		
-		/* control out of bounds */
-		if (y > dungeon_hgt) y = dungeon_hgt;
-		else if (y < 0) y = 0;
-		if (x > dungeon_wid) x = dungeon_wid;
-		else if (x < 0) y = 0;
+		/* control out of bounds and LOS */
+		if (!in_bounds_fully(y, x)) continue;
+		if (!los(p_ptr->py, p_ptr->px, y, x)) continue;
 		
 		move_cursor_relative(y, x);
 		(void)Term_fresh();
@@ -1774,20 +1761,19 @@ bool lite_search(int y1, int x1, int col)
 	}
 	for (ii = 0; ii < grids_in_radius[2]; ii++)
 	{
+		/* run again to restore original colours */
 		y = p_ptr->py + nearby_grids_y[ii];
 		x = p_ptr->px + nearby_grids_x[ii];
 		
-		/* control out of bounds */
-		if (y > dungeon_hgt) y = dungeon_hgt;
-		else if (y < 0) y = 0;
-		if (x > dungeon_wid) x = dungeon_wid;
-		else if (x < 0) y = 0;
+		/* control out of bounds and LOS */
+		if (!in_bounds_fully(y, x)) continue;
+		if (!los(p_ptr->py, p_ptr->px, y, x)) continue;
 		
 		move_cursor_relative(y, x);
 		(void)Term_fresh();
-		//pause_for(1);		
 		lite_spot(y, x);
 		(void)Term_fresh();
+		
 		if (cave_info[y][x] & (CAVE_QADV))
 		{
 			if (cave_feat[y][x] == FEAT_CRYPT)
@@ -1799,12 +1785,20 @@ bool lite_search(int y1, int x1, int col)
 				/* wake undead guardian (1, 1 or 2) */
 				if (summon_specific(y, x, FALSE, p_ptr->depth + 3, SUMMON_UNDEAD, rand_int(3)))
 				{
-					msg_print("Bones around rattled!");
+					message_format(MSG_UMBER, 30, "Bones rattled inside the crypt...");
 				}
 			}
 		}
+		
+		if (cave_info[y][x] & (CAVE_HIDD))
+		{
+			/* (HIDD) testing  */
+			/* (IDEA) found an pseudo-item, that adds to the (DESC) of the room */
+		}
+		
 		if (cave_o_idx[y][x] > 0)
 		{
+			/* examine laying objects */
 			object_type *o_ptr;
 			object_type object_type_body;
 			o_ptr = &object_type_body;
@@ -1815,7 +1809,6 @@ bool lite_search(int y1, int x1, int col)
 				/* inscribe as UNCURSED to mark the bones */
 				crypt += 10;
 				o_ptr->inscrip = INSCRIP_UNCURSED;
-				//printf("now re-insribed:%d \n", o_ptr->inscrip);
 			}
 			else if ((o_ptr->tval == TV_FORGOTTEN) && (o_ptr->inscrip == INSCRIP_SPECIAL))
 			{
@@ -1824,7 +1817,6 @@ bool lite_search(int y1, int x1, int col)
 				mythic += (rand_int(3) + 1) * 5;
 				p_ptr->coll_my += mythic;
 				o_ptr->inscrip = INSCRIP_UNCURSED;
-				//printf("now re-insribed:%d \n", o_ptr->inscrip);
 			}
 		}
 	}
@@ -1842,7 +1834,7 @@ bool lite_search(int y1, int x1, int col)
 	{
 		/* we have completed the crypt objective */
 		p_ptr->qadv_flags |= (QADV_SUCCESS);
-		msg_print("Finally, you know more about this crypt.  Report back.");
+		msg_print("Finally, you know more about this crypt.  Report back to town.");
 
 		/* and add some more crypt lore */
 		p_ptr->coll_cy += (crypt / 3);
@@ -5453,6 +5445,12 @@ void cave_set_feat(int y, int x, int feat)
 	
 	/* Change the feature */
 	cave_feat[y][x] = feat;
+
+	if ((feat == FEAT_SMOKE) || (feat == FEAT_SMOKE_X))
+	{
+		/* -KN- mark the smoke; not the other way around to make space to "discover" smoke */
+		cave_mark[y][x] |= (MARK_SMOKE);
+	}
 
 	/* Adjust the line of sight marker */
 	if (f_info[feat].flags & (TF_LOS)) cave_info[y][x] |= (CAVE_LOS);

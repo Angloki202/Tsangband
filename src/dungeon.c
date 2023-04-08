@@ -719,7 +719,11 @@ static void process_world(void)
 	/* -KN- for nearby grid prompt */
 	int x;
 	int y;
-	int ii;
+	int x1;
+	int y1;
+	int x2;
+	int y2;
+	int rr;
 
 	/* Remember old hitpoint and mana recovery */
 	int old_life_recovery_value = p_ptr->life_recovery_value;
@@ -1691,57 +1695,107 @@ static void process_world(void)
 			demons jumping from ABYSS 
 			etc. ... */
 	//if ((cave_feat[y][x] == FEAT_WEB)
-	/* use similar FEAT detection as in 'SEARCH' */
-	/* now even better with (desc) addendum */
 	
-	/* check around every 3 game turns and on each 9th turn, check in greater radius */
-	if (!(turn % 3))
+	/* check around every 4 game turns and on each 12th turn, check in greater radius */
+	if (!(turn % 4))
 	{
-		ii = 2;
-		if (!(turn % 9)) ii = 3;
-		
-		for (i = 0; i < grids_in_radius[ii]; i++)
+		// define max scanning reach
+		x2 = 4;
+		y2 = 4;
+		x1 = -4;
+		y1 = -4;
+		if (!(turn % 8))
 		{
-			y = p_ptr->py + nearby_grids_y[i];
-			x = p_ptr->px + nearby_grids_x[i];
+			x2 = 7;
+			y2 = 7;
+			x1 = -7;
+			y1 = -7;
+		}
+		if (!(turn % 12))
+		{
+			x2 = 9;
+			y2 = 9;
+			x1 = -9;
+			y1 = -9;
+		}
 			
-			
-			// if (cave_mark[y][x] & (MARK_SMOKE))
-			// {
-				// if (one_in_(3))
-				// {
-					// cave_set_feat(y, x, FEAT_SMOKE);
-				// }
-				// else if (one_in_(3))
-				// {
-					// /* (fix) make the code whirl the smoke around a bit */
-					// cave_set_feat(y, x, FEAT_FLOOR);
-				// }
-				// else
-				// {
-					// /* DO NOT Change if it is also _BROKEN (bug) */
-					// cave_set_feat(y, x, FEAT_SMOKE_X);
-				// }
-			// }
-			
-			
-			if (cave_mark[y][x] & (MARK_BROKEN))
+		/* Scan that area */
+		for (y = p_ptr->py + y1; y < (p_ptr->py + y2); y++)
+		{
+			for (x = p_ptr->px + x1; x < (p_ptr->px + x2); x++)
 			{
-				/* (IDEA) collapse should be triggered by LARGE creatures and certain AOE effects */
-				if (cave_floor_bold(y, x))
+				// skip if not seen or out of bounds
+				if (!in_bounds_fully(y, x)) continue;
+				if (!los(p_ptr->py, p_ptr->px, y, x)) continue;
+				
+				rr = rand_int(100);				
+				
+				if ((cave_feat[y][x] == FEAT_WEB) && (rr < 2))
 				{
-					if (one_in_(5))
+					// being nearby webs can provoke a spider to climb down
+					if (summon_specific(y, x, FALSE, p_ptr->depth - 1, SUMMON_SPIDER, 0))
 					{
-						message_format(MSG_UMBER, 10, "A floor nearby had just collapsed!");
-						cave_set_feat(y, x, FEAT_PIT0);
+						message_format(MSG_UMBER, 20, "You hear scuttling from above...");
+					}					
+				}
+				
+				if ((cave_feat[y][x] == FEAT_PIT1) && (rr < 10))
+				{
+					// being nearby some pits can provoke a demon to climb up
+					if (summon_specific(y, x, FALSE, p_ptr->depth - 1, SUMMON_DEMON, 0))
+					{
+						message_format(MSG_UMBER, 20, "You hear demonic hissing from below...");
+					}					
+				}
+				
+				if ((cave_mark[y][x] & (MARK_SMOKE)) && (rr < 30))
+				{
+					if (f_info[cave_feat[y][x]].flags & (TF_LOS) &&
+					   (cave_info[y][x] & (CAVE_LOS)))
+					{
+						// removing Line-of-Sight
+						cave_info[y][x] &= ~(CAVE_LOS);
+						
+						if ((cave_feat[y][x] != FEAT_SMOKE_X) && (cave_feat[y][x] != FEAT_SMOKE)
+															  && (cave_floor_bold(y, x)))
+						{
+							// make into graphics (so that we can "discover" marked smoke)
+							cave_set_feat(y, x, FEAT_SMOKE_X);
+						}
+					}
+					else
+					{
+						// adding Line-of-Sight
+						cave_info[y][x] |= (CAVE_LOS);
+					}
+					
+					if ((cave_feat[y][x] == FEAT_SMOKE_X) && (rr < 10))
+					{
+						// dissipate the smoke if it's temporal one
+						cave_info[y][x] |= (CAVE_LOS);
+						cave_mark[y][x] &= ~(MARK_SMOKE);
+						cave_set_feat(y, x, get_nearby_floor(y, x));
 					}
 				}
-				else if (cave_wall_bold(y, x))
+				
+				if (cave_mark[y][x] & (MARK_BROKEN))
 				{
-					if (one_in_(10))
+					/* (IDEA) collapse should be triggered by LARGE creatures and certain AOE effects */
+					if (cave_floor_bold(y, x))
 					{
-						message_format(MSG_UMBER, 10, "A wall close by had just collapsed!");
-						cave_set_feat(y, x, FEAT_RUBBLE);
+						if (rr < 10)
+						{
+							message_format(MSG_UMBER, 10, "A floor nearby had just collapsed!");
+							cave_set_feat(y, x, FEAT_PIT0);
+						}
+					}
+					else if (cave_wall_bold(y, x))
+					{
+						if (rr < 5)
+						{
+							message_format(MSG_UMBER, 10, "A wall close by had just collapsed!");
+							cave_set_feat(y, x, FEAT_RUBBLE);
+						}
 					}
 				}
 			}

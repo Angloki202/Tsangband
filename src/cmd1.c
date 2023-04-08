@@ -311,13 +311,13 @@ void do_cmd_search(void)
 	/* Search */
 	search();
 	
-	/* (DESC) test descriptions */
+	/* (DESC) test descriptions (ICI) */
 	if (cave_desc[p_ptr->py][p_ptr->px] > 1)
 	{
 		
 		if (cave_mark[p_ptr->py][p_ptr->px] & (MARK_SEEN))
 		{
-			message(MSG_GREEN, 0, "Room desc = ");
+			//message(MSG_GREEN, 0, "Room desc = ");
 			printf("room: %d \n", cave_mark[p_ptr->py][p_ptr->px]);
 		}
 		
@@ -2667,32 +2667,247 @@ void describe_room(int room)
 	}
 	else if (room < 40)
 	{
-		// cavernous rooms
-		if (room == 20) desc = "";
-		if (room == 21) desc = "";
-		if (room == 22) desc = "";
-		if (room == 23) desc = "";
-		if (room == 24) desc = "";
-		if (room == 25) desc = "";
-		if (room == 26) desc = "";
-		if (room == 27) desc = "";
-		if (room == 28) desc = "";
-		if (room == 29) desc = "";
-		// adv. cavernous rooms
-		if (room == 30) desc = "";
-		if (room == 31) desc = "";
-		if (room == 32) desc = "";
-		if (room == 33) desc = "";
-		if (room == 34) desc = "";
-		if (room == 35) desc = "";
-		if (room == 36) desc = "";
-		if (room == 37) desc = "";
-		if (room == 38) desc = "";
-		if (room == 39) desc = "";
+		// cavernous
+		if (room == 20) desc = "room with rough cave walls";
+		if (room == 21) desc = "cavernous room";
+		if (room == 22) desc = "cave chamber";
+		if (room == 23) desc = "rough cave room";
+		if (room == 24) desc = "cavern opening";
+		if (room == 25) desc = "stone cave";
+		if (room == 26) desc = "uneven room with stone floor";
+		if (room == 27) desc = "room with cave-like features";
+		if (room == 28) desc = "room carved into a cave";
+		if (room == 29) desc = "rocky chamber";
+		if (room == 30) desc = "almost natural cave";
+		if (room == 31) desc = "cave with high ceiling";
+		if (room == 32) desc = "cave with many small stone niches";
+		if (room == 33) desc = "mineral cave chamber";
+		if (room == 34) desc = "damp and slippery cave";
+		if (room == 35) desc = "domed vertical cave";
+		if (room == 36) desc = "rounded cave chamber";
+		if (room == 37) desc = "fungal cavern room";
+		if (room == 38) desc = "mossy cave with dark sand";
+		if (room == 39) desc = "jagged cave";
+	}
+	else if (room < 60)
+	{
+		// broken walls
+		if (room == 40) desc = "room with broken down walls";
+		if (room == 41) desc = "room with large cracks in the walls";
+		if (room == 42) desc = "room full of rubble";
+		if (room == 43) desc = "ruined room";
+		if (room == 44) desc = "partially broken room";
+		if (room == 45) desc = "room with very uneven floor";
+		if (room == 46) desc = "chamber with broken arches";
+		if (room == 47) desc = "room with cracked floor";
+		if (room == 48) desc = "room filled with various debris";
+		if (room == 49) desc = "abandoned room";
+		if (room == 50) desc = "destroyed stone chamber";
+		if (room == 51) desc = "collapsed room";
+		if (room == 52) desc = "room with destroyed ceiling";
+		if (room == 53) desc = "very ruined room";
+		if (room == 54) desc = "room in total ruins";
+		if (room == 55) desc = "room, blasted down in some kind of explosion";
+		if (room == 56) desc = "room filled with tons of rubble";
+		if (room == 57) desc = "room with collapsed walls";
+		if (room == 58) desc = "completely messed up hall";
+		if (room == 59) desc = "wrecked hall";
+	}
+	else if (room < 80)
+	{
+		// wild
+		if (room == 60) desc = "overgrown room";
+		if (room == 61) desc = "room with patches of cave grass";
+		if (room == 62) desc = "room with walls covered in moss";
+		if (room == 63) desc = "chamber with green moss on the floor";
+		if (room == 64) desc = "room with puddles of water";
+		if (room == 65) desc = "room with puddles and cavern grass";
+		if (room == 66) desc = "mossy room with dirt and pebbles";
+		if (room == 67) desc = "room with cavern vegetation";
+		if (room == 68) desc = "room with some roots hanging from the ceiling";
+		if (room == 69) desc = "room with moss and dropping water";
+		if (room == 70) desc = "room with roots and patches of undergrowth";
+		if (room == 71) desc = "overgrown room";
+		if (room == 72) desc = "overgrown room";
+		if (room == 73) desc = "overgrown room";
+		if (room == 74) desc = "overgrown room";
+		if (room == 75) desc = "overgrown room";
+		if (room == 76) desc = "overgrown room";
+		if (room == 77) desc = "overgrown room";
+		if (room == 78) desc = "overgrown room";
+		if (room == 79) desc = "overgrown room";
+	}
+	else if (room < 100)
+	{
+		// guard room
+		if (room == 80) desc = "guard post of some sort";
+		if (room == 81) desc = "armoury chamber";
+		if (room == 82) desc = "small outpost";
+		if (room == 83) desc = "guard post";
+		if (room == 84) desc = "guard post";
+		if (room == 85) desc = "guard post";
+		if (room == 86) desc = "guard post";
+		if (room == 87) desc = "guard post";
+		if (room == 88) desc = "guard post";
+		if (room == 89) desc = "guard post";
+		if (room == 90) desc = "guard post";
+		if (room == 91) desc = "guard post";
+		if (room == 92) desc = "guard post";
+		if (room == 93) desc = "guard post";
+		if (room == 94) desc = "guard post";
+		if (room == 95) desc = "guard post";
+		if (room == 96) desc = "guard post";
+		if (room == 97) desc = "guard post";
+		if (room == 98) desc = "guard post";
+		if (room == 99) desc = "buried dungeon tower";
+	}
+	else if (room < 120)
+	{
+		// boneyard
+		if (room == 100) desc = "boneyard";
+		if (room == 101) desc = "boneyard";
+		if (room == 102) desc = "boneyard";
+		if (room == 103) desc = "boneyard";
+		if (room == 104) desc = "boneyard";
+		if (room == 105) desc = "boneyard";
+		if (room == 106) desc = "boneyard";
+		if (room == 107) desc = "boneyard";
+		if (room == 108) desc = "boneyard";
+		if (room == 109) desc = "boneyard";
+		if (room == 110) desc = "boneyard";
+		if (room == 111) desc = "boneyard";
+		if (room == 112) desc = "boneyard";
+		if (room == 113) desc = "boneyard";
+		if (room == 114) desc = "boneyard";
+		if (room == 115) desc = "boneyard";
+		if (room == 116) desc = "boneyard";
+		if (room == 117) desc = "boneyard";
+		if (room == 118) desc = "boneyard";
+		if (room == 119) desc = "boneyard";
+	}
+	else if (room < 140)
+	{
+		// web infested
+		if (room == 120) desc = "web infested room";
+		if (room == 121) desc = "nesting ground";
+		if (room == 122) desc = "spider lair";
+		if (room == 123) desc = "ancient room with cobwebs";
+		if (room == 124) desc = "old room";
+		if (room == 125) desc = "old room";
+		if (room == 126) desc = "old room";
+		if (room == 127) desc = "old room";
+		if (room == 128) desc = "old room";
+		if (room == 129) desc = "old room";
+		if (room == 130) desc = "old room";
+		if (room == 131) desc = "old room";
+		if (room == 132) desc = "old room";
+		if (room == 133) desc = "old room";
+		if (room == 134) desc = "old room";
+		if (room == 135) desc = "old room";
+		if (room == 136) desc = "old room";
+		if (room == 137) desc = "old room";
+		if (room == 138) desc = "old room";
+		if (room == 139) desc = "old room";
+	}
+	else if (room < 160)
+	{
+		// laboratory
+		if (room == 140) desc = "strange laboratory";
+		if (room == 141) desc = "alchemical workshop";
+		if (room == 142) desc = "dusty library";
+		if (room == 143) desc = "abandoned lab";
+		if (room == 144) desc = "abandoned lab";
+		if (room == 145) desc = "abandoned lab";
+		if (room == 146) desc = "abandoned lab";
+		if (room == 147) desc = "abandoned lab";
+		if (room == 148) desc = "abandoned lab";
+		if (room == 149) desc = "abandoned lab";
+		if (room == 150) desc = "abandoned lab";
+		if (room == 151) desc = "abandoned lab";
+		if (room == 152) desc = "abandoned lab";
+		if (room == 153) desc = "abandoned lab";
+		if (room == 154) desc = "abandoned lab";
+		if (room == 155) desc = "abandoned lab";
+		if (room == 156) desc = "abandoned lab";
+		if (room == 157) desc = "abandoned lab";
+		if (room == 158) desc = "abandoned lab";
+		if (room == 159) desc = "abandoned lab";
+	}
+	else if (room < 180)
+	{
+		// stalagmite
+		if (room == 160) desc = "cavern";
+		if (room == 161) desc = "cavern";
+		if (room == 162) desc = "cavern";
+		if (room == 163) desc = "cavern";
+		if (room == 164) desc = "cavern";
+		if (room == 165) desc = "cavern";
+		if (room == 166) desc = "cavern";
+		if (room == 167) desc = "cavern";
+		if (room == 168) desc = "cavern";
+		if (room == 169) desc = "cavern";
+		if (room == 170) desc = "cavern";
+		if (room == 171) desc = "cavern";
+		if (room == 172) desc = "cavern";
+		if (room == 173) desc = "cavern";
+		if (room == 174) desc = "cavern";
+		if (room == 175) desc = "cavern";
+		if (room == 176) desc = "cavern";
+		if (room == 177) desc = "cavern";
+		if (room == 178) desc = "cavern";
+		if (room == 179) desc = "cavern";
+	}
+	else if (room < 200)
+	{
+		// basin
+		if (room == 180) desc = "room with basin";
+		if (room == 181) desc = "room with basin";
+		if (room == 182) desc = "room with basin";
+		if (room == 183) desc = "room with basin";
+		if (room == 184) desc = "room with basin";
+		if (room == 185) desc = "room with basin";
+		if (room == 186) desc = "room with basin";
+		if (room == 187) desc = "room with basin";
+		if (room == 188) desc = "room with basin";
+		if (room == 189) desc = "room with basin";
+		if (room == 190) desc = "room with basin";
+		if (room == 191) desc = "room with basin";
+		if (room == 192) desc = "room with basin";
+		if (room == 193) desc = "room with basin";
+		if (room == 194) desc = "room with basin";
+		if (room == 195) desc = "room with basin";
+		if (room == 196) desc = "room with basin";
+		if (room == 197) desc = "room with basin";
+		if (room == 198) desc = "room with basin";
+		if (room == 199) desc = "room with basin";
+	}
+	else if (room < 220)
+	{
+		// dark
+		if (room == 200) desc = "room filled up with smoke";
+		if (room == 201) desc = "room obscured in smoke and dust";
+		if (room == 202) desc = "misty room";
+		if (room == 203) desc = "misty room";
+		if (room == 204) desc = "misty room";
+		if (room == 205) desc = "misty room";
+		if (room == 206) desc = "misty room";
+		if (room == 207) desc = "misty room";
+		if (room == 208) desc = "misty room";
+		if (room == 209) desc = "misty room";
+		if (room == 210) desc = "room filled with heavy mist";
+		if (room == 211) desc = "room with menacing dense fog";
+		if (room == 212) desc = "very obscured dark room";
+		if (room == 213) desc = "dark room";
+		if (room == 214) desc = "dark room";
+		if (room == 215) desc = "dark room";
+		if (room == 216) desc = "dark room";
+		if (room == 217) desc = "dark room";
+		if (room == 218) desc = "dark room";
+		if (room == 219) desc = "dark room";
 	}
 	else
 	{
-		desc = "Nevim, dal...";
+		desc = "(undefined)";
 	}
 	
 	message_format(MSG_YELLOW, 10, "You are in %s.", desc);	

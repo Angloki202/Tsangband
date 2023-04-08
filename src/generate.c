@@ -91,6 +91,7 @@
 #define ALLOC_TYP_ABYSS      11  /* Abyss */
 #define ALLOC_TYP_BONES      12  /* Bones */
 #define ALLOC_TYP_CAULDRON   13  /* Cauldrons */
+#define ALLOC_TYP_SMOKE      14  /* Smoke */
 
 /*
  * Maximal number of room types
@@ -1554,12 +1555,23 @@ static void alloc_object(int set, int typ, int num)
 			case ALLOC_TYP_CAULDRON:
 			{
 				//if (one_in_(22 - div_round(p_ptr->depth, 5))) cave_set_feat(y, x, FEAT_CAULDRON);
-				if (one_in_(3)) cave_set_feat(y, x, FEAT_CAULDRON);
+				if (!one_in_(3)) cave_set_feat(y, x, FEAT_CAULDRON);
 				else
 				{
 					/* tell me there is a full cauldron */
 					printf("--full cauldron added-- \n");
 					cave_set_feat(y, x, FEAT_CAULDRON_X);
+				}
+				break;
+			}
+
+			/* -KN- added smoke support */
+			case ALLOC_TYP_SMOKE:
+			{
+				if (one_in_(3)) cave_set_feat(y, x, FEAT_SMOKE);
+				else
+				{
+					cave_set_feat(y, x, FEAT_SMOKE_X);
 				}
 				break;
 			}
@@ -2132,7 +2144,7 @@ static bool generate_starburst_room(int y1, int x1, int y2, int x2,
 
 
 	/* Make a cloverleaf room sometimes.  (discovered by accident) */
-	if ((special_ok) && (width >= 12) && (height >= 12) && (one_in_(15)))
+	if ((special_ok) && (width >= 12) && (height >= 12) && (one_in_(12)))
 	{
 		arc_num = 12;
 		make_cloverleaf = TRUE;
@@ -2338,7 +2350,8 @@ static bool generate_starburst_room(int y1, int x1, int y2, int x2,
 							else
 							{
 								/* Replace old feature in some cases. */
-								if ((feat == FEAT_TREE) || (feat == FEAT_RUBBLE))
+								if ((feat == FEAT_TREE) || (feat == FEAT_RUBBLE)
+									|| (feat == FEAT_SMOKE) || (feat == FEAT_SMOKE_X))
 								{
 									/* Make denser in the middle. */
 									if ((cave_floor_bold(y, x)) &&
@@ -2347,7 +2360,7 @@ static bool generate_starburst_room(int y1, int x1, int y2, int x2,
 								}
 
 								/* Water and lava try to be contiguous */
-								if ((feat == FEAT_WATER) || (feat == FEAT_LAVA))
+								if ((feat == FEAT_WATER) || (feat == FEAT_LAVA) || (feat == FEAT_ABYSS))
 								{
 									if ((temp_array_active) &&
 									    !(cave_info[y][x] & (CAVE_TEMP)))
@@ -2674,7 +2687,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 		if (one_in_(MIN(5 - div_round(p_ptr->depth, 18), 2)))
 		{
 			/* type (zz) of spec. room dependent on dungeon environment */
-			zz = rand_range(2, 19);
+			zz = rand_range(2, 21);
 			
 			
 			//	( - - - ICI - - - )
@@ -2732,6 +2745,11 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 				printf("=%d x%d/y%d  basin room - ", zz, x1, y1);
 				desc = rand_range(180, 189);
 			}
+			if ((zz == 20) || (zz == 21))
+			{
+				printf("=%d x%d/y%d  shadow room - ", zz, x1, y1);
+				desc = rand_range(200, 209);
+			}
 
 			if (zz % 2 == 1)
 			{
@@ -2776,17 +2794,6 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 
 					/* or the original floor */
 					else feat = FEAT_FLOOR;
-					
-					
-					// (testing) _SMOKE and _BROKEN
-					
-					if (one_in_(30))
-						{
-							feat = FEAT_SMOKE_X;
-							cave_mark[y][x] |= (MARK_SMOKE);
-						}
-					//if (one_in_(40)) cave_mark[y][x] |= (MARK_BROKEN);
-					
 					break;
 				}
 				case 2:
@@ -2872,8 +2879,8 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 							if (p_ptr->depth > 45) feat = FEAT_PILLAR;
 						}
 						
-						/* and make some parts unstable */
-						if (one_in_(18)) cave_mark[y][x] |= (MARK_BROKEN);
+						/* and make few parts unstable */
+						if (one_in_(50)) cave_mark[y][x] |= (MARK_BROKEN);
 					}
 					else
 					{
@@ -2948,6 +2955,9 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						else if (rr % 12 == 0) feat = FEAT_FLOOR4;
 						else if (rr % 40 == 0) feat = FEAT_WEB;
 					}
+
+					/* and make some parts unstable */
+					if (one_in_(40)) cave_mark[y][x] |= (MARK_BROKEN);
 
 					/* place rubble around walls */
 					if ((advanced == TRUE) || ((zz == 5) && (p_ptr->depth > 45)))
@@ -3382,8 +3392,8 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					else if (rr > 130) feat = floor;
 					else feat = FEAT_FLOOR;
 
-		/*	(experimental) */
-		//	if (one_in_(5)) cave_info[y][x] |= (CAVE_TYP1);
+					/*	(experimental) */
+					if (one_in_(30)) cave_info[y][x] |= (CAVE_HIDD);
 
 					if (p_ptr->depth > 60)
 					{
@@ -3669,6 +3679,9 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						}
 					}
 
+					/* and make few parts unstable */
+					if (one_in_(45)) cave_mark[y][x] |= (MARK_BROKEN);
+
 					/* also more cavernish feel */
 					if ((feat == FEAT_FLOOR) && (rr % 4 != 0)) feat = FEAT_FLOOR2;
 					break;
@@ -3800,6 +3813,144 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					}
 					break;
 				}
+				case 20:
+				case 21:
+				{
+					/* --- SHADOW ROOM --- */
+					/* smoke and sorcery */
+					if (rr > 190) feat = floor_sec;
+					else if (rr > 188) feat = floor_plus;
+					else if (rr > 130) feat = floor;
+					else feat = FEAT_FLOOR_B;
+
+					if (p_ptr->depth > 60)
+					{
+						/* iron pits and deeper ... chess-like features */
+						if (((x % 2 == 0) && (y % 2 == 1)) || ((x % 2 == 1) && (y % 2 == 0)))
+						{
+							/* dangerous black board-tiles */
+							if (rr % 4 == 0) feat = FEAT_SMOKE;
+							else if (rr % 5 == 0) feat = FEAT_PIT1;
+							else feat = FEAT_PIT0;
+						}
+						else
+						{
+							/* white board tiles */
+							if (rr % 3 == 0) feat = FEAT_SMOKE;
+							else feat = FEAT_FLOOR_B;
+						}
+						
+						/* temporary smoke that is "being discovered" */
+						if (one_in_(6)) cave_mark[y][x] |= (MARK_SMOKE);
+					}
+					if (p_ptr->depth > 45)
+					{
+						/* deep halls ... add lot of smoke fumes along the walls */
+						if (one_in_(45)) feat = FEAT_PIT0;
+						else if ((one_in_(3)) &&
+						((x == x2) || (x == x1) || (y == y2) || (y == y1))) feat = FEAT_SMOKE;
+						else if ((one_in_(6)) &&
+						((x == x2 - 1) || (x == x1 + 1) || (y == y2 - 1) || (y == y1 + 1))) feat = FEAT_SMOKE;
+						
+						/* t. smoke that is "being discovered" */
+						if (one_in_(9)) cave_mark[y][x] |= (MARK_SMOKE);
+					}
+					else if (p_ptr->depth > 30)
+					{
+						/* underwoods ... water and smoke */
+						if (one_in_(30)) feat = floor_plus;
+						else if (one_in_(25)) feat = FEAT_BONEPILE;
+						else if (rr % 20 == 0) feat = FEAT_WEB;
+						else if ((rr % 5 != 0) && (zz == 21))
+						{
+							/* each odd room will have a wild moat */
+							if ((dd == 0) && ((x == x1 + 1) || (x == x1 + 2))) feat = FEAT_WATER;
+							if ((dd == 1) && ((x == x2 - 1) || (x == x2 - 2))) feat = FEAT_WATER;
+							if ((dd == 2) && ((y == y1 + 1) || (x == y1 + 2))) feat = FEAT_WATER;
+							if ((dd == 3) && ((y == y2 - 1) || (x == y2 - 2))) feat = FEAT_WATER;
+							if (one_in_(12)) feat = FEAT_TREE;
+						}
+						
+						/* t. smoke that is "being discovered" */
+						if (one_in_(12)) cave_mark[y][x] |= (MARK_SMOKE);
+					}
+					else if (p_ptr->depth > 15)
+					{
+						/* caves ... more dark and smokey */
+						if (one_in_(45)) feat = FEAT_BONEPILE;
+						else if (rr % 35 == 0) feat = FEAT_WEB;
+						else if ((one_in_(8)) &&
+						((x == x2) || (x == x1) || (y == y2) || (y == y1))) feat = FEAT_SMOKE_X;
+						else if ((zz == 21) && ((x % 12 == 0) || (y % 8 == 0)))
+						{
+							/* each odd room could have a wall of smoke */
+							feat = FEAT_SMOKE;
+						}
+						
+						/* temporary smoke that is "being discovered" but more windy in caves */
+						if (one_in_(18)) cave_mark[y][x] |= (MARK_SMOKE);
+					}
+					else
+					{
+						/* dungeon ... more dark */
+						if (one_in_(50)) feat = FEAT_PIT0;
+						else if ((one_in_(15)) &&
+						((x == x2) || (x == x1) || (y == y2) || (y == y1))) feat = FEAT_SMOKE;
+						else if (rr % 6 == 0) feat = FEAT_FLOOR_B;
+						else if (rr % 12 == 0) feat = FEAT_WEB;
+						
+						/* smoke that is "being discovered" */
+						if (one_in_(15)) cave_mark[y][x] |= (MARK_SMOKE);
+					}
+					
+					/* make central darkness */
+					if ((advanced == TRUE) || ((zz == 21) && (p_ptr->depth > 15)))
+					{
+						if ((x == x2) && (y == y2))
+						{
+							if (((x2 - x1) > 4) && ((y2 - y1) > 4))
+							{
+								if (p_ptr->depth > 60)
+								{
+									/* with shadow bubble if deeper */
+									generate_starburst_room(y1, x1, y2, x2, FALSE, FEAT_SMOKE, FALSE);
+									generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 6, FEAT_CAULDRON_X, FEAT_SMOKE);
+								}
+								else if (p_ptr->depth > 30)
+								{
+									/* with shadow bubble if deeper */
+									generate_starburst_room(y1, x1, y2, x2, FALSE, FEAT_SMOKE_X, FALSE);
+									generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 5, FEAT_ORB, FEAT_SMOKE);
+								}
+								else
+								{
+									generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 2, FEAT_PILLAR, FEAT_SMOKE);
+								}
+							}
+							else generate_well(y1+(y2-y1)/2, x1+(x2-x1)/2, 1, FEAT_BONEPILE, FEAT_SMOKE_X);
+						}
+					}
+					else
+					{
+						/* otherwise less regular circle of smoke */
+						if (((x == (x2 - 1)) || (x == (x1 + 1)) || (y == (y2 - 1)) ||
+							(y == (y1 + 1))) && (one_in_(3)))
+						{
+							/* correct the edges */
+							if (((x == x1 + 1) && (y == y1)) ||
+								((x == x1 + 1) && (y == y2)) ||
+								((x == x1) && (y == y + 1)) ||
+								((x == x1) && (y == y2 - 1)) ||
+								((x == x2 - 1) && (y == y1)) ||
+								((x == x2 - 1) && (y == y2)) ||
+								((x == x2) && (y = y1 + 1)) ||
+								((x == x2) && (y = y2 - 1))) feat = floor_sec;
+							else feat = FEAT_SMOKE;
+						}
+					}
+					
+					break;					
+				}
 				default:
 				{
 					/* empty */
@@ -3818,7 +3969,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 			/* (DESC) all the tiles have the same room description */
 			cave_desc[y][x] = desc;
 			
-			/* use FLAGS to distribute description "drivers" */
+			/* (IDEA) use FLAGS to distribute description "drivers" */
 			/* zz and size can drive some new mark FLAGS */
 			
 			//cave_mark[y][x] |= (MARK_SEEN);
@@ -9103,6 +9254,7 @@ static void cave_gen(void)
 
 	/* -KN- for reference */
 	printf("\n");
+	printf("_________________");
 	printf("Dungeon %d level: \n", p_ptr->depth);
 	printf("--- divided by 2, 5, 10, 16 = %d;%d;%d;%d \n", div_round(p_ptr->depth, 2),
 		div_round(p_ptr->depth, 5), div_round(p_ptr->depth, 10), div_round(p_ptr->depth, 16));
@@ -9120,7 +9272,6 @@ static void cave_gen(void)
 			destroyed = TRUE;
 		}
 	}
-
 
 	/* Hack -- Start with basic granite (or floor, if empty) */
 	for (y = 0; y < dungeon_hgt; y++)

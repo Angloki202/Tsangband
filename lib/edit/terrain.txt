@@ -463,18 +463,18 @@ D:A pile of hacked creatures.  They have no crypto.
 #
 #
 
-## added terrain -KN- not-implemented
+## added terrain -KN-
 N:74:heavy smoke
 G:+:W
 C:15
-F:TF_PASSABLE | TF_OBJECT | TF_TRAP | TF_PROJECT | TF_FLOOR | TF_NO_SCENT
+F:TF_PASSABLE | TF_OBJECT | TF_TRAP | TF_LOS | TF_PROJECT | TF_FLOOR | TF_NO_SCENT
 D:Thick layer of heavy smoke.
 
-## added terrain -KN- not-implemented
+## added terrain -KN- for temporal smoke
 N:75:smoke
 G:+:w
 C:10
-F:TF_PASSABLE | TF_OBJECT | TF_TRAP | TF_LOS | TF_PROJECT | TF_FLOOR
+F:TF_PASSABLE | TF_OBJECT | TF_TRAP | TF_LOS | TF_PROJECT | TF_FLOOR | TF_NO_SCENT
 D:Smoking ground.
 
 

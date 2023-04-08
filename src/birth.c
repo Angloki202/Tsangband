@@ -891,7 +891,7 @@ void player_wipe(bool full)
 
 			/* -KN- (DESC) */
 			/* No descriptive */
-			cave_desc[y][x] = 100;
+			cave_desc[y][x] = 0;
 			cave_mark[y][x] = 0;
 		}
 	}

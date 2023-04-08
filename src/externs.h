@@ -205,7 +205,7 @@ extern s16b (*cave_o_idx)[DUNGEON_WID_MAX];
 extern s16b (*cave_m_idx)[DUNGEON_WID_MAX];
 extern byte (*cave_cost)[DUNGEON_WID_MAX];
 extern byte (*cave_when)[DUNGEON_WID_MAX];
-extern byte (*cave_desc)[DUNGEON_WID_MAX];			// -KN- (DESC) number of room
+extern byte (*cave_desc)[DUNGEON_WID_MAX];			// -KN- (DESC) number of the room details 
 extern u16b (*cave_mark)[DUNGEON_WID_MAX];			// -KN- (DESC) other flags
 extern int scent_when;
 extern int flow_center_y;

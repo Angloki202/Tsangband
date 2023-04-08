@@ -816,6 +816,9 @@ void teleport_away(int m_idx, int dis, bool require_los)
 
 	int d, i, min;
 	int ny, nx, oy, ox;
+	
+	/* -KN- for smoke */
+	int smoke_prob;
 
 	bool look = TRUE;
 
@@ -880,6 +883,23 @@ void teleport_away(int m_idx, int dis, bool require_los)
 	/* Clear old target */
 	m_ptr->ty = 0;
 	m_ptr->tx = 0;
+
+	/* -KN- leave the smoke behind thieves after teleportation */
+	for (i = 0; i < MONSTER_BLOW_MAX; i++)
+	{
+		/* Extract information about the blow effect */
+		int effect = r_ptr->blow[i].effect;
+		if ((effect == RBE_EAT_GOLD) || (effect == RBE_EAT_ITEM))
+		{
+			smoke_prob += 20;
+		}
+	}
+
+	if ((one_in_(MAX(40 - smoke_prob, 1))) && (cave_floor_bold(oy,ox)))	
+	{
+		/* -KN- also leave some temporary smoke */
+		cave_set_feat(oy, ox, FEAT_SMOKE_X);
+	}
 
 	/* Clear the cave_temp flag (the "project()" code may have set it). */
 	cave_info[ny][nx] &= ~(CAVE_TEMP);
