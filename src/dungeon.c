@@ -1728,18 +1728,19 @@ static void process_world(void)
 				if (!in_bounds_fully(y, x)) continue;
 				if (!los(p_ptr->py, p_ptr->px, y, x)) continue;
 				
-				rr = rand_int(100);				
+				/* (IDEA) call in STEALTH check to reduce danger */
+				rr = rand_int(255);				
 				
-				if ((cave_feat[y][x] == FEAT_WEB) && (rr < 2))
+				if ((cave_feat[y][x] == FEAT_WEB) && (rr < 3))
 				{
-					// being nearby webs can provoke a spider to climb down
+					// being nearby webs can (in rare cases) provoke a spider to climb down
 					if (summon_specific(y, x, FALSE, p_ptr->depth - 1, SUMMON_SPIDER, 0))
 					{
 						message_format(MSG_UMBER, 20, "You hear scuttling from above...");
 					}					
 				}
 				
-				if ((cave_feat[y][x] == FEAT_PIT1) && (rr < 10))
+				if ((cave_feat[y][x] == FEAT_PIT1) && (rr < 12))
 				{
 					// being nearby some pits can provoke a demon to climb up
 					if (summon_specific(y, x, FALSE, p_ptr->depth - 1, SUMMON_DEMON, 0))
@@ -1748,7 +1749,7 @@ static void process_world(void)
 					}					
 				}
 				
-				if ((cave_mark[y][x] & (MARK_SMOKE)) && (rr < 30))
+				if ((cave_mark[y][x] & (MARK_SMOKE)) && (rr < 60))
 				{
 					if (f_info[cave_feat[y][x]].flags & (TF_LOS) &&
 					   (cave_info[y][x] & (CAVE_LOS)))
@@ -1769,7 +1770,7 @@ static void process_world(void)
 						cave_info[y][x] |= (CAVE_LOS);
 					}
 					
-					if ((cave_feat[y][x] == FEAT_SMOKE_X) && (rr < 10))
+					if ((cave_feat[y][x] == FEAT_SMOKE_X) && (rr < 21))
 					{
 						// dissipate the smoke if it's temporal one
 						cave_info[y][x] |= (CAVE_LOS);
@@ -1783,7 +1784,7 @@ static void process_world(void)
 					/* (IDEA) collapse should be triggered by LARGE creatures and certain AOE effects */
 					if (cave_floor_bold(y, x))
 					{
-						if (rr < 10)
+						if (rr < 15)
 						{
 							message_format(MSG_UMBER, 10, "A floor nearby had just collapsed!");
 							cave_set_feat(y, x, FEAT_PIT0);
@@ -1791,7 +1792,7 @@ static void process_world(void)
 					}
 					else if (cave_wall_bold(y, x))
 					{
-						if (rr < 5)
+						if (rr < 6)
 						{
 							message_format(MSG_UMBER, 10, "A wall close by had just collapsed!");
 							cave_set_feat(y, x, FEAT_RUBBLE);

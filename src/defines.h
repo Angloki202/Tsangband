@@ -1244,17 +1244,16 @@
 #define FEAT_LAVA          10
 #define FEAT_WATER         11
 #define FEAT_TREE          12
-/* -KN- added web */
+/* -KN- added web, pits, abyss & bones */
+/* -KN- added more special floors, along with _MI minor and _MA major furniture */
 #define FEAT_WEB           13
-/* -KN- added pits & bones */
 #define FEAT_PIT0          14
 #define FEAT_PIT1          15
 #define FEAT_ABYSS         16
 #define FEAT_BONEPILE      17
 #define FEAT_FLOOR_B       18
-
-
-/* -KN- added deep floors */
+#define FEAT_FLOOR_MI      19
+#define FEAT_FLOOR_MA      20
 #define FEAT_FLOOR4        21
 #define FEAT_FLOOR5        22
 #define FEAT_FLOOR6        23
@@ -2980,8 +2979,8 @@
 #define HELP_BIRTH_GENDER          10
 #define HELP_BIRTH_RACE            11
 #define HELP_BIRTH_CLASS           12  /* Not used in Sangband */
-#define HELP_BIRTH_XTRA1           13  /* Not used yet */
-#define HELP_BIRTH_XTRA2           14  /* Not used yet */
+#define HELP_BIRTH_XTRA1           13  /* Not used yet (IDEA potential) */
+#define HELP_BIRTH_XTRA2           14  /* Not used yet (IDEA potential)*/
 
 #define HELP_STAT_STR              15
 #define HELP_STAT_INT              16
@@ -3205,7 +3204,7 @@
 #define ATTACK_DEADLY      0x8000
 
 
-/* -KN- added advanced quest flags */
+/* -KN- added advanced global quest flags */
 #define QADV_XXXX     	   0x0000		// default FALSE
 #define QADV_CRYPTIC       0x0001		// on CRYPTIC quest
 #define QADV_MYTHIC        0x0002		// on MYTHIC quest
@@ -3225,7 +3224,7 @@
 #define QADV_QUESTBOX      0x8000		// found Quest box (?)
 
 /* -KN- added CRYPTIC rewards flags */
-/* needs reworking... */
+/* (ICI) needs reworking... */
 #define CY_KNOCK     	   0x0001
 #define CY_KNOCK2   	   0x0002
 #define CY_SEE      	   0x0004

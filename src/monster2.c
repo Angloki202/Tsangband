@@ -3970,16 +3970,8 @@ void mon_death_effect(int m_idx)
 	/* Living tornado */
 	else if (m_ptr->r_idx == MON_TORNADO)
 	{
-		int num = randint(7) + 1;
-
 		/* -KN- use fetch_items code */
-		fetch_items(fy, fx, 1, num, 2, rand_range(r_ptr->level / 2, r_ptr->level));
-		
-		/* Drop lots of boulders */
-		//for (i = 0; i < num; i++)
-		//{
-		//	make_boulder(fy, fx, rand_range(r_ptr->level / 2, r_ptr->level));
-		//}
+		fetch_items(fy, fx, 1, randint(6) + 3, 2, 0);
 	}
 
 	/* Morgoth, Lord of Darkness */

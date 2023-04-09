@@ -891,13 +891,13 @@ void teleport_away(int m_idx, int dis, bool require_los)
 		int effect = r_ptr->blow[i].effect;
 		if ((effect == RBE_EAT_GOLD) || (effect == RBE_EAT_ITEM))
 		{
-			smoke_prob += 20;
+			smoke_prob += 3;
 		}
 	}
 
-	if ((one_in_(MAX(40 - smoke_prob, 1))) && (cave_floor_bold(oy,ox)))	
+	if ((one_in_(MAX(5 - smoke_prob, 1))) && (cave_floor_bold(oy,ox)) && (smoke_prob > 2))	
 	{
-		/* -KN- also leave some temporary smoke */
+		/* -KN- also leave some temporary smoke if it was a thief */
 		cave_set_feat(oy, ox, FEAT_SMOKE_X);
 	}
 

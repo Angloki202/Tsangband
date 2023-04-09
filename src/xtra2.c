@@ -4830,6 +4830,12 @@ static int target_set_interactive_aux(int y, int x, int mode, cptr info)
 
 			/* Hack -- handle unknown grids */
 			if (feat == FEAT_NONE) name = "unexplored area";
+			
+			/* -KN- (DESC) adding room-dependent furniture description */
+			if ((feat == FEAT_FLOOR_MI) || (feat == FEAT_FLOOR_MA))
+			{
+				name = describe_random(y, x);
+			}
 
 			/* Pick a prefix */
 			if (*s2 && (feat >= FEAT_DOOR_HEAD)) s2 = "in ";
@@ -4941,6 +4947,69 @@ static int target_set_interactive_aux(int y, int x, int mode, cptr info)
 	return (query);
 }
 
+
+/*
+ * -KN- (DESC) Get the "desc" of furnishing inside a room (used also in search)
+ */
+cptr describe_random(int y, int x)
+{
+	if (cave_feat[y][x] == FEAT_FLOOR_MI)
+	{
+		/* minor debris */
+		switch (cave_desc[y][x])
+		{
+			/* common room contents */
+			case  2: return ("debris in plain room"); break;
+			case  3: return ("debris in interesting room"); break;
+			case  4: return ("debris in smelly room"); break;
+			case  5: return ("debris in suspicious room"); break;
+			case  6: return ("debris in vague room"); break;
+			case  7: return ("debris in room with lower ceiling"); break;
+			case  8: return ("debris in room with arched ceiling"); break;
+			case  9: return ("debris in room with dark corners"); break;
+			case 10: return ("debris in room that smells with blood"); break;
+			case 11: return ("debris in room with uneven floor"); break;
+			case 12: return ("debris in dusty room"); break;
+			case 13: return ("debris in cold room"); break;
+			case 14: return ("debris in stone-carved room"); break;
+			case 15: return ("debris in dirty room, covered in moss"); break;
+			case 16: return ("debris in decorated chamber"); break;
+			case 17: return ("debris in oddly smelling chamber"); break;
+			case 18: return ("debris in chamber with arched hallway"); break;
+			case 19: return ("debris in black chamber"); break;
+		}
+	}
+	else if (cave_feat[y][x] == FEAT_FLOOR_MA)
+	{
+		/* interesting stash */
+		switch (cave_desc[y][x])
+		{
+			/* common room name of the stash */
+			case  2: return ("stash in plain room"); break;
+			case  3: return ("stash in interesting room"); break;
+			case  4: return ("stash in smelly room"); break;
+			case  5: return ("stash in suspicious room"); break;
+			case  6: return ("stash in vague room"); break;
+			case  7: return ("stash in room with lower ceiling"); break;
+			case  8: return ("stash in room with arched ceiling"); break;
+			case  9: return ("stash in room with dark corners"); break;
+			case 10: return ("stash in room that smells with blood"); break;
+			case 11: return ("stash in room with uneven floor"); break;
+			case 12: return ("stash in dusty room"); break;
+			case 13: return ("stash in cold room"); break;
+			case 14: return ("stash in stone-carved room"); break;
+			case 15: return ("stash in dirty room, covered in moss"); break;
+			case 16: return ("stash in decorated chamber"); break;
+			case 17: return ("stash in oddly smelling chamber"); break;
+			case 18: return ("stash in chamber with arched hallway"); break;
+			case 19: return ("stash in black chamber"); break;
+		}
+	}
+	else
+	{
+		return ("unknown sort of debris");
+	}
+}
 
 
 

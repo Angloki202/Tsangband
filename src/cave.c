@@ -834,7 +834,7 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 			}
 		}
 
-		/* Lighting:  no special conditions */
+		/* Lighting: no special conditions */
 		else
 		{
 			/* Normal attr/char */
@@ -857,9 +857,9 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 	if (p_ptr->dungeon_flags & (DUNGEON_HALLS))
 	{
 		/* only modify half of the level if on HALF_VERTI */
-		if (((y > (dungeon_hgt / 2)) && (p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL)))
-			|| ((y > 0) && !(p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL))))
-		{
+		//if (((y > (dungeon_hgt / 2)) && (p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL)))
+		//	|| ((y > 0) && !(p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL))))
+		//{
 			if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
 			{
 				/* infra-seen walls dark */
@@ -910,7 +910,7 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 				/* iron doors */
 				a = 26;
 			}
-		}
+		//}
 	}
 
 	/* -KN- dungeon looks more like real Angband, the Iron Pits */
@@ -1677,19 +1677,17 @@ void lite_effect(int y1, int x1, int col, int rad)
 		for (ii = 0; ii < grids_in_radius[rad]; ii++)
 		{
 			/* skip some for less delay with larger radia */
-			if ((one_in_(3)) && (rad > 1)) continue;
+			if ((one_in_(4)) && (rad > 1)) continue;
 			y = y1 + nearby_grids_y[ii];
 			x = x1 + nearby_grids_x[ii];
 			
 			/* control out of bounds */
-			if (y > dungeon_hgt) y = dungeon_hgt;
-			else if (y < 0) y = 0;
-			if (x > dungeon_wid) x = dungeon_wid;
-			else if (x < 0) y = 0;
+			if (!in_bounds_fully(y, x)) continue;
 			
 			move_cursor_relative(y, x);
 			(void)Term_fresh();
 			
+			/* hold it for a bit */
 			if (rad == 1) pause_for(2);
 			else pause_for(1);
 			
@@ -1700,6 +1698,7 @@ void lite_effect(int y1, int x1, int col, int rad)
 	else
 	{
 		/* with radius 0, flicker 12 times at one spot */
+		/* (IDEA) should be as a "delay flicker" global option */
 		for (ii = 0; ii < 12; ii++)
 		{
 			move_cursor_relative(y1, x1);
@@ -1716,14 +1715,10 @@ void lite_effect(int y1, int x1, int col, int rad)
 		x = x1 + nearby_grids_x[ii];
 		
 		/* control out of bounds */
-		if (y > dungeon_hgt) y = dungeon_hgt;
-		else if (y < 0) y = 0;
-		if (x > dungeon_wid) x = dungeon_wid;
-		else if (x < 0) y = 0;
+		if (!in_bounds_fully(y, x)) continue;
 		
 		move_cursor_relative(y, x);
 		(void)Term_fresh();
-		//pause_for(1);
 		lite_spot(y, x);
 		(void)Term_fresh();
 	}	
@@ -1732,7 +1727,7 @@ void lite_effect(int y1, int x1, int col, int rad)
 }
 
 
-/* -KN- added player-centered bloom effect */
+/* -KN- added player-centered bloom effect with search/testing grid around */
 bool lite_search(int y1, int x1, int col)
 {
 	int x, y;

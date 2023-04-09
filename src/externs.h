@@ -526,6 +526,8 @@ extern void mon_essence(int y, int x, int r_idx);
 extern void obj_essence(int y, int x, const object_type *o_ptr);
 extern void destroy_level(bool new_level);
 extern void generate_cave(void);
+extern void mark_adjacent(int y, int x, int rad, int typ); 					// -KN- added to MARK_ around x, y
+extern bool fetch_items(int y, int x, int d, int num, int typ, int lvl);	// -KN- added foo for quick items
 
 /* history.c */
 extern history_info *history_list;
@@ -708,7 +710,6 @@ extern void apply_random_qualities(object_type *o_ptr);
 extern void apply_magic(object_type *o_ptr, int lev, int okay, bool good, bool great);
 extern bool make_object(object_type *j_ptr, bool good, bool great, bool exact_kind);
 extern void make_specific_tval(int tval, int lev, bool in_pack);
-extern void fetch_items(int y, int x, int d, int num, int typ, int lvl);  // -KN- added foo for quick items
 extern bool make_gold(object_type *o_ptr);
 extern bool make_special_gold(object_type *o_ptr);
 extern int breakage_chance(object_type *o_ptr);
@@ -1277,6 +1278,7 @@ extern bool get_rep_dir(int *dp);
 extern bool confuse_dir(int *dp);
 extern void precog_msg(int precog_msg_idx);
 extern void danger_music_level(bool change_right_now);
+extern cptr describe_random(int y, int x);	/* -KN- foo to get a proper name for furnishing/debris of the room */
 
 
 #ifdef ALLOW_BORG

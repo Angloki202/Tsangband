@@ -144,18 +144,26 @@ F:TF_ROCK | TF_PASSABLE | TF_OBJECT | TF_LOS
 D:A pile of bones.  Some small, some big.  Takes some careful steps to 
 D:walk into.  It can block most projectiles but you can see behind.
 
-## added terrain -KN- scattered bones
+## added terrain -KN- floor with scattered bones
 N:18:bones
 G:.:s
 C:5
 F:TF_LOS | TF_PROJECT | TF_PASSABLE | TF_FLOOR | TF_OBJECT | TF_TRAP
 D:Floor partially covered in bones.
 
-#
-#
-# space for more special terrain here
-#
-#
+## added ('23) -KN- floor with small/minor room-specific furnishing
+N:19:various debris
+G:.:u
+C:10
+F:TF_LOS | TF_PROJECT | TF_PASSABLE | TF_FLOOR | TF_OBJECT | TF_TRAP | TF_DETONATE
+D:Floor is littered by debris and perhaps some interesting stuff.
+
+## added ('23) -KN- floor with more interesting room-specific stash/table etc.
+N:20:container
+G:.:U
+C:15
+F:TF_LOS | TF_PROJECT | TF_PASSABLE | TF_FLOOR | TF_OBJECT | TF_TRAP | TF_INTERESTING | TF_DETONATE
+D:There's a stash of sorts among the broken furniture.
 
 # -KN- added for deeper variety (cracked/melted)
 N:21:open floor
@@ -438,14 +446,14 @@ D:Large orb of foul magic floats above the ground menacingly.
 # added a stone crypt - for quest vaults mainly
 N:69:crypt
 G:*:D
-C:10
+C:20
 F:TF_INTERESTING | TF_NO_SCENT
 D:What hides in this crypt?  Obviously no hero would rest in such a dark place.
 
 # added a monolith - for quest vaults mainly
 N:70:monolith
 G:*:z
-C:10
+C:20
 F:TF_INTERESTING | TF_NO_SCENT
 D:Tall obelisk-like menhir gleams in arcane light rays, coming from above.
 
@@ -453,7 +461,7 @@ D:Tall obelisk-like menhir gleams in arcane light rays, coming from above.
 ## added terrain -KN- corpse pile not-implemented
 N:72:corpse pile
 G:::r
-C:20
+C:10
 F:TF_ROCK | TF_PASSABLE | TF_OBJECT | TF_LOS
 D:A pile of hacked creatures.  They have no crypto.
 
@@ -466,7 +474,7 @@ D:A pile of hacked creatures.  They have no crypto.
 ## added terrain -KN-
 N:74:heavy smoke
 G:+:W
-C:15
+C:10
 F:TF_PASSABLE | TF_OBJECT | TF_TRAP | TF_LOS | TF_PROJECT | TF_FLOOR | TF_NO_SCENT
 D:Thick layer of heavy smoke.
 

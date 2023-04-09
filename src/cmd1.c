@@ -306,6 +306,7 @@ void do_cmd_search(void)
 	if (lite_search(p_ptr->py, p_ptr->px, 6))
 	{
 		/* -KN- all the interesting stuff happens inside the lite_search */
+		/* on TRUE player has found some clues, dunno if I want to expand on that */
 	}
 
 	/* Search */
@@ -319,6 +320,45 @@ void do_cmd_search(void)
 		{
 			//message(MSG_GREEN, 0, "Room desc = ");
 			printf("room: %d \n", cave_mark[p_ptr->py][p_ptr->px]);
+		}
+		
+		/* and if standing on furniture/debris, give the description */
+		if ((cave_feat[p_ptr->py][p_ptr->px] == FEAT_FLOOR_MI) || 
+			(cave_feat[p_ptr->py][p_ptr->px] == FEAT_FLOOR_MA))
+		{
+			cptr name = "debris";
+			name = describe_random(p_ptr->py, p_ptr->px);
+			message(MSG_YELLOW, 10, format("You observe %s.", name));
+			
+			/* roll on perception, room determines results */
+			int room = ((cave_desc[p_ptr->py][p_ptr->px]) / 20) + 1;
+			printf("room type id: %d \n", room);
+			
+			switch (room)
+			{
+				case 1:
+				{
+					/* common rooms */
+					if (get_skill(S_PERCEPTION, 0, 100) > rand_int(100))
+					{
+						/* testing */
+						if (fetch_items(p_ptr->py, p_ptr->px, 1, 1, 1, -2))
+						{
+							message(MSG_YELLOW, 15, format("And found a tresure!"));
+						}
+					}
+					break;
+				}
+				default:
+				{
+					/* unwritten yet */
+					if (fetch_items(p_ptr->py, p_ptr->px, 1, 2, 2, -2))
+					{
+						message(MSG_YELLOW, 15, format("And found a ball!"));
+					}
+					break;
+				}
+			}
 		}
 		
 		describe_room(cave_desc[p_ptr->py][p_ptr->px]);
