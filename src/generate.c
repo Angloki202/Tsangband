@@ -34,8 +34,9 @@
 
 /*
  * Option to allow unlimited pits, vaults, and huge rooms (debug mode)
+ * -KN- (ICI)
  */
-#define UNLIMITED_SPECIAL_ROOMS   FALSE
+#define UNLIMITED_SPECIAL_ROOMS   TRUE
 
 /*
  * Dungeon generation values	 -KN- DUM_ROOMS from 30 to 32
@@ -2478,6 +2479,7 @@ static bool generate_pool(int y1, int x1, int y2, int x2, int feat)
 		y0 + height / 2, x0 + width / 2, FALSE, feat, FALSE));
 }
 
+
 /*
  * -KN- terrain feature groups - 'wells'
  */
@@ -2667,7 +2669,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 			floor_plus = FEAT_RUBBLE;
 		}
 
-		/* save minor rooms */
+		/* save minor room */
 		if((dun->minor_n) < MINOR_MAX)
 		{
 			/* coordinates in the middle of the room */
@@ -2682,6 +2684,9 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 
 		/* increasing chance for advanced features */
 		if (one_in_(15 - div_round(p_ptr->depth, 8))) advanced = TRUE;
+		
+		/* (FIX) do not use MIN/MAX in those cases, is malfunctioning */
+		//MIN(5 - div_round(p_ptr->depth, 18), 2)
 
 		/* ever-raising chance for more varied and dangerous themes */
 		if (one_in_(MIN(5 - div_round(p_ptr->depth, 18), 2)))
@@ -2697,7 +2702,6 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 			/* still testing (ICI), want to see advanced rooms 1/3 of the time */
 			if (one_in_(3)) advanced = TRUE;
 			else advanced = FALSE;
-
 
 
 			if ((zz == 2) || (zz == 3))
@@ -2766,8 +2770,9 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 		else
 		{
 			/* (DESC) general random range of variance */
-			/* 0 == corridor/wall, 1 == reserved */
+			/* 0 == corridor/wall, 1 == reserved, 12 to 19 is slightly more rare among the common rooms */
 			desc = rand_range(2, 19);
+			if ((desc > 11) && (one_in_(2))) (desc = desc - 10);
 			zz = 1;
 		}
 	}
@@ -2794,10 +2799,6 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 
 					/* or the original floor */
 					else feat = FEAT_FLOOR;
-					
-					/* (TESTING) add some furniture */
-					if (rr % 40 == 0) feat = FEAT_FLOOR_MA;
-					else if (rr % 24 == 0) feat = FEAT_FLOOR_MI;
 					
 					break;
 				}
@@ -2961,8 +2962,12 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 						else if (rr % 40 == 0) feat = FEAT_WEB;
 					}
 
-					/* and make some parts unstable */
-					if (one_in_(40)) cave_mark[y][x] |= (MARK_BROKEN);
+					/* and make some consecutive parts unstable */
+					if (one_in_(40))
+					{
+						mark_adjacent(y, x, 2, 2);
+						//cave_mark[y][x] |= (MARK_BROKEN);
+					}
 
 					/* place rubble around walls */
 					if ((advanced == TRUE) || ((zz == 5) && (p_ptr->depth > 45)))
@@ -3398,7 +3403,7 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 					else feat = FEAT_FLOOR;
 
 					/*	(experimental) (IDEA) ? */
-					if (one_in_(30)) cave_info[y][x] |= (CAVE_HIDD);
+					//if (one_in_(30)) cave_info[y][x] |= (CAVE_HIDD);
 
 					if (p_ptr->depth > 60)
 					{
@@ -3953,12 +3958,31 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 							else feat = FEAT_SMOKE;
 						}
 					}
-					
-					break;					
+					break;
+				}
+				case 22:
+				case 23:
+				{
+					/* --- ARCHIVES ROOM --- */
+					break;
+				}
+				case 24:
+				case 25:
+				{
+					/* --- STORAGE ROOM --- */
+					break;
+				}
+				case 26:
+				case 27:
+				{
+					/* --- CAGED ROOM --- */
+					break;
 				}
 				default:
 				{
+					printf("%d|", feat);
 					/* empty */
+					break;
 				}
 			}
 
@@ -3968,23 +3992,27 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 				if (one_in_(22 - div_round(p_ptr->depth, 5))) feat = FEAT_PIT1;
 			}
 
+			if (feat == FEAT_FLOOR)
+			{
+				/* (TESTING) add some furniture */
+				if (rr % 20 == 0) feat = FEAT_FLOOR_MA;
+				else if (rr % 50 == 0) feat = FEAT_FLOOR_MI;
+				else if (rr % 9 == 0) feat = FEAT_TREE;
+			}
+
 			/* draw the fill with variance */
 			cave_set_feat(y, x, feat);
 			
-			/* (DESC) all the tiles have the same room description */
-			cave_desc[y][x] = desc;
+			/* (DESC) all the non-wall tiles have the same room description */
+			if (!(cave_wall_bold(y, x))) cave_desc[y][x] = desc;
 			
 			/* (IDEA) use FLAGS to distribute description "drivers" */
 			/* zz and size can drive some new mark FLAGS */
 			
 			//cave_mark[y][x] |= (MARK_SEEN);
-			
-			
-			
-			
-			
+
 			/* (testing) */
-			//if ((zz == 2) || (zz == 3)) cave_mark[y][x] |= (MARK_0002);
+			//if ((zz == 2) || (zz == 3)) cave_mark[y][x] |= (MARK_SEARCHED);
 			//if ((zz == 4) || (zz == 5)) cave_mark[y][x] |= (MARK_0004);
 			
 			
@@ -4001,7 +4029,8 @@ static void generate_fill(int y1, int x1, int y2, int x2, int feat)
 		}
 	}
 	
-	printf("\n R O O M %d ========== desc. %d \n", dun->minor_n - 1, desc);
+	if (desc == 0) printf("something's ZERO y%d to %d || x%d to %d \n", y1, y2, x1, x2);
+	printf("R O O M %d ========== desc. %d \n\n", dun->minor_n - 1, desc);
 }
 
 
@@ -4377,9 +4406,8 @@ static void build_seam(int feat, int chance)
 
 
 /* Convert a maze coordinate into a dungeon coordinate */
-#define YPOS(y, y1)		((y1) + (y) * 2 + 1)
-#define XPOS(x, x1)		((x1) + (x) * 2 + 1)
-
+#define YPOS(y, y1) ((y1) + (y) * 2 + 1)
+#define XPOS(x, x1) ((x1) + (x) * 2 + 1)
 
 /*
  * Build an acyclic maze inside a given rectangle.  - Eric Bock -
@@ -4389,9 +4417,9 @@ static void build_seam(int feat, int chance)
  *
  * THIS FUNCTION IS AVAILABLE ONLY UNDER THE MORIA LICENSE.
  */
-static void draw_maze(int y1, int x1, int y2, int x2, byte feat_wall,
-    byte feat_path)
+static void draw_maze(int y1, int x1, int y2, int x2, byte feat_wall, byte feat_path)
 {
+	printf(".r1maze___________________corrected__||");
 	int i, j;
 	int ydim, xdim;
 	int grids;
@@ -4429,6 +4457,8 @@ static void draw_maze(int y1, int x1, int y2, int x2, byte feat_wall,
 			/* Pick a target */
 			ty = rand_int(ydim);
 			tx = rand_int(xdim);
+
+			printf("||%d||", grids);
 
 			while (TRUE)
 			{
@@ -4483,7 +4513,7 @@ static void draw_maze(int y1, int x1, int y2, int x2, byte feat_wall,
 
 				/* One less grid to examine */
 				grids--;
-
+				
 				/* Check for completion */
 				if ((y == ty) && (x == tx)) break;
 			}
@@ -4506,6 +4536,7 @@ static void draw_maze(int y1, int x1, int y2, int x2, byte feat_wall,
  */
 static bool build_type1_starburst(bool light, int feat)
 {
+	printf(".r1star||");
 	int y0, x0, y1, x1, y2, x2;
 	int i;
 	int height, width;
@@ -4625,6 +4656,7 @@ static void set_feat_room(int y, int x, int feat)
  */
 static bool build_type1_pillars(bool light)
 {
+	printf(".r1pillar||");
 	int y, x, dy, dx, y0, x0, y1, x1, y2, x2;
 	int y_num, x_num;
 
@@ -4726,8 +4758,8 @@ static bool build_type1_pillars(bool light)
 	/* Generate outer walls */
 	generate_draw(y1, x1, y2, x2, FEAT_WALL_OUTER);
 
-	/* Make a standard room */
-	generate_fill(y1+1, x1+1, y2-1, x2-1, FEAT_FLOOR);
+	/* Make a standard room (deviate floor to FLOOR5) */
+	generate_fill(y1+1, x1+1, y2-1, x2-1, FEAT_FLOOR5);
 
 
 	/*** Fill room ***/
@@ -4793,6 +4825,8 @@ static bool build_type1_pillars(bool light)
 		{
 			for (x = x1+2; x <= x2-2; x++)
 			{
+				/* -KN- (IDEA) can change into other terrain */
+				
 				/* This is a pillar */
 				if (cave_feat[y][x] == FEAT_PILLAR)
 				{
@@ -4808,7 +4842,7 @@ static bool build_type1_pillars(bool light)
 	if (!vaulted)
 	{
 		/* Fill with floor  XXX XXX */
-		generate_fill(y1+2, x1+2, y2-2, x2-2, FEAT_FLOOR);
+		generate_fill(y1+2, x1+2, y2-2, x2-2, FEAT_FLOOR5);
 	}
 
 	/* Success */
@@ -4824,6 +4858,7 @@ static bool build_type1_pillars(bool light)
  */
 static bool build_type1(void)
 {
+	printf(".r1||");
 	int height, width, choice;
 
 	int y, x, y0, x0, y1, x1, y2, x2;
@@ -4872,7 +4907,7 @@ static bool build_type1(void)
 	/* Generate outer walls */
 	generate_draw(y1-1, x1-1, y2+1, x2+1, FEAT_WALL_OUTER);
 
-	/* Make a standard room. */
+	/* Make a standard room: -KN- subject to interesting / advanced room */
 	generate_fill(y1, x1, y2, x2, FEAT_FLOOR);
 
 	/* Sometimes, we get creative. */
@@ -5138,6 +5173,7 @@ static bool build_type1(void)
  */
 static bool build_type2(void)
 {
+	printf(".r2double||");
 	int y1a, x1a, y2a, x2a;
 	int y1b, x1b, y2b, x2b;
 	int y0, x0;
@@ -5291,6 +5327,7 @@ static bool build_type2(void)
  */
 static bool build_type3(void)
 {
+	printf(".r3cross||");
 	int y, x;
 	int y0, x0;
 	int height, width;
@@ -5483,6 +5520,7 @@ static bool build_type3(void)
  */
 static bool build_type4(void)
 {
+	printf(".r4various||");
 	int y, x, y1, x1, y2, x2, e_y, e_x;
 	int y0, x0;
 
@@ -5521,11 +5559,11 @@ static bool build_type4(void)
 	generate_draw(y1-1, x1-1, y2+1, x2+1, FEAT_WALL_OUTER);
 
 	/* Generate floors */
-	generate_fill(y1, x1, y2, x2, FEAT_FLOOR);
+	generate_fill(y1, x1, y2, x2, FEAT_FLOOR5);
 
 
 	/* Usually, but not always, have an inner room */
-	if (!one_in_(5))
+	if (!one_in_(4))
 	{
 		/* Note presence of inner room */
 		inner = TRUE;
@@ -5670,9 +5708,9 @@ static bool build_type4(void)
 				/* Maze is in an inner room */
 				if (inner)
 				{
-					/* Draw maze */
+					/* Draw maze; -KN- cannot be basic FLOOR as it is replaced based on depth */
 					draw_maze(y1 - 1, x1 - 1, y2 + 1, x2 + 1,
-						FEAT_WALL_INNER, FEAT_FLOOR);
+						FEAT_WALL_INNER, FEAT_FLOOR_B);
 
 					/* Place a secret door (vertical) */
 					if (one_in_(2))
@@ -5692,9 +5730,9 @@ static bool build_type4(void)
 				/* Maze occupies the entire room */
 				else
 				{
-					/* Draw maze (use outer walls) */
+					/* Draw maze; -KN- cannot be basic FLOOR as that is replaced based on depth */
 					draw_maze(y1 - 1, x1 - 1, y2 + 1, x2 + 1,
-						FEAT_WALL_OUTER, FEAT_FLOOR);
+						FEAT_WALL_OUTER, FEAT_FLOOR_B);
 
 					/* Change most of the maze walls to inner walls */
 					for (y = y1; y <= y2; y++)
@@ -5810,6 +5848,7 @@ static bool build_type4(void)
  */
 static bool build_type5(void)
 {
+	printf(".r5pit||");
 	int y, x, y0, x0, y1, x1, y2, x2;
 	int i, j;
 	int depth;
@@ -5851,8 +5890,8 @@ static bool build_type5(void)
 	/* Generate outer walls */
 	generate_draw(y1-1, x1-1, y2+1, x2+1, FEAT_WALL_OUTER);
 
-	/* Generate inner floors */
-	generate_fill(y1, x1, y2, x2, FEAT_FLOOR);
+	/* Generate inner floors: -KN- make it always look bone-covered */
+	generate_fill(y1, x1, y2, x2, FEAT_FLOOR_B);
 
 	/* Advance to the center room */
 	y1 = y1 + 2;
@@ -6083,6 +6122,7 @@ static bool build_type5(void)
  */
 static void make_chamber(int c_y1, int c_x1, int c_y2, int c_x2)
 {
+	printf(".r6ch||");
 	int i, d, y, x;
 	int count;
 
@@ -6250,6 +6290,7 @@ static void hollow_out_room(int y, int x)
  */
 static bool build_type6(void)
 {
+	printf(".r6||");
 	int i;
 	int size_mod = 0;
 	int d;
@@ -6262,6 +6303,10 @@ static bool build_type6(void)
 	int y0, x0, y1, x1, y2, x2;
 
 	bool dummy;
+
+
+	printf("................type 6.............");
+	
 
 	/* Monster generation variables. */
 	s16b monsters_left, depth;
@@ -6629,6 +6674,10 @@ static bool build_type6(void)
 	else if (can_precog(100, LEV_REQ_PRECOG))
 		precog_msg(PRECOG_GEN_COMMUNITY);
 
+	else
+	{
+		printf("..........room 6 alright.........(%s)", name);
+	}
 
 	/* Success */
 	return (TRUE);
@@ -9851,7 +9900,7 @@ static void cave_gen(void)
 					/* mark area as unstable */
 					if (one_in_(35))
 					{
-						if (one_in_(4)) mark_adjacent(y, x, 3, 2);
+						if (one_in_(3)) mark_adjacent(y, x, 3, 2);
 						else mark_adjacent(y, x, 2, 2);
 					}
 					
@@ -10163,7 +10212,7 @@ static void cave_gen(void)
 	/* -KN- minor room extras */
 	for (mm = 0; mm < (dun->minor_n); mm++)
 	{
-		/* at L1 and sometimes deeper, skip the extras */
+		/* at L1 and sometimes deeper, skip the extras (ICI) */
 		if ((one_in_(4)) || (p_ptr->depth < 2))
 		{
 			continue;
@@ -11584,7 +11633,8 @@ void mark_adjacent(int y, int x, int rad, int typ)
 
 
 /* -KN- easy & quick item-placement */
-/* 		changed into bool to only find item when it is created */
+/* 		changed into bool to tell us, whether an item was placed */
+/*		(FIX) not working properly */
 bool fetch_items(int y, int x, int d, int num, int typ, int lvl)
 {
 	/* add "j" to discern if at least 1 item is generate */
@@ -11593,6 +11643,13 @@ bool fetch_items(int y, int x, int d, int num, int typ, int lvl)
 	int j; 
 	int rr;
 
+
+	printf("room REWARD id: dist=%d | num=%d | type=%d | lvl=%d\n", d, num, typ, lvl);
+
+
+
+	/* prevent pre-town level crash */
+	if (lvl < 0) lvl = 0;
 	j = 0;
 	bool looking = TRUE;
 
@@ -11609,16 +11666,26 @@ bool fetch_items(int y, int x, int d, int num, int typ, int lvl)
 		{
 			/* count for limited time
 			/* with d=0 it tries once to allocate to x/y */
-			/* with d=1 it tries on 4 spaces around x/y */
+			/* with d=1 it tries on 4 spaces around, d=2 is 9, d=3 is 16, etc. */
+			/* 1st run will try the x/y spot itself */
 			//i++;
 			++i;
 
+			printf("i=%d|", i);
 			/* fail the allocation */
 			if (i > ((d + 1) * (d + 1))) looking = FALSE;
 
 			/* new location */
-			x = rand_spread(x, d);
-			y = rand_spread(y, d);
+			if (i == 1)
+			{
+				x = x;
+				y = y;
+			}
+			else
+			{
+				x = rand_spread(x, d);
+				y = rand_spread(y, d);
+			}
 
 			/* Grid must be able to hold objects */
 			if (!cave_allow_object_bold(y, x)) continue;
@@ -11764,7 +11831,7 @@ bool fetch_items(int y, int x, int d, int num, int typ, int lvl)
 			}
 			case 15:
 			{
-				/* ---- DEBRIS (atm green stuff) ---- */
+				/* ---- rare DEBRIS ---- */
 				if (lvl == 0)
 				{
 					/* it is possible to find clues for the hidden lair by chance */
@@ -11772,6 +11839,15 @@ bool fetch_items(int y, int x, int d, int num, int typ, int lvl)
 					else make_debris(y, x, 0);
 				}
 				else make_debris(y, x, 1);
+				break;
+			}
+			case 16:
+			{
+				/* ---- regular JUNK and similar ---- */
+				/* -KN- check to see fails (FIX) not showing at all! */
+				printf("room REWARD?: y=%d | x=%d | py=%d | px=%d\n", y, x, p_ptr->py, p_ptr->px);
+				
+				make_debris(y, x, -1);
 				break;
 			}
 		}

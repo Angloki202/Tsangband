@@ -4953,24 +4953,72 @@ static int target_set_interactive_aux(int y, int x, int mode, cptr info)
  */
 cptr describe_random(int y, int x)
 {
+	int d = cave_desc[y][x];
+	
 	if (cave_feat[y][x] == FEAT_FLOOR_MI)
 	{
 		/* minor debris */
-		switch (cave_desc[y][x])
+		switch (d)
 		{
 			/* common room contents */
-			case  2: return ("debris in plain room"); break;
-			case  3: return ("debris in interesting room"); break;
-			case  4: return ("debris in smelly room"); break;
-			case  5: return ("debris in suspicious room"); break;
-			case  6: return ("debris in vague room"); break;
-			case  7: return ("debris in room with lower ceiling"); break;
-			case  8: return ("debris in room with arched ceiling"); break;
-			case  9: return ("debris in room with dark corners"); break;
-			case 10: return ("debris in room that smells with blood"); break;
-			case 11: return ("debris in room with uneven floor"); break;
-			case 12: return ("debris in dusty room"); break;
-			case 13: return ("debris in cold room"); break;
+			case  2:
+			case  3:
+			case  4:
+			case  5:
+			case  6:
+			case  7:
+			case  8:
+			case  9:
+			{
+				/* non-advanced rooms shuffle content driven by x/y */
+				if ((d == 3) && (x % 2 == 0)) 			return ("a small pile of broken glass and debris");
+				else if (d == 3) 						return ("a very dirty empty bottle");
+				else if ((d == 4) && (x % 2 == 0)) 		return ("rotten and funky rodent nests");
+				else if (d == 4) 						return ("rotting flesh wrapped in some old rags");
+				else if ((d == 9) && (x % 2 == 0))		return ("a small hole, leading to dark burrow");
+				else if (d == 9) 						return ("several little holes that emmit clicking sounds");
+				else if ((x % 2 == 0) && (y % 2 == 0))	return ("broken glass and dirt");
+				else if ((x % 2 == 1) && (y % 2 == 1))	return ("irregular footprints among debris");				
+				else if ((x % 2 == 0) && (y % 2 == 1))	return ("debris and broken table");
+				else if ((x % 2 == 1) && (y % 2 == 0))	return ("small piles of rodent crap");
+				break;
+			}
+			case 10:
+			{
+				/* room that smells of blood */
+				if ((x % 2 == 0) && (y % 2 == 0))		return ("remains of a rotting carcass");
+				else if ((x % 2 == 1) && (y % 2 == 1))	return ("a small puddle of orcish blood");
+				else if ((x % 2 == 0) && (y % 2 == 1))	return ("dried up blood stains");
+				else if ((x % 2 == 1) && (y % 2 == 0))	return ("a little pile of bloody offering");
+				break;
+			}
+			case 11:
+			{
+				/* room with uneven floor */
+				if ((x % 2 == 0) && (y % 2 == 0))		return ("a small ditch with mud");
+				else if ((x % 2 == 1) && (y % 2 == 1))	return ("a broken floor tile");
+				else if ((x % 2 == 0) && (y % 2 == 1))	return ("cracked stone tiles");
+				else if ((x % 2 == 1) && (y % 2 == 0))	return ("a rough natural stone slab");
+				break;
+			}
+			case 12:
+			{
+				/* dusty room */
+				if ((x % 2 == 0) && (y % 2 == 0))		return ("a mound of dirt and debris");
+				else if ((x % 2 == 1) && (y % 2 == 1))	return ("a trail of slimy residue");
+				else if ((x % 2 == 0) && (y % 2 == 1))	return ("a dusty, torn-down tapestry depicting a grand battle");
+				else if ((x % 2 == 1) && (y % 2 == 0))	return ("a pile of dirty rags and tatters");
+				break;
+			}
+			case 13:
+			{
+				/* cold room */
+				if ((x % 2 == 0) && (y % 2 == 0))		return ("a moldy pile of debris");
+				else if ((x % 2 == 1) && (y % 2 == 1))	return ("a floor section with bestial scratches and marks");
+				else if ((x % 2 == 0) && (y % 2 == 1))	return ("torn-down drapes and rags");
+				else if ((x % 2 == 1) && (y % 2 == 0))	return ("a glittering layer of ice in small crevices");
+				break;
+			}
 			case 14: return ("debris in stone-carved room"); break;
 			case 15: return ("debris in dirty room, covered in moss"); break;
 			case 16: return ("debris in decorated chamber"); break;
@@ -4982,10 +5030,14 @@ cptr describe_random(int y, int x)
 	else if (cave_feat[y][x] == FEAT_FLOOR_MA)
 	{
 		/* interesting stash */
-		switch (cave_desc[y][x])
+		switch (d)
 		{
 			/* common room name of the stash */
-			case  2: return ("stash in plain room"); break;
+			case  2:
+			{
+				if ((x + y) % 2 == 0) return ("a sturdy wooden table with a mix of rubble and rubbish on the desk");
+				else 				  return ("a mound of dirt and debris with a faint odor of decay"); break;
+			}
 			case  3: return ("stash in interesting room"); break;
 			case  4: return ("stash in smelly room"); break;
 			case  5: return ("stash in suspicious room"); break;
@@ -4995,20 +5047,27 @@ cptr describe_random(int y, int x)
 			case  9: return ("stash in room with dark corners"); break;
 			case 10: return ("stash in room that smells with blood"); break;
 			case 11: return ("stash in room with uneven floor"); break;
-			case 12: return ("stash in dusty room"); break;
+			case 12:
+			{
+				if ((x + y) % 2 == 0) return ("a broken bookshelf with piles of yellowed parchments around");
+				else 				  return ("a dusty crate filled with old scrolls and maps"); break;
+			}
 			case 13: return ("stash in cold room"); break;
 			case 14: return ("stash in stone-carved room"); break;
 			case 15: return ("stash in dirty room, covered in moss"); break;
 			case 16: return ("stash in decorated chamber"); break;
 			case 17: return ("stash in oddly smelling chamber"); break;
 			case 18: return ("stash in chamber with arched hallway"); break;
-			case 19: return ("stash in black chamber"); break;
+			case 19:
+			{
+				if ((x + y) % 2 == 0) return ("a circle of charred bones arranged in a strange pattern");
+				else 				  return ("a pile of blackened bones, with the smell of sulfur in the air"); break;
+			}
 		}
 	}
-	else
-	{
-		return ("unknown sort of debris");
-	}
+	
+	/* all the cases should be covered in the end, but still... */
+	return ("unidentifiable pile of debris");
 }
 
 

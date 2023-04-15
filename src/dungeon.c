@@ -733,7 +733,7 @@ static void process_world(void)
 	object_kind *k_ptr;
 
 
-	/* Every 10 game turns */
+	/* Every 10 game turns (one classic 110 move = 10 turns; thus check only on every 10th) */
 	if (turn % 10) return;
 
 #ifdef ALLOW_BORG
@@ -1696,22 +1696,22 @@ static void process_world(void)
 			etc. ... */
 	//if ((cave_feat[y][x] == FEAT_WEB)
 	
-	/* check around every 4 game turns and on each 12th turn, check in greater radius */
-	if (!(turn % 4))
+	/* check around every 4 full turns and on each 12th turn, check in greater radius */
+	if (!(turn % 40))
 	{
 		// define max scanning reach
 		x2 = 4;
 		y2 = 4;
 		x1 = -4;
 		y1 = -4;
-		if (!(turn % 8))
+		if (!(turn % 80))
 		{
 			x2 = 7;
 			y2 = 7;
 			x1 = -7;
 			y1 = -7;
 		}
-		if (!(turn % 12))
+		if (!(turn % 120))
 		{
 			x2 = 9;
 			y2 = 9;
@@ -1737,6 +1737,15 @@ static void process_world(void)
 					if (summon_specific(y, x, FALSE, p_ptr->depth - 1, SUMMON_SPIDER, 0))
 					{
 						message_format(MSG_UMBER, 20, "You hear scuttling from above...");
+					}					
+				}
+				
+				if ((cave_feat[y][x] == FEAT_CAULDRON_X) && (rr < 6))
+				{
+					// being near the full cauldron can make a worm crawl out of that (IDEA) make SUMMON_WORM
+					if (summon_specific(y, x, FALSE, p_ptr->depth - 1, SUMMON_ANT, 0))
+					{
+						message_format(MSG_UMBER, 20, "You hear something crawling around...");
 					}					
 				}
 				
@@ -1790,10 +1799,11 @@ static void process_world(void)
 							cave_set_feat(y, x, FEAT_PIT0);
 						}
 					}
-					else if (cave_wall_bold(y, x))
+					else if ((cave_wall_bold(y, x)) && !(cave_perma_bold(y, x)))
 					{
 						if (rr < 6)
 						{
+							/* collapse wall, but not the permanent one */
 							message_format(MSG_UMBER, 10, "A wall close by had just collapsed!");
 							cave_set_feat(y, x, FEAT_RUBBLE);
 						}

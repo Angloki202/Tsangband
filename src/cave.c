@@ -1721,9 +1721,7 @@ void lite_effect(int y1, int x1, int col, int rad)
 		(void)Term_fresh();
 		lite_spot(y, x);
 		(void)Term_fresh();
-	}	
-	
-	// can add later ___ return (FALSE);
+	}
 }
 
 

@@ -21,10 +21,9 @@ V:1.0.2
 
 #
 # N: object index: name
-# G: ASCII char used to display the object: color symbol : pval
-# I: object tval (general kind): object sval (specific type)
-# W: object level : activation: 
-#      weight (in deci-pounds): value
+# G: ASCII char used to display the object: color symbol
+# I: object tval (general kind): object sval (specific type): pval
+# W: object level: activation: weight (in deci-pounds): value
 # M: probability (%) of object appearing in quantity, die roll for number
 # A: All depths/abundances of the item (max of three pairs possible)
 # C: Base armor class: damage done when wielded or thrown: 
@@ -4589,30 +4588,22 @@ C:0:2d5:0:0:0
 M:100:1d5
 D:Fuel for lamps.
 
+
 ## XXX 630 XXX ##
-
-## XXX 631 XXX ##
-
-## XXX 632 XXX ##
-
-## XXX 633 XXX ##
-
-## XXX 634 XXX ##
-
-## XXX 635 XXX ##
 
 
 ##### Junk #####
 
-N:636:& shard~ of pottery
+N:631:& shard~ of pottery
 G:`:r
 I:2:1:0
 W:0:0:5:0
-A:0/50:10/0
+M:25:1d3
+A:0/50:15/2
 C:0:1d1:0:0:0
 D:A fragment of an old jug.  You think you catch a wiff of spoiled wine.
 
-N:637:& broken stick~
+N:632:& broken stick~
 G:`:U
 I:2:2:0
 W:0:0:3:0
@@ -4622,7 +4613,7 @@ D:Perhaps it was once a staff or served as handle to the axe of a hero.
 D:Now, it's kindling.
 
 # Boulders have special code that controls weight and damage
-N:638:& boulder~
+N:633:& boulder~
 G:#:s
 I:2:3:0
 W:0:0:5:0
@@ -4631,7 +4622,7 @@ C:0:1d1:0:0:0
 D:A large rock.  The heavier it is, the greater the damage it does when 
 D:thrown.
 
-N:639:& Blanket~
+N:634:& Blanket~
 G:~:D
 I:2:4:0
 W:35:0:20:500
@@ -4640,8 +4631,57 @@ C:0:1d1:0:0:0
 D:A large sheet of magical fabric that grants protection to everything in your 
 D:backpack until it is destroyed.
 
-## XXX 640 XXX ##
+# -KN- added
+N:635:& small carved figurine~
+G:`:w
+I:2:5:0
+W:0:0:4:1
+A:0/25:30/5
+C:0:1d1:0:0:0
+D:A small toy or an idol made of bone and wood.
 
+# -KN- added
+N:636:& set~ of rusty keys
+G:`:B
+I:2:6:0
+W:0:0:2:0
+A:0/15:40/10:60/5
+C:0:1d1:0:0:0
+D:Number of broken or rusty keys on large metal ring.
+
+# -KN- added
+N:637:& piece~ of sharpened obsidian
+G:`:D
+I:2:7:0
+W:0:0:2:50
+M:20:1d4
+A:0/5:20/10:60/20
+C:0:1d2:0:0:0
+D:A small piece of crafted obsidian, just the perfect size to fit average man's palm.
+
+# -KN- added
+N:638:& strange mechanical device~
+G:`:t
+I:2:8:0
+W:0:0:8:10
+A:0/2:15/5:50/15
+C:0:1d1:0:0:0
+D:An unusual gadget with wires, gears and cogs.  Brobably not working
+D:and completely useless.
+
+# -KN- added
+N:639:& wyrmling scale~
+G:`:G
+I:2:9:0
+W:0:0:5:100
+M:10:1d3
+A:0/1:25/5:70/10
+C:0:1d1:0:0:0
+F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
+D:An old piece of dragon scale, probably worth something.
+
+
+## XXX 640 XXX ##
 
 
 ##### Skeletons #####
@@ -5126,7 +5166,7 @@ W:75:0:0:500
 
 
 ##### Special Treasure Objects (value varies according to depth) ######
-## reduced the price from 1500, 2000, 2500, 3000, 25000
+## reduced the price from 1500, 2000, 2500, 3000, 25000; still too much!
 
 N:715:& large sapphire
 G:+:b

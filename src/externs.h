@@ -382,7 +382,7 @@ extern bool quiver_carry(object_type *o_ptr, int o_idx);
 extern byte py_pickup(int pickup);
 extern void move_player(int dir, int do_pickup);
 extern void run_step(int dir);
-extern void describe_room(int room);	// -KN- describe foo
+extern void describe_room(s16b room);	// -KN- describe foo
 extern void cancel_running();
 
 /* cmd2.c */
@@ -722,6 +722,7 @@ extern void make_boulder(int y, int x, int level);
 extern bool make_box(int y, int x, bool questbox);		//	-KN- a questbox summon
 extern void make_food(int y, int x);
 extern void make_skeleton(int y, int x, int value);		//	-KN- added function for bone piles
+extern void make_debris(int y, int x, int type);		//	-KN- added function for junk creation (incl. quest items)
 extern void inven_item_charges(int item);
 extern void use_item_describe(int item, int mode);
 extern void inven_item_describe(int item);
@@ -1278,7 +1279,7 @@ extern bool get_rep_dir(int *dp);
 extern bool confuse_dir(int *dp);
 extern void precog_msg(int precog_msg_idx);
 extern void danger_music_level(bool change_right_now);
-extern cptr describe_random(int y, int x);	/* -KN- foo to get a proper name for furnishing/debris of the room */
+extern cptr describe_random(int y, int x);		/* -KN- foo to get a proper name for furnishing/debris of the room */
 
 
 #ifdef ALLOW_BORG

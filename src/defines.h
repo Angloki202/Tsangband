@@ -1232,9 +1232,8 @@
 
 /* Dungeon features */
 #define FEAT_FLOOR         1
-/* -KN- added marble and grassy */
-#define FEAT_FLOOR2        2
-#define FEAT_FLOOR3        3
+#define FEAT_FLOOR2        2		/* -KN- added sandy */
+#define FEAT_FLOOR3        3		/* -KN- added grassy */
 #define FEAT_LESS2         4
 #define FEAT_MORE2         5
 #define FEAT_OPEN          6
@@ -1254,9 +1253,9 @@
 #define FEAT_FLOOR_B       18
 #define FEAT_FLOOR_MI      19
 #define FEAT_FLOOR_MA      20
-#define FEAT_FLOOR4        21
-#define FEAT_FLOOR5        22
-#define FEAT_FLOOR6        23
+#define FEAT_FLOOR4        21		/* -KN- added cracked */
+#define FEAT_FLOOR5        22		/* -KN- added jade (changed from icy [is now MARK_ICE]) */
+#define FEAT_FLOOR6        23		/* -KN- added hellish */
 
 /* Doors */
 #define FEAT_DOOR_HEAD     32
@@ -3358,7 +3357,7 @@
  * Special cave grid marks (for DESC and some monster interaction)
  */
 #define MARK_SEEN         0x0001  /* mark the room spot as seen, not triggering desc. */
-#define MARK_0002         0x0002  /*  */
+#define MARK_SEARCHED     0x0002  /* mark the spot as already searched */
 #define MARK_0004         0x0004  /*  */
 #define MARK_0008         0x0008  /*  */
 #define MARK_0010         0x0010  /*  */
@@ -3378,7 +3377,7 @@
 /*
  * Cave grid marks that get saved in the savefile (all, atm)
  */
-#define SAVE_CAVE_MARKS (MARK_SEEN | MARK_0002 | MARK_0004 | MARK_0008 | \
+#define SAVE_CAVE_MARKS (MARK_SEEN | MARK_SEARCHED | MARK_0004 | MARK_0008 | \
 						 MARK_0010 | MARK_0020 | MARK_0040 | MARK_SMOKE | \
 						 MARK_ICE | MARK_BROKEN | MARK_0400 | MARK_0800 | \
  						 MARK_1000 | MARK_2000 | MARK_4000 | MARK_8000)
@@ -5547,7 +5546,7 @@
 #define MSG_SLATE          202			// -KN- combat descriptive, webs
 #define MSG_ORANGE         203			// -KN- (orig) INN quest fail, hunger
 #define MSG_RED            204			// -KN- (orig) danger, super-hunger
-#define MSG_GREEN          205			// -KN- (orig) classic INN quest complete
+#define MSG_GREEN          205			// -KN- (orig) classic INN quest complete + found treasure
 #define MSG_BLUE           206			// -KN-   --- free ---
 #define MSG_UMBER          207			// -KN- voice of sounds ie. 'Waorrrgh!'
 #define MSG_L_DARK         208			// -KN- sort of tutorial, explanatory
@@ -5555,7 +5554,7 @@
 #define MSG_L_PURPLE       210			// -KN- (orig) player ghost feeling
 #define MSG_YELLOW         211			// -KN- (orig) warning bell
 #define MSG_L_RED          212			// -KN- (orig) bbreath, other nasties
-#define MSG_L_GREEN        213			// -KN-   --- free ---
+#define MSG_L_GREEN        213			// -KN-   --- free --- now (DESC) descriptive
 #define MSG_L_BLUE         214			// -KN- (orig) priestly, commending
 #define MSG_L_UMBER        215			// -KN- related to GATE, QUESTS, QADV rewards
 /* Insert new colors here */

@@ -261,7 +261,8 @@ void notice_unseen_objects(void)
 			/* Message */
 			if ((!p_ptr->blind) && (!no_light()))
 			{
-				msg_format("You see %s.", o_name);
+				message(MSG_SLATE, 0, format("You see %s.", o_name));
+				//msg_format("You see %s.", o_name);
 			}
 			else
 			{
@@ -315,57 +316,146 @@ void do_cmd_search(void)
 	/* (DESC) test descriptions (ICI) */
 	if (cave_desc[p_ptr->py][p_ptr->px] > 1)
 	{
+		cptr name = "debris";
 		
-		if (cave_mark[p_ptr->py][p_ptr->px] & (MARK_SEEN))
+		// if (cave_mark[p_ptr->py][p_ptr->px] & (MARK_SEEN))
+		// {
+			// /* (REMOVE) at some point if not used */
+			// printf("room: %d \n", cave_mark[p_ptr->py][p_ptr->px]);
+		// }
+		
+		/* describe the current room and previously searched place */
+		describe_room(cave_desc[p_ptr->py][p_ptr->px]);
+		
+		if (cave_mark[p_ptr->py][p_ptr->px] & (MARK_SEARCHED))
 		{
-			//message(MSG_GREEN, 0, "Room desc = ");
-			printf("room: %d \n", cave_mark[p_ptr->py][p_ptr->px]);
+			name = describe_random(p_ptr->py, p_ptr->px);
+			message(MSG_L_GREEN, 10, format("Nothing useful around %s.", name));
 		}
 		
-		/* and if standing on furniture/debris, give the description */
-		if ((cave_feat[p_ptr->py][p_ptr->px] == FEAT_FLOOR_MI) || 
-			(cave_feat[p_ptr->py][p_ptr->px] == FEAT_FLOOR_MA))
+		/* and if standing on unsearched furniture[MI]/debris[MA], give the description */
+		if (((cave_feat[p_ptr->py][p_ptr->px] == FEAT_FLOOR_MI) || 
+			(cave_feat[p_ptr->py][p_ptr->px] == FEAT_FLOOR_MA)) &&
+			!(cave_mark[p_ptr->py][p_ptr->px] & (MARK_SEARCHED)))
 		{
-			cptr name = "debris";
+			/* get the pseudo-item's name */
 			name = describe_random(p_ptr->py, p_ptr->px);
-			message(MSG_YELLOW, 10, format("You observe %s.", name));
+			message(MSG_L_GREEN, 10, format("You search %s.", name));
 			
 			/* roll on perception, room determines results */
+			bool noluck = FALSE;
 			int room = ((cave_desc[p_ptr->py][p_ptr->px]) / 20) + 1;
-			printf("room type id: %d \n", room);
+			s16b room_spec = (cave_desc[p_ptr->py][p_ptr->px]);
+			int room_search = get_skill(S_PERCEPTION, 0, 100);
+			int num = 1;
+			int typ = 1;
+			int lev = 1;
 			
-			switch (room)
+			/* stashes [MA] are more likely to produce treasure, they are marked as negative */
+			if (cave_feat[p_ptr->py][p_ptr->px] == FEAT_FLOOR_MA) room_spec = (room_spec) * (-1);
+			int rr = rand_int(100) + rand_int(p_ptr->depth / 3);
+			
+			/* testing to always find something */
+			if (room_spec < 0) room_search = room_search + rand_int(50) + 100;
+			
+			printf("room type id: %d|%d ||r=%d \n", room, room_spec, rr);
+			
+			if (room_search > rr)
 			{
-				case 1:
+				/* found something */
+				switch (room)
 				{
-					/* common rooms */
-					if (get_skill(S_PERCEPTION, 0, 100) > rand_int(100))
+					case 1:
 					{
-						/* testing */
-						if (fetch_items(p_ptr->py, p_ptr->px, 1, 1, 1, -2))
+						/* all common rooms */
+						if (room_spec > 0)
 						{
-							message(MSG_YELLOW, 15, format("And found a tresure!"));
+							/* numbers for mostly boring results */
+							lev = -2;							
+							num = 1;
+							if (!one_in_(4)) 	   typ = 2;
+							else if (one_in_(4))   typ = 3;
+							else if (one_in_(9))   typ = 1;
+							if (ABS(room_spec) == 3) typ = 1;
+							if (ABS(room_spec) == 5) typ = 1;
+							if (ABS(room_spec) == 9) typ = 4;
 						}
+						else
+						{
+							/* numbers for stashes (ie. better results) */
+							lev++;
+							if (one_in_(6)) num = 2;
+							else 			num = 1;
+							if (ABS(room_spec) == 16) typ = 1;
+							if (ABS(room_spec) == 19) typ = 3;
+						}
+						
+						/* if nothing specific, default to 16: boring junk */
+						if (typ == 1) typ = 16;
+						break;
 					}
-					break;
-				}
-				default:
-				{
-					/* unwritten yet */
-					if (fetch_items(p_ptr->py, p_ptr->px, 1, 2, 2, -2))
+					default:
 					{
-						message(MSG_YELLOW, 15, format("And found a ball!"));
+						/* case not found */
+						lev = -4;							
+						num = 1;
+						typ = 16;
+						break;
 					}
-					break;
 				}
+				
+				/* all the variables for succeful search yield fetch */
+				if (fetch_items(p_ptr->py, p_ptr->px, 1, num, typ, lev))
+				{
+					/* can be more specific with the description */
+					if (typ == 1) 		message(MSG_GREEN, 15, format("And found a treasure!"));
+					else if (typ == 2)  message(MSG_GREEN, 12, format("What a perfect stone surprise among the rubble!"));
+					else if (typ == 3)  message(MSG_GREEN, 12, format("There were some bones in the rubble."));
+					else if (typ == 4)  message(MSG_GREEN, 12, format("And found something edible!"));
+					else if (lev == -4)	message(MSG_GREEN, 10, format("And found some random stuff."));
+					else 				message(MSG_GREEN, 12, format("And found something!"));
+				}
+				else noluck = TRUE;
 			}
+			else
+			{
+				/* found nothing, but wait... (look for specific failed & dangerous searches)*/
+				if (room_spec == -19)
+				{
+					if (one_in_(4))
+					{
+						/* stash in "black chamber" is dangerous to search */
+						message(MSG_UMBER, 20, format("...air is suddenly filled with sulphurous smoke!"));
+						summon_specific(p_ptr->py, p_ptr->px, FALSE, (p_ptr->depth - 2), SUMMON_DEMON, 0);
+					}
+					else message(MSG_L_GREEN, 5, format("...air smelled of sulphur for a few moments..."));
+				}
+				else if (room_spec == -5)
+				{
+					/* next danger */
+				}
+				else message(MSG_L_GREEN, 5, format("...nothing here..."));
+			}
+			
+			/* vocalize if fetch was unsuccesful */
+			if (noluck == TRUE) message(MSG_L_GREEN, 5, format("...it surely looked promising..."));
 		}
 		
-		describe_room(cave_desc[p_ptr->py][p_ptr->px]);
+		/* and as the last step, mark the spot as already searched */
+		cave_mark[p_ptr->py][p_ptr->px] |= (MARK_SEARCHED);
 	}
 
 	/* Search for essences; note, infusion or alchemy required */
 	search_essence(TRUE);
+
+	/* acknowledge items on the player spot */
+	/* (FIX) the code should be elsewhere, I dunno why a brand new item cannot be seen via notice_unseen */
+	object_type *o_ptr;
+	for (o_ptr = get_first_object(p_ptr->py, p_ptr->px); o_ptr;
+		  o_ptr = get_next_object(o_ptr))
+	{
+		o_ptr->marked = FALSE;
+	}
 
 	/* Notice unseen objects */
 	notice_unseen_objects();
@@ -1552,7 +1642,19 @@ void move_player(int dir, int do_pickup)
 		/*** Handle traversable terrain.  ***/
 		switch (cave_feat[y][x])
 		{
-			/* -KN- added terrain */
+			/* -KN- added interesting terrain */
+			case FEAT_FLOOR_MI:
+			case FEAT_FLOOR_MA:
+			{
+				cptr name;
+				name = describe_random(y, x);
+				message(MSG_L_GREEN, 0, format("You see %s.", name));
+				//(void)strnfmt(out_val, sizeof(out_val), "%s%s%s%s [%s]", s1, s2, s3, name, info);
+				//msg_print_aux()
+				//msg_format("You have %s (%c).", o_name, index_to_label(slot));
+				can_move = TRUE;
+				break;
+			}
 			case FEAT_BONEPILE:
 			{
 				/* Dark magic-users have no need to be careful. */
@@ -1677,6 +1779,16 @@ void move_player(int dir, int do_pickup)
 					p_ptr->command_dir = dir;
 				}
 
+				break;
+			}
+
+			/* -KN- added smoke terrains */
+			case FEAT_SMOKE:
+			case FEAT_SMOKE_X:
+			{
+				/* (IDEA) can turn you blind for a moment or two */
+				if (one_in_(4)) set_blind(p_ptr->blind + rand_range(2, 6), "The smoke gets into your eyes!");
+				can_move = TRUE;
 				break;
 			}
 
@@ -2680,7 +2792,7 @@ void run_step(int dir)
 /* -KN-
  * Show a message, describing entered room or while searching
  */
-void describe_room(int room)
+void describe_room(s16b room)
 {
 	cptr desc;
 	
@@ -2694,7 +2806,7 @@ void describe_room(int room)
 		if (room ==  7) desc = "room with lower ceiling";
 		if (room ==  8) desc = "room with arched ceiling";
 		if (room ==  9) desc = "room with dark corners";
-		if (room == 10) desc = "room that smells with blood";
+		if (room == 10) desc = "room that smells of blood";
 		if (room == 11) desc = "room with uneven floor";
 		if (room == 12) desc = "dusty room";
 		if (room == 13) desc = "cold room";
@@ -2950,5 +3062,5 @@ void describe_room(int room)
 		desc = "(undefined)";
 	}
 	
-	message_format(MSG_YELLOW, 10, "You are in %s.", desc);	
+	message_format(MSG_L_GREEN, 10, "You are in %s.", desc);	
 }

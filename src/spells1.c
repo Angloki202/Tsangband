@@ -479,11 +479,6 @@ static bool project_f(int who, int y, int x, int dist, int dam, int typ)
 
 			if ((one_in_(4)) && (cave_floor_bold(y,x)))
 			{
-				/* -KN- chill the ground a bit */
-				cave_set_feat(y, x, FEAT_FLOOR5);
-			}
-			else
-			{
 				/* -KN- (DESC) cover in ice */
 				cave_mark[y][x] |= (MARK_ICE);
 			}

@@ -171,9 +171,9 @@ G:.:o
 C:5
 F:TF_LOS | TF_PROJECT | TF_PASSABLE | TF_FLOOR | TF_OBJECT | TF_TRAP
 
-# -KN- added for deeper variety (icy-cold)
+# -KN- added for deeper variety (jade, mold, wet)
 N:22:open floor
-G:.:B
+G:.:t
 C:5
 F:TF_LOS | TF_PROJECT | TF_PASSABLE | TF_FLOOR | TF_OBJECT | TF_TRAP
 

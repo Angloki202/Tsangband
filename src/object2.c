@@ -3559,6 +3559,8 @@ static void add_magic_to_others(object_type *o_ptr, int level, int power)
 
 		case TV_JUNK:
 		{
+			/* KNs (IDEA) can randomize other junk, such as dragon scales or obsidians... */
+			
 			/* Boulders vary in size and weight */
 			if (o_ptr->sval == SV_BOULDER)
 			{
@@ -5410,12 +5412,13 @@ void place_object(int y, int x, bool good, bool great, bool exact_kind)
 	/* Get local object */
 	i_ptr = &forge;
 
+
 	/* Make an object (if possible) */
 	if (make_object(i_ptr, good, great, exact_kind))
-	{
+	{		
 		/* Give it to the floor */
 		if (!floor_carry(y, x, i_ptr))
-		{
+		{			
 			/* Hack -- Preserve artifacts */
 			a_info[i_ptr->artifact_index].cur_num = 0;
 		}
@@ -5602,6 +5605,7 @@ void make_skeleton(int y, int x, int value)
 		{
 			if (value > 0)
 			{
+				/* make it "great" aka for quest */
 				apply_magic(i_ptr, p_ptr->depth, TRUE, FALSE, TRUE);
 			}
 
@@ -5635,8 +5639,17 @@ void make_debris(int y, int x, int type)
 	i_ptr = &object_type_body;
 
 	/* Restrict by type */
-	/* now only supports TV of 4 */
-	required_tval = TV_FORGOTTEN;
+	if (type < 0)
+	{
+		/* add random boring debris with negative call */
+		if (one_in_(7))			required_tval = TV_SKELETON;
+		else if (one_in_(4)) 	required_tval = TV_SPIKE;
+		else if (one_in_(2)) 	required_tval = TV_JUNK;
+		else if (one_in_(3)) 	required_tval = TV_BOTTLE;
+		else if (one_in_(2))	required_tval = TV_PARCHMENT;
+		else 					required_tval = TV_FLASK;
+	}
+	else required_tval = TV_FORGOTTEN;
 
 	/* Keep trying */
 	while (TRUE)
