@@ -183,6 +183,13 @@ G:.:R
 C:5
 F:TF_LOS | TF_PROJECT | TF_PASSABLE | TF_FLOOR | TF_OBJECT | TF_TRAP
 
+# -KN- a see-through, not passable terrain
+N:24:iron bars
+G:+:Y
+C:5
+F:TF_LOS
+D:Metal gratings: a perfect for the iron prison.
+
 #
 #
 # space for more terrain here

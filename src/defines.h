@@ -464,8 +464,14 @@
 /*
  * Flags for player_type.spell_flags[]
  */
-#define PY_SPELL_WORKED     0x02 /* Spell has been successfully tried */
-#define PY_SPELL_FORGOTTEN  0x04 /* Spell has been forgotten */
+#define PY_SPELL_X01         0x01 /* -KN- can be added for (UPG) upgrades (IDEA) */
+#define PY_SPELL_WORKED      0x02 /* Spell has been successfully tried */
+#define PY_SPELL_FORGOTTEN   0x04 /* Spell has been forgotten */
+#define PY_SPELL_X08         0x08 /* -KN- can be added */
+#define PY_SPELL_X10         0x10 /* -KN- can be added */
+#define PY_SPELL_X20         0x20 /* -KN- can be added */
+#define PY_SPELL_X40         0x40 /* -KN- can be added */
+#define PY_SPELL_X80         0x80 /* -KN- can be added */
 
 /*
  * Maximum number of player spells
@@ -640,7 +646,7 @@
 #define S_FORGE_ARMOR   23       /* armor forging */
 #define S_ALCHEMY       24       /* scroll, potion, ring, & amulet creation */
 #define S_INFUSION      25       /* magical enhancement (using essences) */
-#define S_SHAPECHANGE   26       /* shapechange */
+#define S_SHAPECHANGE   26       /* shapechange -KN- redo, revisit, CHR? */
 
 
 #define S_XXX1          28       /*  */
@@ -1254,8 +1260,11 @@
 #define FEAT_FLOOR_MI      19
 #define FEAT_FLOOR_MA      20
 #define FEAT_FLOOR4        21		/* -KN- added cracked */
-#define FEAT_FLOOR5        22		/* -KN- added jade (changed from icy [is now MARK_ICE]) */
+#define FEAT_FLOOR5        22		/* -KN- added jade */
 #define FEAT_FLOOR6        23		/* -KN- added hellish */
+
+/* -KN- other additions */
+#define FEAT_BARS      	   24		/* -KN- added iron prison bars (IDEA) let proj pass 1/4 */
 
 /* Doors */
 #define FEAT_DOOR_HEAD     32
@@ -2107,9 +2116,9 @@
 #define SV_METAL_SCALE                   4	/* 15 */
 #define SV_AUGMENTED_CHAIN_MAIL          6	/* 16 */
 #define SV_SEGMENTED_PLATE               8	/* 19 */
-#define SV_PARTIAL_PLATE_ARMOR         12	/* 21 */
-#define SV_FULL_PLATE_ARMOR            15	/* 25 */
-#define SV_RIBBED_PLATE_ARMOR          18	/* 28 */
+#define SV_PARTIAL_PLATE_ARMOR          12	/* 21 */
+#define SV_FULL_PLATE_ARMOR             15	/* 25 */
+#define SV_RIBBED_PLATE_ARMOR           18	/* 28 */
 #define SV_MITHRIL_CHAIN_MAIL           20	/* 28+ */
 #define SV_MITHRIL_PLATE_MAIL           25	/* 35+ */
 #define SV_ADAMANTITE_PLATE_MAIL        30	/* 40+ */
@@ -2473,7 +2482,7 @@
 #define SV_FOOD_HEROISM                 23
 #define SV_FOOD_BERSERKERGANG           24
 #define SV_FOOD_VITALITY                25
-#define SV_FOOD_ARMORING               26
+#define SV_FOOD_ARMORING                26
 /* xxx */
 /* xxx */
 #define SV_FOOD_SLIME_MOLD              29
@@ -3049,7 +3058,7 @@
 #define PR_EQUIPPY      0x00000020L	/* Display Equippy chars */
 #define PR_STATS        0x00000040L	/* Display Stats */
 #define PR_SHAPE        0x00000080L	/* Display Shapechange */
-#define PR_ARMOR        0x00000100L	/* Display Armor */
+#define PR_ARMOR        0x00000100L	/* Display Armor -KN- and Stamina */
 #define PR_HP           0x00000200L	/* Display Hitpoints */
 #define PR_MANA         0x00000400L	/* Display Mana */
 #define PR_HEALTH       0x00000800L	/* Display Health Bar */
@@ -3362,7 +3371,7 @@
 #define MARK_0008         0x0008  /*  */
 #define MARK_0010         0x0010  /*  */
 #define MARK_0020         0x0020  /*  */
-#define MARK_0040         0x0040  /*  */
+#define MARK_FLICKER      0x0040  /* shines when nearby */
 #define MARK_SMOKE        0x0080  /* smoke, that alternates terrain btw. light and heavy */
 
 #define MARK_ICE          0x0100  /* icy nuisance cover on the tile (wall / tile) */
@@ -3378,7 +3387,7 @@
  * Cave grid marks that get saved in the savefile (all, atm)
  */
 #define SAVE_CAVE_MARKS (MARK_SEEN | MARK_SEARCHED | MARK_0004 | MARK_0008 | \
-						 MARK_0010 | MARK_0020 | MARK_0040 | MARK_SMOKE | \
+						 MARK_0010 | MARK_0020 | MARK_FLICKER | MARK_SMOKE | \
 						 MARK_ICE | MARK_BROKEN | MARK_0400 | MARK_0800 | \
  						 MARK_1000 | MARK_2000 | MARK_4000 | MARK_8000)
 
@@ -5281,9 +5290,9 @@
 #define DUNGEON_UNDERWOOD               0x00000004	/* -KN- woody feel */
 #define DUNGEON_HALLS  	                0x00000008	/* -KN- deephalls feel */
 #define DUNGEON_IRON_PITS               0x00000010  /* -KN- iron pits */
-#define DUNGEON_ELDRITCH                0x00000020  /* -KN- endless depths */
-#define DUNGEON_XX3	    	            0x00000040
-#define DUNGEON_XX4	        	        0x00000080
+#define DUNGEON_ELDRITCH                0x00000020  /* -KN- endless depths (special) */
+#define DUNGEON_INFERNAL   	            0x00000040	/* -KN- inferno L > 75 */
+#define DUNGEON_SKULLKEEP      	        0x00000080	/* -KN- horror L > 90 */
 #define DUNGEON_RIVER                   0x00000100  /* -KN- add a river */
 #define DUNGEON_FOREST                  0x00000200  /* -KN- add a forest */
 #define DUNGEON_MAIN_CORRIDOR           0x00000400  /* -KN- big corridor around */
@@ -5291,7 +5300,7 @@
 #define DUNGEON_HOLLOW                  0x00001000  /* -KN- hollowed caves */
 #define DUNGEON_X10		                0x00002000
 #define DUNGEON_X11	    	            0x00004000
-#define DUNGEON_HALF_CORRIDOR  	        0x00008000	/* -KN- dungeon is split by a corridor */
+#define DUNGEON_HALF_CORRIDOR  	        0x00008000	/* -KN- dungeon is divided in half */
 #define DUNGEON_HALF_VERTICAL           0x00010000  /* -KN- features are up/down */
 #define DUNGEON_HALF_HORIZONTAL         0x00020000  /* -KN- features are left/right */
 #define DUNGEON_X15	    	            0x00040000

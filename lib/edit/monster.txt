@@ -8048,7 +8048,7 @@ D:your doom.
 
 ## empty space (available for unique monsters) ##
 
-## added unique ##
+## -KN- added unique ##
 N:680:Snaga called Nilbog
 G:o:Y
 I:110:70:20:20:60:1

@@ -1517,7 +1517,7 @@ void display_inn(void)
 		else if ((p_ptr->qadv_flags & (QADV_STARTED)) &&
 				(p_ptr->qadv_flags & (QADV_SUCCESS)))
 		{
-			/* mark failed, unclaimed */
+			/* mark success, unclaimed */
 			c_put_str(TERM_L_VIOLET, format("(success)"), 17, 21);
 		}
 	}

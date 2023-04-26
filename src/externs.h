@@ -382,7 +382,7 @@ extern bool quiver_carry(object_type *o_ptr, int o_idx);
 extern byte py_pickup(int pickup);
 extern void move_player(int dir, int do_pickup);
 extern void run_step(int dir);
-extern void describe_room(s16b room);	// -KN- describe foo
+extern void describe_room(int room);	// -KN- describe foo
 extern void cancel_running();
 
 /* cmd2.c */

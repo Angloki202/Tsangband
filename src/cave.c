@@ -747,6 +747,12 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 	s16b m_idx;
 
 	s16b image = p_ptr->image;
+	
+	/* -KN- variables for dungeon styles */
+	int x3;
+	int y3;
+	bool xd;
+	bool yd;
 
 	/* Assume that we'll show any marked objects */
 	bool ignore_objects = FALSE;
@@ -853,13 +859,169 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 		c = f_info[FEAT_NONE].x_char;
 	}
 
+	if (p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR))
+	{
+		/* -KN- set rules for dungeon division */
+		
+		if ((p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL)) && (p_ptr->dungeon_flags & (DUNGEON_HALF_HORIZONTAL)))
+		{
+			// 1, 1         ooX
+			//              ooX
+			// lower right  XXX
+			x3 = dungeon_wid - (dungeon_wid / 3);
+			y3 = dungeon_hgt - (dungeon_hgt / 3);
+			xd = TRUE;  // change enviro for x > x3 or
+			yd = TRUE;  // change enviro for y > y3
+		}
+		else if (!(p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL)) && (p_ptr->dungeon_flags & (DUNGEON_HALF_HORIZONTAL)))
+		{
+			// 0, 1         XXX
+			//              ooX
+			// upper right  ooX
+			x3 = dungeon_wid - (dungeon_wid / 3);
+			y3 = (dungeon_hgt / 3);
+			xd = TRUE;  // change enviro for x > x3 or
+			yd = FALSE; // change enviro for y < y3
+		}
+		else if ((p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL)) && !(p_ptr->dungeon_flags & (DUNGEON_HALF_HORIZONTAL)))
+		{
+			// 1, 0         Xoo
+			//              Xoo
+			// lower left   XXX
+			x3 = (dungeon_wid / 3);
+			y3 = dungeon_hgt - (dungeon_hgt / 3);
+			xd = FALSE; // change enviro for x < x3 or
+			yd = TRUE;  // change enviro for y > y3
+		}
+		else if (!(p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL)) && !(p_ptr->dungeon_flags & (DUNGEON_HALF_HORIZONTAL)))
+		{
+			// 0, 0         XXX
+			//              Xoo
+			// upper left   Xoo
+			x3 = (dungeon_wid / 3);
+			y3 = (dungeon_hgt / 3);
+			xd = FALSE; // change enviro for x < x3 or
+			yd = FALSE; // change enviro for y < y3
+		}
+	}
+
+	/* -KN- dungeon look much more like a caverns */
+	if (p_ptr->dungeon_flags & (DUNGEON_CAVERNOUS))
+	{
+		/* only modify half of the level if on HALF_CORRIDOR level */
+		if (((p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)) &&
+			((((x > x3) && (xd == TRUE)) || ((y > y3) && (yd == TRUE))) ||
+			(((x < x3) && (xd == FALSE)) || ((y < y3) && (yd == FALSE))))) ||
+			!(p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)))
+		{
+			if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
+			{
+				/* infra-seen walls dark */
+				a = 32;
+				if ((feat > 53) && (feat < 56)) a = 30;
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
+			{
+				if (info & (CAVE_GLOW))
+				{
+					/* brighter walls */				
+					a = 20;
+					
+					/* reveal quartz and treasure seams */
+					if ((feat > 53) && (feat < 56)) a = 3;
+					
+					/* quartz and magma */
+					else if (feat == 50)			a = 15;
+					else if (feat == 51)			a = 15;
+				}
+				else
+				{
+					a = 19;
+					if ((feat > 53) && (feat < 56)) a = 11;
+					if (feat < 53) 					a = 15;
+				}
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
+			{
+				/* walls in EXPLORED darkness */
+				a = 7;
+				if ((feat > 53) && (feat < 56)) a = 30;
+			}
+			
+			if ((cave_feat[y][x] != FEAT_BROKEN) &&
+				(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
+				(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
+			{
+				/* non-hidden doors are not brown */
+				a = 2;
+			}
+		}
+	}
+
+	/* -KN- dungeon looks more like a underground roots */
+	if (p_ptr->dungeon_flags & (DUNGEON_UNDERWOOD))
+	{
+		/* only modify half of the level if on HALF_CORRIDOR level */
+		if (((p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)) &&
+			((((x > x3) && (xd == TRUE)) || ((y > y3) && (yd == TRUE))) ||
+			(((x < x3) && (xd == FALSE)) || ((y < y3) && (yd == FALSE))))) ||
+			!(p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)))
+		{
+			if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
+			{
+				/* infra-seen walls dark */
+				a = 33;
+				if ((feat > 53) && (feat < 56)) a = 11;
+				else if (feat < 56) a = 19;			
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
+			{
+				if (info & (CAVE_GLOW))
+				{
+					/* walls flicker with shadows in the brambles */				
+					if (!one_in_(9)) a = 5;
+					else 			 a = 13;
+					
+					/* reveal quartz and treasure seams */
+					if ((feat > 53) && (feat < 56)) a = 3;
+					if (feat < 53) a = 30;
+				}
+				else
+				{
+					a = 5;
+					
+					if ((feat > 53) && (feat < 56)) a = 11;
+					if (feat < 53) a = 2;
+				}
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
+			{
+				/* walls in EXPLORED darkness */
+				if (!one_in_(15)) a = 33;
+				else 			  a = 18;
+				if (feat < 56)    a = 25;
+				if ((feat > 53) && (feat < 56)) a = 20;
+			}
+			
+			if ((cave_feat[y][x] != FEAT_BROKEN) &&
+				(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
+				(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
+			{
+				/* non-hidden doors are slightly more barklike */
+				a = 19;
+			}
+		}
+	}
+
 	/* -KN- dungeon looks more like halls of the mountain king */
 	if (p_ptr->dungeon_flags & (DUNGEON_HALLS))
 	{
-		/* only modify half of the level if on HALF_VERTI */
-		//if (((y > (dungeon_hgt / 2)) && (p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL)))
-		//	|| ((y > 0) && !(p_ptr->dungeon_flags & (DUNGEON_HALF_VERTICAL))))
-		//{
+		/* only modify half of the level if on HALF_CORRIDOR level */
+		if (((p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)) &&
+			((((x > x3) && (xd == TRUE)) || ((y > y3) && (yd == TRUE))) ||
+			(((x < x3) && (xd == FALSE)) || ((y < y3) && (yd == FALSE))))) ||
+			!(p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)))
+		{
 			if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
 			{
 				/* infra-seen walls dark */
@@ -871,8 +1033,7 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 				if (info & (CAVE_GLOW))
 				{
 					/* brighter walls */				
-					if (!one_in_(8)) a = 20;
-					else 			  a = 1;
+					a = 20;
 					
 					/* reveal quartz and treasure seams */
 					if ((feat > 53) && (feat < 56)) a = 14;
@@ -895,14 +1056,6 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 				if ((feat > 53) && (feat < 56)) a = 26;
 			}
 			
-			if ((cave_feat[y][x] == FEAT_ABYSS) && (info & (CAVE_MARK)))
-			{
-				/* make abyss more menacing */
-				if 		(info & (CAVE_SEEN)) a =  4;
-				else if (info & (CAVE_INFR)) a = 12;
-				else 						 a = 28;
-			}
-			
 			if ((cave_feat[y][x] != FEAT_BROKEN) &&
 				(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
 				(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
@@ -910,238 +1063,237 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 				/* iron doors */
 				a = 26;
 			}
-		//}
+		}
 	}
 
 	/* -KN- dungeon looks more like real Angband, the Iron Pits */
 	if (p_ptr->dungeon_flags & (DUNGEON_IRON_PITS))
 	{
-		if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
+		/* only modify half of the level if on HALF_CORRIDOR level */
+		if (((p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)) &&
+			((((x > x3) && (xd == TRUE)) || ((y > y3) && (yd == TRUE))) ||
+			(((x < x3) && (xd == FALSE)) || ((y < y3) && (yd == FALSE))))) ||
+			!(p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)))
 		{
-			/* infra-seen walls and seams */
-			//a = 32;
-			//a = 33;
-			a = 19;
-			if (feat < 53) a = 8;
-		}
-		else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
-		{
-			if (info & (CAVE_GLOW))
+			if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
 			{
-				/* brighter iron walls */				
-				if (!one_in_(7)) a = 30;
-				else 			 a = 25;
-				
-				/* reveal quartz and treasure seams */
-				if ((feat > 53) && (feat < 56)) a = 20;
-				if (feat < 53) a = 2;
-			}
-			else
-			{
-				//a = 32;
-				//a = 24;
-				a = 25;
-				
-				if ((feat > 53) && (feat < 56)) a = 20;
-				if (feat < 53) a = 9;
-			}
-		}
-		else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
-		{
-			/* walls in EXPLORED darkness */
-											a = 31;
-			if (feat < 56)    				a = 28;
-			if ((feat > 53) && (feat < 56)) a = 11;
-		}
-		
-		if ((cave_feat[y][x] != FEAT_BROKEN) &&
-			(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
-			(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
-		{
-			/* non-hidden doors */
-			a = 31;
-			if (info & (CAVE_SEEN)) a = 32;
-		}
-		
-		if ((cave_feat[y][x] == FEAT_ABYSS) && (info & (CAVE_MARK)))
-		{
-			/* make abyss black and more menacing */
-			if 		(info & (CAVE_SEEN)) a = 3;
-			else if (info & (CAVE_INFR)) a = 7;
-			else 						 a = 32;
-		}
-	}
-
-	/* -KN- dungeon looks more like a underground roots */
-	if (p_ptr->dungeon_flags & (DUNGEON_UNDERWOOD))
-	{
-		if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
-		{
-			/* infra-seen walls dark */
-			a = 33;
-			if ((feat > 53) && (feat < 56)) a = 11;
-			else if (feat < 56) a = 19;			
-		}
-		else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
-		{
-			if (info & (CAVE_GLOW))
-			{
-				/* brighter walls */				
-				if (!one_in_(7)) a = 5;
-				else 			 a = 13;
-				
-				/* reveal quartz and treasure seams */
-				if ((feat > 53) && (feat < 56)) a = 3;
-				if (feat < 53) a = 30;
-			}
-			else
-			{
-				a = 5;
-				//if (!one_in_(7)) a = 5;
-				//else 			 a = 33;
-				
-				if ((feat > 53) && (feat < 56)) a = 11;
-				if (feat < 53) a = 2;
-			}
-		}
-		else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
-		{
-			/* walls in EXPLORED darkness */
-			if (!one_in_(12)) a = 33;
-			else 			  a = 18;
-			if (feat < 56)    a = 25;
-			if ((feat > 53) && (feat < 56)) a = 20;
-		}
-		
-		if ((cave_feat[y][x] != FEAT_BROKEN) &&
-			(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
-			(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
-		{
-			/* non-hidden doors are slightly more barklike */
-			a = 19;
-		}
-		
-		if ((cave_feat[y][x] == FEAT_ABYSS) && (info & (CAVE_MARK)))
-		{
-			/* make abyss more menacing */
-			if 		(info & (CAVE_SEEN)) a = 32;
-			else if (info & (CAVE_INFR)) a = 31;
-			else 						 a = 28;
-		}
-	}
-
-
-	/* -KN- dungeon look much more like a caverns */
-	if (p_ptr->dungeon_flags & (DUNGEON_CAVERNOUS))
-	{
-		if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
-		{
-			/* infra-seen walls dark */
-			a = 32;
-			if ((feat > 53) && (feat < 56)) a = 30;
-		}
-		else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
-		{
-			if (info & (CAVE_GLOW))
-			{
-				/* brighter walls */				
-				a = 20;
-				
-				/* reveal quartz and treasure seams */
-				if ((feat > 53) && (feat < 56)) a = 3;
-				if (feat < 53) a = 15;
-			}
-			else
-			{
+				/* infra-seen walls and seams */
 				a = 19;
+				if (feat < 53) a = 8;
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
+			{
+				if (info & (CAVE_GLOW))
+				{
+					/* brighter iron walls */				
+					a = 30;
+					
+					/* reveal quartz and treasure seams */
+					if ((feat > 53) && (feat < 56)) a = 20;
+					if (feat < 53) a = 2;
+				}
+				else
+				{
+					a = 25;
+					
+					if ((feat > 53) && (feat < 56)) a = 20;
+					if (feat < 53) a = 9;
+				}
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
+			{
+				/* walls in EXPLORED darkness */
+												a = 31;
+				if (feat < 56)    				a = 28;
 				if ((feat > 53) && (feat < 56)) a = 11;
-				if (feat < 53) a = 15;
+			}
+			
+			if ((cave_feat[y][x] != FEAT_BROKEN) &&
+				(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
+				(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
+			{
+				/* non-hidden doors */
+				a = 31;
+				if (info & (CAVE_SEEN)) a = 32;
 			}
 		}
-		else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
+	}
+
+	/* -KN- dungeon looks more like Inferno	 */
+	if (p_ptr->dungeon_flags & (DUNGEON_INFERNAL))
+	{
+		/* only modify half of the level if on HALF_CORRIDOR level */
+		if (((p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)) &&
+			((((x > x3) && (xd == TRUE)) || ((y > y3) && (yd == TRUE))) ||
+			(((x < x3) && (xd == FALSE)) || ((y < y3) && (yd == FALSE))))) ||
+			!(p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)))
 		{
-			/* walls in EXPLORED darkness */
-			if (!one_in_(12)) a = 7;
-			else a = 15;
-			if ((feat > 53) && (feat < 56)) a = 30;
+			if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
+			{
+				/* infra-seen walls and seams */
+				a = 32;
+				if (feat < 53) a = 31;
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
+			{
+				if (info & (CAVE_GLOW))
+				{
+					/* crimson walls */				
+					a = 12;
+					
+					/* reveal quartz and treasure seams */
+					if ((feat > 53) && (feat < 56)) a = 10;
+					if (feat < 53) 					a = 21;
+				}
+				else
+				{
+					a = 4;
+					
+					if ((feat > 53) && (feat < 56)) a = 16;
+					if (feat < 53) 					a = 17;
+				}
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
+			{
+				/* walls in EXPLORED darkness */
+												a = 32;
+				if (feat < 56)    				a = 33;
+				if ((feat > 53) && (feat < 56)) a = 30;
+			}
+			
+			if ((cave_feat[y][x] != FEAT_BROKEN) &&
+				(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
+				(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
+			{
+				/* non-hidden doors */
+				a = 18;
+				if (info & (CAVE_SEEN)) a = 19;
+			}
 		}
-		
-		if ((cave_feat[y][x] != FEAT_BROKEN) &&
-			(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
-			(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
+	}
+
+	/* -KN- dungeon looks more like the end of the game */
+	if (p_ptr->dungeon_flags & (DUNGEON_SKULLKEEP))
+	{
+		/* only modify half of the level if on HALF_CORRIDOR level */
+		if (((p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)) &&
+			((((x > x3) && (xd == TRUE)) || ((y > y3) && (yd == TRUE))) ||
+			(((x < x3) && (xd == FALSE)) || ((y < y3) && (yd == FALSE))))) ||
+			!(p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)))
 		{
-			/* non-hidden doors are not brown */
-			a = 2;
-		}
-		
-		else if ((cave_feat[y][x] == FEAT_ABYSS) && (info & (CAVE_MARK)))
-		{
-			/* make abyss more menacing */
-			if 		(info & (CAVE_SEEN)) a = 8;
-			else if (info & (CAVE_INFR)) a = 31;
-			else 						 a = 28;
+			if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
+			{
+				/* infra-seen walls and seams */
+				a = 34;
+				if (feat < 53) a = 28;
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
+			{
+				if (info & (CAVE_GLOW))
+				{
+					/* dark and cold walls */				
+					a = 27;
+					
+					/* reveal quartz and treasure seams */
+					if ((feat > 53) && (feat < 56)) a = 23;
+					
+					/* quartz and magma */
+					else if (feat == 50)			a = 22;
+					else if (feat == 51)			a = 22;
+				}
+				else
+				{
+					a = 6;
+					
+					if ((feat > 53) && (feat < 56)) a = 17;
+					if (feat < 53) 					a = 18;
+				}
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
+			{
+				/* walls in EXPLORED darkness */
+												a = 29;
+				if (feat < 56)    				a = 31;
+				if ((feat > 53) && (feat < 56)) a = 34;
+			}
+			
+			if ((cave_feat[y][x] != FEAT_BROKEN) &&
+				(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
+				(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
+			{
+				/* non-hidden doors */
+				a = 30;
+				if (info & (CAVE_SEEN)) a = 20;
+			}
 		}
 	}
 
 	/* -KN- dungeon is full of vile sorcery */
 	if (p_ptr->dungeon_flags & (DUNGEON_ELDRITCH))
 	{
-		if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
+		/* only modify half of the level if on HALF_CORRIDOR level */
+		if (((p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)) &&
+			((((x > x3) && (xd == TRUE)) || ((y > y3) && (yd == TRUE))) ||
+			(((x < x3) && (xd == FALSE)) || ((y < y3) && (yd == FALSE))))) ||
+			!(p_ptr->dungeon_flags & (DUNGEON_HALF_CORRIDOR)))
 		{
-			/* infra-seen walls */
-			a = 31;
-			//if (feat < 53) a = 29;
-			if ((feat > 53) && (feat < 56)) a = 3;
-		}
-		else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
-		{
-			if (info & (CAVE_GLOW))
+			if ((cave_wall_bold(y, x)) && (info & (CAVE_INFR)))
 			{
-				/* brighter walls */				
-				if (!one_in_(6))  a = 22;
-				else 			  a = 18;
-				
-				if (feat < 53) a = 2;
-				if ((feat > 53) && (feat < 56)) a = 20;
-			}
-			else
-			{
-				a = 18;
-				if (feat < 53) a = 8;
+				/* infra-seen walls */
+				a = 31;
+				//if (feat < 53) a = 29;
 				if ((feat > 53) && (feat < 56)) a = 3;
 			}
-		}
-		else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
-		{
-			/* walls in EXPLORED darkness */
-			a = 33;
-			if (feat < 56) a = 28;
-			if ((feat > 53) && (feat < 56)) a = 11;
-		}
-		
-		if ((cave_feat[y][x] == FEAT_ABYSS) && (info & (CAVE_MARK)))
-		{
-			/* make abyss more sorcerous */
-			if 		(info & (CAVE_SEEN)) a = 10;
-			else if (info & (CAVE_INFR)) a = 16;
-			else 						 a = 32;
-		}
-		
-		if ((cave_feat[y][x] == FEAT_TREE) && (info & (CAVE_MARK)))
-		{
-			/* make trees withered */
-			if 		(info & (CAVE_SEEN)) a = 2;
-			else if (info & (CAVE_INFR)) a = 8;
-			else 						 a = 28;
-		}
-		
-		if ((cave_feat[y][x] != FEAT_BROKEN) &&
-			(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
-			(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
-		{
-			/* ancient doors */
-			a = 18;
-			if (info & (CAVE_SEEN)) a = 14;
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_SEEN)))
+			{
+				if (info & (CAVE_GLOW))
+				{
+					/* brighter walls */				
+					if (!one_in_(6))  a = 22;
+					else 			  a = 18;
+					
+					if (feat < 53) a = 2;
+					if ((feat > 53) && (feat < 56)) a = 20;
+				}
+				else
+				{
+					a = 18;
+					if (feat < 53) a = 8;
+					if ((feat > 53) && (feat < 56)) a = 3;
+				}
+			}
+			else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
+			{
+				/* walls in EXPLORED darkness */
+				a = 33;
+				if (feat < 56) a = 28;
+				if ((feat > 53) && (feat < 56)) a = 11;
+			}
+			
+			if ((cave_feat[y][x] == FEAT_ABYSS) && (info & (CAVE_MARK)))
+			{
+				/* make abyss more sorcerous */
+				if 		(info & (CAVE_SEEN)) a = 10;
+				else if (info & (CAVE_INFR)) a = 16;
+				else 						 a = 32;
+			}
+			
+			if ((cave_feat[y][x] == FEAT_TREE) && (info & (CAVE_MARK)))
+			{
+				/* make trees withered */
+				if 		(info & (CAVE_SEEN)) a = 2;
+				else if (info & (CAVE_INFR)) a = 8;
+				else 						 a = 28;
+			}
+			
+			if ((cave_feat[y][x] != FEAT_BROKEN) &&
+				(cave_feat[y][x] != FEAT_SECRET) && (info & (CAVE_MARK)) &&
+				(f_info[cave_feat[y][x]].flags & (TF_DOOR_ANY)))
+			{
+				/* ancient doors */
+				a = 18;
+				if (info & (CAVE_SEEN)) a = 14;
+			}
 		}
 	}
 
@@ -1149,16 +1301,16 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 	/* -KN- (DESC) color modifier */
 	if (((cave_floor_bold(y,x)) || (cave_wall_bold(y, x))) && (info & (CAVE_SEEN)))
 	{
-		// open floor tiles can have its appearance modified by MARK_ flags
 		if (cave_mark[y][x] & (MARK_ICE))
 		{
-			// cover in ice
+			// floor / wall covered in ice
 			a = 14;
 			if (!(rr % 3)) a = 27;
 		}
 		
-		if (cave_mark[y][x] & (MARK_SMOKE))
+		if ((cave_mark[y][x] & (MARK_SMOKE)) && !(cave_wall_bold(y, x)))
 		{
+			/* animate SMOKE, but not on walls; smoke may arise when the wall is down */
 			a = 19;
 			if (!(rr % 3)) a = 25;
 		}
@@ -5425,7 +5577,7 @@ void cave_set_feat(int y, int x, int feat)
 	if ((feat == FEAT_FLOOR) && (p_ptr->depth > 0))
 	{
 		/* adjust the look of the floor to the depth */
-		if (p_ptr->depth > 90)      feat = FEAT_FLOOR_B;
+		if 		(p_ptr->depth > 90) feat = FEAT_FLOOR_B;
 		else if (p_ptr->depth > 75) feat = FEAT_FLOOR6;
 		else if (p_ptr->depth > 60) feat = FEAT_FLOOR5;
 		else if (p_ptr->depth > 45) feat = FEAT_FLOOR4;
@@ -5434,6 +5586,12 @@ void cave_set_feat(int y, int x, int feat)
 		
 		/* with some chance to keep the original look */
 		if (one_in_(4 + div_round(p_ptr->depth, 15))) feat = FEAT_FLOOR;
+	}
+	
+	if (feat == FEAT_ORB)
+	{
+		/* make the glow around the ORBs */
+		mark_adjacent(y, x, 2, 11);
 	}
 	
 	/* Change the feature */

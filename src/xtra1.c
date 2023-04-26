@@ -1472,7 +1472,7 @@ static void prt_ac(void)
 	char tmp[32];
 
 	/* variables for ac adjustment */
-	int temp_ac;
+	int temp_ac = 0;
 	int x = p_ptr->px;
 	int y = p_ptr->py;
 	int col_ac = TERM_L_GREEN;
@@ -1510,8 +1510,8 @@ static void prt_ac(void)
 		col_ac = TERM_MUSTARD;
 	}
 
-	/* -KN- this should move at some point (fix) (move) */
-	/* and print with temp adjustment */
+	/* -KN- cleared to draw modified AC */
+	c_put_str(col_ac, "      ", ROW_AC, COL_AC + 2);
 	(void)strnfmt(tmp, sizeof(tmp), "%3d", ac + temp_ac);
 	c_put_str(col_ac, tmp, ROW_AC, COL_AC + 3);
 
@@ -2695,54 +2695,7 @@ static void left_panel_display_aux(byte item, byte row, int tmp)
 		}
 		case DISPLAY_STAMINA:
 		{
-			/* -KN- Stamina bar for later use */
-			/* mstam; cstam; restam; ixstam */
-
 			/* (REMOVE) deprecated; moved to AC row (prt_ac()) */
-
-			c_put_str(TERM_SLATE, "sta:", row, 0);
-			//					  "*****[*****]"
-			if (p_ptr->mstam == 3)
-			{
-				c_put_str(TERM_TEAL, format("[   ]"), row, 5);
-				(void)Term_gotoxy(6, row);
-				(void)Term_addch(TERM_GREEN, 42);
-				(void)Term_gotoxy(7, row);
-				(void)Term_addch(TERM_L_GREEN, 42);
-				(void)Term_gotoxy(8, row);
-				(void)Term_addch(TERM_L_GREEN, 42);
-
-				if (p_ptr->cstam == 2)
-				{
-					(void)Term_gotoxy(6, row);
-					(void)Term_addch(TERM_GREEN, 42);
-					(void)Term_gotoxy(7, row);
-					(void)Term_addch(TERM_L_GREEN, 42);
-					(void)Term_gotoxy(8, row);
-					(void)Term_addch(TERM_SLATE, 46);
-				}
-				else if (p_ptr->cstam == 1)
-				{
-					(void)Term_gotoxy(6, row);
-					(void)Term_addch(TERM_YELLOW, 42);
-					(void)Term_gotoxy(7, row);
-					(void)Term_addch(TERM_SLATE, 46);
-					(void)Term_gotoxy(8, row);
-					(void)Term_addch(TERM_SLATE, 46);
-				}
-				else if (p_ptr->cstam == 0)
-				{
-					(void)Term_gotoxy(6, row);
-					(void)Term_addch(TERM_L_DARK, 33);
-					(void)Term_gotoxy(7, row);
-					(void)Term_addch(TERM_L_DARK, 33);
-					(void)Term_gotoxy(8, row);
-					(void)Term_addch(TERM_L_DARK, 33);
-				}
-			}
-
-
-
 			break;
 		}
 

@@ -1689,12 +1689,6 @@ static void process_world(void)
 			}
 		}
 	}
-
-	/* -KN- IDEA: add the turn counter to test for:
-			spiders jumping from WEBS
-			demons jumping from ABYSS 
-			etc. ... */
-	//if ((cave_feat[y][x] == FEAT_WEB)
 	
 	/* check around every 4 full turns and on each 12th turn, check in greater radius */
 	if (!(turn % 40))
@@ -1793,7 +1787,7 @@ static void process_world(void)
 					/* (IDEA) collapse should be triggered by LARGE creatures and certain AOE effects */
 					if (cave_floor_bold(y, x))
 					{
-						if (rr < 15)
+						if (rr < 12)
 						{
 							message_format(MSG_UMBER, 10, "A floor nearby had just collapsed!");
 							cave_set_feat(y, x, FEAT_PIT0);
@@ -1801,13 +1795,23 @@ static void process_world(void)
 					}
 					else if ((cave_wall_bold(y, x)) && !(cave_perma_bold(y, x)))
 					{
-						if (rr < 6)
+						if (rr < 3)
 						{
 							/* collapse wall, but not the permanent one */
 							message_format(MSG_UMBER, 10, "A wall close by had just collapsed!");
 							cave_set_feat(y, x, FEAT_RUBBLE);
 						}
 					}
+				}
+				
+				if (cave_mark[y][x] & (MARK_FLICKER))
+				{
+					/* make a tile flicker with light */
+					cave_info[y][x] |= (CAVE_GLOW);
+					if (one_in_(3)) cave_info[y][x] &= ~(CAVE_GLOW);
+
+					note_spot(y, x);
+					lite_spot(y, x);
 				}
 			}
 		}

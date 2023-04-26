@@ -261,6 +261,8 @@ void notice_unseen_objects(void)
 			/* Message */
 			if ((!p_ptr->blind) && (!no_light()))
 			{
+				/* -KN- (FIX) need to make it without disturbance;
+				 *	0 delay should do it, but doesn't... */
 				message(MSG_SLATE, 0, format("You see %s.", o_name));
 				//msg_format("You see %s.", o_name);
 			}
@@ -324,9 +326,6 @@ void do_cmd_search(void)
 			// printf("room: %d \n", cave_mark[p_ptr->py][p_ptr->px]);
 		// }
 		
-		/* describe the current room and previously searched place */
-		describe_room(cave_desc[p_ptr->py][p_ptr->px]);
-		
 		if (cave_mark[p_ptr->py][p_ptr->px] & (MARK_SEARCHED))
 		{
 			name = describe_random(p_ptr->py, p_ptr->px);
@@ -355,8 +354,8 @@ void do_cmd_search(void)
 			if (cave_feat[p_ptr->py][p_ptr->px] == FEAT_FLOOR_MA) room_spec = (room_spec) * (-1);
 			int rr = rand_int(100) + rand_int(p_ptr->depth / 3);
 			
-			/* testing to always find something */
-			if (room_spec < 0) room_search = room_search + rand_int(50) + 100;
+			/* more likely to find something in MAjor stashes */
+			if (room_spec < 0) room_search = room_search + rand_int(50) + 20;
 			
 			printf("room type id: %d|%d ||r=%d \n", room, room_spec, rr);
 			
@@ -379,6 +378,8 @@ void do_cmd_search(void)
 							if (ABS(room_spec) == 3) typ = 1;
 							if (ABS(room_spec) == 5) typ = 1;
 							if (ABS(room_spec) == 9) typ = 4;
+							
+							/* (IDEA) non-fungible, knowledge / lore rewards */
 						}
 						else
 						{
@@ -408,7 +409,7 @@ void do_cmd_search(void)
 				if (fetch_items(p_ptr->py, p_ptr->px, 1, num, typ, lev))
 				{
 					/* can be more specific with the description */
-					if (typ == 1) 		message(MSG_GREEN, 15, format("And found a treasure!"));
+					if 		(typ == 1) 	message(MSG_GREEN, 15, format("And found a treasure!"));
 					else if (typ == 2)  message(MSG_GREEN, 12, format("What a perfect stone surprise among the rubble!"));
 					else if (typ == 3)  message(MSG_GREEN, 12, format("There were some bones in the rubble."));
 					else if (typ == 4)  message(MSG_GREEN, 12, format("And found something edible!"));
@@ -449,7 +450,7 @@ void do_cmd_search(void)
 	search_essence(TRUE);
 
 	/* acknowledge items on the player spot */
-	/* (FIX) the code should be elsewhere, I dunno why a brand new item cannot be seen via notice_unseen */
+	/* (FIX) this code should be elsewhere, I dunno why a brand new item cannot be seen via notice_unseen */
 	object_type *o_ptr;
 	for (o_ptr = get_first_object(p_ptr->py, p_ptr->px); o_ptr;
 		  o_ptr = get_next_object(o_ptr))
@@ -459,6 +460,9 @@ void do_cmd_search(void)
 
 	/* Notice unseen objects */
 	notice_unseen_objects();
+	
+	/* describe the current room */
+	describe_room(cave_desc[p_ptr->py][p_ptr->px]);
 }
 
 
@@ -1446,6 +1450,7 @@ void move_player(int dir, int do_pickup)
 	if (cave_m_idx[y][x] > 0)
 	{
 		/* Attack.  Usually do not move. */
+		/* (IDEA) bash (or attack and take a step back) should be handled here */
 		if (py_attack(y, x)) return;
 	}
 
@@ -1655,6 +1660,7 @@ void move_player(int dir, int do_pickup)
 				can_move = TRUE;
 				break;
 			}
+			
 			case FEAT_BONEPILE:
 			{
 				/* Dark magic-users have no need to be careful. */
@@ -1685,9 +1691,9 @@ void move_player(int dir, int do_pickup)
 					p_ptr->command_rep = 1;
 					p_ptr->command_dir = dir;
 				}
-
 				break;
 			}
+			
 			case FEAT_RUBBLE:
 			{
 				/* Characters in wraithform move easily through rubble. */
@@ -1726,6 +1732,8 @@ void move_player(int dir, int do_pickup)
 			{
 				/* Characters in wraithform move easily through webs. */
 				if (p_ptr->wraithform) can_move = TRUE;
+				
+				/* (IDEA) allow for some shapeshift to avoid webs or other new terrain */
 
 				/* Require two turns to get through webs */
 				else if (p_ptr->crossing_moves >= 1)
@@ -2042,12 +2050,13 @@ void move_player(int dir, int do_pickup)
 		if (p_ptr->leaving) return;
 
 		/* -KN- (DESC) */
-		/* describe a new room when entering from corridor (< 2)*/
-		if (cave_desc[py][px] < 2)
+		/* describe a new room when entering from corridor (desc == 0) */
+		if (cave_desc[py][px] < 1)
 		{
 			/* into a room, not visited from this tile yet */
 			if (cave_desc[y][x] > 0 && !(cave_mark[y][x] & (MARK_SEEN)))
 			{
+				printf("ROOOOM = %d\n", cave_desc[y][x]);
 				describe_room(cave_desc[y][x]);
 				cave_mark[y][x] |= (MARK_SEEN);
 			}
@@ -2792,12 +2801,16 @@ void run_step(int dir)
 /* -KN-
  * Show a message, describing entered room or while searching
  */
-void describe_room(s16b room)
+void describe_room(int room)
 {
 	cptr desc;
+	desc = "(empty)";
 	
 	if (room < 20)
 	{
+		if      (room == 0) desc = "a corridor";
+		else if (room == 1) desc = "the dungeon";
+		
 		if (room ==  2) desc = "plain room";
 		if (room ==  3) desc = "interesting room";
 		if (room ==  4) desc = "smelly room";
@@ -2868,198 +2881,222 @@ void describe_room(s16b room)
 	else if (room < 80)
 	{
 		// wild
-		if (room == 60) desc = "overgrown room";
-		if (room == 61) desc = "room with patches of cave grass";
-		if (room == 62) desc = "room with walls covered in moss";
-		if (room == 63) desc = "chamber with green moss on the floor";
-		if (room == 64) desc = "room with puddles of water";
-		if (room == 65) desc = "room with puddles and cavern grass";
-		if (room == 66) desc = "mossy room with dirt and pebbles";
-		if (room == 67) desc = "room with cavern vegetation";
+		if (room == 60) desc = "overgrown room";  
+		if (room == 61) desc = "room with patches of cave grass";  
+		if (room == 62) desc = "room with walls covered in moss";  
+		if (room == 63) desc = "chamber with green moss on the floor";  
+		if (room == 64) desc = "room with puddles of water";  
+		if (room == 65) desc = "room with puddles and cavern grass";  
+		if (room == 66) desc = "mossy room with dirt and pebbles";  
+		if (room == 67) desc = "room with cavern vegetation";  
 		if (room == 68) desc = "room with some roots hanging from the ceiling";
-		if (room == 69) desc = "room with moss and dropping water";
-		if (room == 70) desc = "room with roots and patches of undergrowth";
-		if (room == 71) desc = "overgrown room";
-		if (room == 72) desc = "overgrown room";
-		if (room == 73) desc = "overgrown room";
-		if (room == 74) desc = "overgrown room";
-		if (room == 75) desc = "overgrown room";
-		if (room == 76) desc = "overgrown room";
-		if (room == 77) desc = "overgrown room";
-		if (room == 78) desc = "overgrown room";
-		if (room == 79) desc = "overgrown room";
+		if (room == 69) desc = "room with moss and dropping water";  
+		if (room == 70) desc = "room with roots and patches of undergrowth";  
+		if (room == 71) desc = "room with thick patches of wild dungeon trees";
+		if (room == 72) desc = "room overgrown with dungeon trees";
+		if (room == 73) desc = "lush chamber with dungeon vegetation";
+		if (room == 74) desc = "cave with branching roots all over the walls"; 
+		if (room == 75) desc = "room with tangled branches of underwood";  
+		if (room == 76) desc = "unusually vivid cave chamber";  
+		if (room == 77) desc = "room with twisted dungeon roots";  
+		if (room == 78) desc = "room that changes into an underground marsh";  
+		if (room == 79) desc = "room with stacks of fallen darkwood";  
 	}
 	else if (room < 100)
 	{
 		// guard room
-		if (room == 80) desc = "guard post of some sort";
-		if (room == 81) desc = "armoury chamber";
-		if (room == 82) desc = "small outpost";
-		if (room == 83) desc = "guard post";
-		if (room == 84) desc = "guard post";
-		if (room == 85) desc = "guard post";
-		if (room == 86) desc = "guard post";
-		if (room == 87) desc = "guard post";
-		if (room == 88) desc = "guard post";
-		if (room == 89) desc = "guard post";
-		if (room == 90) desc = "guard post";
-		if (room == 91) desc = "guard post";
-		if (room == 92) desc = "guard post";
-		if (room == 93) desc = "guard post";
-		if (room == 94) desc = "guard post";
-		if (room == 95) desc = "guard post";
-		if (room == 96) desc = "guard post";
-		if (room == 97) desc = "guard post";
-		if (room == 98) desc = "guard post";
-		if (room == 99) desc = "buried dungeon tower";
+		if (room == 80) desc = "guard post of some sort";  
+		if (room == 81) desc = "almost empty armoury";  
+		if (room == 82) desc = "small outpost";  
+		if (room == 83) desc = "room with broken bars of rusty metal"; 
+		if (room == 84) desc = "rusty old room";
+		if (room == 85) desc = "abandoned outpost";
+		if (room == 86) desc = "room with a small collonade";  
+		if (room == 87) desc = "guarding chamber";  
+		if (room == 88) desc = "long forgotten armoury";  
+		if (room == 89) desc = "room with thin pillars";  
+		if (room == 90) desc = "room with massive pillars";  
+		if (room == 91) desc = "chamber with stone columns";  
+		if (room == 92) desc = "abandoned forge";  
+		if (room == 93) desc = "ornate collonade";  
+		if (room == 94) desc = "fortified hallway";  
+		if (room == 95) desc = "abandoned throne room";  
+		if (room == 96) desc = "ruined hall";  
+		if (room == 97) desc = "hall of giant pillars";  
+		if (room == 98) desc = "underground ruined temple";
+		if (room == 99) desc = "buried dungeon tower";  
 	}
 	else if (room < 120)
 	{
 		// boneyard
-		if (room == 100) desc = "boneyard";
-		if (room == 101) desc = "boneyard";
-		if (room == 102) desc = "boneyard";
-		if (room == 103) desc = "boneyard";
-		if (room == 104) desc = "boneyard";
-		if (room == 105) desc = "boneyard";
-		if (room == 106) desc = "boneyard";
-		if (room == 107) desc = "boneyard";
-		if (room == 108) desc = "boneyard";
-		if (room == 109) desc = "boneyard";
-		if (room == 110) desc = "boneyard";
-		if (room == 111) desc = "boneyard";
-		if (room == 112) desc = "boneyard";
-		if (room == 113) desc = "boneyard";
-		if (room == 114) desc = "boneyard";
-		if (room == 115) desc = "boneyard";
-		if (room == 116) desc = "boneyard";
-		if (room == 117) desc = "boneyard";
-		if (room == 118) desc = "boneyard";
-		if (room == 119) desc = "boneyard";
+		if (room == 100) desc = "rough natural catacombs";
+		if (room == 101) desc = "room with scattered animal bones";  
+		if (room == 102) desc = "room with a nasty smell of decay";
+		if (room == 103) desc = "burial grounds";  
+		if (room == 104) desc = "underground graveyard";  
+		if (room == 105) desc = "site of digging operation";  
+		if (room == 106) desc = "chamber with the stench of death";  
+		if (room == 107) desc = "abandoned silent garden";  
+		if (room == 108) desc = "chilly underground room";  
+		if (room == 109) desc = "strangely eerie place";  
+		if (room == 110) desc = "hunting grounds";  
+		if (room == 111) desc = "boneyard";  
+		if (room == 112) desc = "ancient orcish cemetery";  
+		if (room == 113) desc = "barrow mounds ground";  
+		if (room == 114) desc = "cemetery lair";  
+		if (room == 115) desc = "ossuary";  
+		if (room == 116) desc = "burial pits";  
+		if (room == 117) desc = "catacomb with no abyss";  
+		if (room == 118) desc = "skeletal archway";  
+		if (room == 119) desc = "dark room with many graves";  
 	}
 	else if (room < 140)
 	{
 		// web infested
-		if (room == 120) desc = "web infested room";
-		if (room == 121) desc = "nesting ground";
-		if (room == 122) desc = "spider lair";
-		if (room == 123) desc = "ancient room with cobwebs";
-		if (room == 124) desc = "old room";
-		if (room == 125) desc = "old room";
-		if (room == 126) desc = "old room";
-		if (room == 127) desc = "old room";
-		if (room == 128) desc = "old room";
-		if (room == 129) desc = "old room";
-		if (room == 130) desc = "old room";
-		if (room == 131) desc = "old room";
-		if (room == 132) desc = "old room";
-		if (room == 133) desc = "old room";
-		if (room == 134) desc = "old room";
-		if (room == 135) desc = "old room";
-		if (room == 136) desc = "old room";
-		if (room == 137) desc = "old room";
-		if (room == 138) desc = "old room";
-		if (room == 139) desc = "old room";
+		if (room == 120) desc = "web infested room";  
+		if (room == 121) desc = "nesting ground";  
+		if (room == 122) desc = "spider lair";  
+		if (room == 123) desc = "ancient room with cobwebs";  
+		if (room == 124) desc = "room covered in spider webs";  
+		if (room == 125) desc = "perfect room for a spider ambush";  
+		if (room == 126) desc = "gloomy room with ceiling all covered in webs";  
+		if (room == 127) desc = "infested storage room";  
+		if (room == 128) desc = "cavernous room with massive cobwebs";
+		if (room == 129) desc = "arachnid hunting grounds";  
+		if (room == 130) desc = "dark room absolutely not suited for arachnophobes";  
+		if (room == 131) desc = "web infested room full of cocoons";  
+		if (room == 132) desc = "nasty spider cavern";  
+		if (room == 133) desc = "chamber with cocoons and webs hanging from the ceiling";  
+		if (room == 134) desc = "webbed hideout";  
+		if (room == 135) desc = "arachnid nest within a deep antechamber";  
+		if (room == 136) desc = "cocoon-littered hallway";  
+		if (room == 137) desc = "room consumed by giant spider webs";  
+		if (room == 138) desc = "room with intricately woven webs";
+		if (room == 139) desc = "spider lair infused with malevolent intelligence of sorts";
 	}
 	else if (room < 160)
 	{
 		// laboratory
-		if (room == 140) desc = "strange laboratory";
-		if (room == 141) desc = "alchemical workshop";
-		if (room == 142) desc = "dusty library";
-		if (room == 143) desc = "abandoned lab";
-		if (room == 144) desc = "abandoned lab";
-		if (room == 145) desc = "abandoned lab";
-		if (room == 146) desc = "abandoned lab";
-		if (room == 147) desc = "abandoned lab";
-		if (room == 148) desc = "abandoned lab";
-		if (room == 149) desc = "abandoned lab";
-		if (room == 150) desc = "abandoned lab";
-		if (room == 151) desc = "abandoned lab";
-		if (room == 152) desc = "abandoned lab";
-		if (room == 153) desc = "abandoned lab";
-		if (room == 154) desc = "abandoned lab";
-		if (room == 155) desc = "abandoned lab";
-		if (room == 156) desc = "abandoned lab";
-		if (room == 157) desc = "abandoned lab";
-		if (room == 158) desc = "abandoned lab";
-		if (room == 159) desc = "abandoned lab";
+		if (room == 140) desc = "strange laboratory";  
+		if (room == 141) desc = "alchemical workshop";  
+		if (room == 142) desc = "abandoned alchemy lab";  
+		if (room == 143) desc = "room with weird reagents and broken glass";  
+		if (room == 144) desc = "rat infested laboratory";  
+		if (room == 145) desc = "site of weird experiments";  
+		if (room == 146) desc = "room with broken lab equipment";  
+		if (room == 147) desc = "abandoned research chamber";  
+		if (room == 148) desc = "nauseating room with cooking tools";  
+		if (room == 149) desc = "room with impressive cooking pit";
+		if (room == 150) desc = "room with a large suspicious cauldron";  
+		if (room == 151) desc = "witchy chamber with a great cauldron";  
+		if (room == 152) desc = "vile abbatoire chamber";  
+		if (room == 153) desc = "very dark ritual chamber";
+		if (room == 154) desc = "hellish workshop with torture devices";  
+		if (room == 155) desc = "workshop room with a large furnace";  
+		if (room == 156) desc = "laboratory with glowing substances in caskets";
+		if (room == 157) desc = "lab room with smoking barrels";  
+		if (room == 158) desc = "room with orcish breeding experiments";  
+		if (room == 159) desc = "necromancer's alchemical hideout";
 	}
 	else if (room < 180)
 	{
 		// stalagmite
-		if (room == 160) desc = "cavern";
-		if (room == 161) desc = "cavern";
-		if (room == 162) desc = "cavern";
-		if (room == 163) desc = "cavern";
-		if (room == 164) desc = "cavern";
-		if (room == 165) desc = "cavern";
-		if (room == 166) desc = "cavern";
-		if (room == 167) desc = "cavern";
-		if (room == 168) desc = "cavern";
-		if (room == 169) desc = "cavern";
-		if (room == 170) desc = "cavern";
-		if (room == 171) desc = "cavern";
-		if (room == 172) desc = "cavern";
-		if (room == 173) desc = "cavern";
-		if (room == 174) desc = "cavern";
-		if (room == 175) desc = "cavern";
-		if (room == 176) desc = "cavern";
-		if (room == 177) desc = "cavern";
-		if (room == 178) desc = "cavern";
-		if (room == 179) desc = "cavern";
+		if (room == 160) desc = "cavern with jagged ceiling";  
+		if (room == 161) desc = "cavern room";  
+		if (room == 162) desc = "fungal cavern";  
+		if (room == 163) desc = "windy cave";  
+		if (room == 164) desc = "stalagmite chamber";  
+		if (room == 165) desc = "room with stalactites";  
+		if (room == 166) desc = "very rough cavernous room";  
+		if (room == 167) desc = "mossy cave chamber";  
+		if (room == 168) desc = "deep underground cavern";  
+		if (room == 169) desc = "icy cold cave chamber";  
+		if (room == 170) desc = "crystal grotto";  
+		if (room == 171) desc = "burial cave with painted ceiling";  
+		if (room == 172) desc = "underground dark shrine";  
+		if (room == 173) desc = "cavern vault of fossils";  
+		if (room == 174) desc = "abandoned troll cave";  
+		if (room == 175) desc = "orcish cave lair";  
+		if (room == 176) desc = "koboulderarium";  
+		if (room == 177) desc = "grand stalagmite pits";  
+		if (room == 178) desc = "great underground chimney";  
+		if (room == 179) desc = "foul smelling cavern";  
 	}
 	else if (room < 200)
 	{
 		// basin
-		if (room == 180) desc = "room with basin";
-		if (room == 181) desc = "room with basin";
-		if (room == 182) desc = "room with basin";
-		if (room == 183) desc = "room with basin";
-		if (room == 184) desc = "room with basin";
-		if (room == 185) desc = "room with basin";
-		if (room == 186) desc = "room with basin";
-		if (room == 187) desc = "room with basin";
-		if (room == 188) desc = "room with basin";
-		if (room == 189) desc = "room with basin";
-		if (room == 190) desc = "room with basin";
-		if (room == 191) desc = "room with basin";
-		if (room == 192) desc = "room with basin";
-		if (room == 193) desc = "room with basin";
-		if (room == 194) desc = "room with basin";
-		if (room == 195) desc = "room with basin";
-		if (room == 196) desc = "room with basin";
-		if (room == 197) desc = "room with basin";
-		if (room == 198) desc = "room with basin";
-		if (room == 199) desc = "room with basin";
+		if (room == 180) desc = "room with a cascading stream";  
+		if (room == 181) desc = "room with natural fountains";  
+		if (room == 182) desc = "chamber with foul water wells";  
+		if (room == 183) desc = "room with underground pools";  
+		if (room == 184) desc = "room with running water";  
+		if (room == 185) desc = "room with ice cold stream";  
+		if (room == 186) desc = "room with dirty water puddles";  
+		if (room == 187) desc = "wet room with some water wells";  
+		if (room == 188) desc = "room with some water and nasty fish odour"; 
+		if (room == 189) desc = "room with a primitive aquaduct";  
+		if (room == 190) desc = "room with a shallow basin";  
+		if (room == 191) desc = "room with a dark watering hole";  
+		if (room == 192) desc = "cave chamber with large geyser";  
+		if (room == 193) desc = "steaming hot cave with a basin";  
+		if (room == 194) desc = "ice cold cave with a pool of water";  
+		if (room == 195) desc = "room with a small underground lake";  
+		if (room == 196) desc = "room with a water body, teeming with life"; 
+		if (room == 197) desc = "ruined aquatic temple";  
+		if (room == 198) desc = "chamber of the great fountain";  
+		if (room == 199) desc = "room with a shimmering radiant lake";  
 	}
 	else if (room < 220)
 	{
 		// dark
-		if (room == 200) desc = "room filled up with smoke";
-		if (room == 201) desc = "room obscured in smoke and dust";
-		if (room == 202) desc = "misty room";
-		if (room == 203) desc = "misty room";
+		if (room == 200) desc = "room filled up with a smoke";  
+		if (room == 201) desc = "room obscured in smoke and dust";  
+		if (room == 202) desc = "dark misty room";  
+		if (room == 203) desc = "room with strange shadows";  
 		if (room == 204) desc = "misty room";
-		if (room == 205) desc = "misty room";
-		if (room == 206) desc = "misty room";
-		if (room == 207) desc = "misty room";
-		if (room == 208) desc = "misty room";
-		if (room == 209) desc = "misty room";
-		if (room == 210) desc = "room filled with heavy mist";
-		if (room == 211) desc = "room with menacing dense fog";
-		if (room == 212) desc = "very obscured dark room";
-		if (room == 213) desc = "dark room";
-		if (room == 214) desc = "dark room";
-		if (room == 215) desc = "dark room";
-		if (room == 216) desc = "dark room";
-		if (room == 217) desc = "dark room";
-		if (room == 218) desc = "dark room";
-		if (room == 219) desc = "dark room";
+		if (room == 205) desc = "misty room";  
+		if (room == 206) desc = "misty room";  
+		if (room == 207) desc = "misty room";  
+		if (room == 208) desc = "misty room";  
+		if (room == 209) desc = "misty room";  
+		if (room == 210) desc = "room filled with heavy mist";  
+		if (room == 211) desc = "room with menacing dense fog";  
+		if (room == 212) desc = "very obscured dark room";  
+		if (room == 213) desc = "dark room emanating vile sorcery";  
+		if (room == 214) desc = "dark room";  
+		if (room == 215) desc = "dark room";  
+		if (room == 216) desc = "dark room";  
+		if (room == 217) desc = "dark room";  
+		if (room == 218) desc = "dark room";  
+		if (room == 219) desc = "dark room";  
+	}
+	else if (room < 240)
+	{
+		// archives
+		if (room == 220) desc = "room with old broken shelves";  
+		if (room == 221) desc = "room with rows of shelves";  
+		if (room == 222) desc = "dusty chamber full of scrolls";  
+		if (room == 223) desc = "room with ancient scroll racks";
+		if (room == 224) desc = "messy room with piles of broken clay tablets";
+		if (room == 225) desc = "archive chamber, turned into a foul lair";
+		if (room == 226) desc = "a museum chamber of sorts";  
+		if (room == 227) desc = "burned down archives";  
+		if (room == 228) desc = "musky old archive";  
+		if (room == 229) desc = "web infested archive room";  
+		if (room == 230) desc = "chamber of dragon archive";
+		if (room == 231) desc = "morgul library";  
+		if (room == 232) desc = "archive room";  
+		if (room == 233) desc = "archive room";  
+		if (room == 234) desc = "cartography archive";  
+		if (room == 235) desc = "room with strange exponates";  
+		if (room == 236) desc = "archive of ancient magic";  
+		if (room == 237) desc = "archive room";  
+		if (room == 238) desc = "archive room";  
+		if (room == 239) desc = "archive room";  
 	}
 	else
 	{
-		desc = "(undefined)";
+		desc = "( > 240 !!!)";
 	}
 	
 	message_format(MSG_L_GREEN, 10, "You are in %s.", desc);	

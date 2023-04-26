@@ -2244,7 +2244,7 @@ static bool do_cmd_tunnel_aux(int y, int x)
 			return (FALSE);
 		}
 
-		/* Tunnel */
+		/* Tunnel -KN- (IDEA) make some diggers more effective */
 		else if ((p_ptr->skill_dig > rand_range(20, 2420)) && twall(y, x))
 		{
 			msg_print("You have chopped down the trees.");
@@ -3019,6 +3019,8 @@ void do_cmd_alter(bool deliberate)
 	/*
 	 * If a monster is present, and visible, a Burglar may steal from it.
 	 * Otherwise, the player will simply attack. -LM-
+	 * -KN- Stamina use allows for cleave several adj. monsters.
+	 * Warriors can do it without expanding STA.
 	 */
 	if (cave_m_idx[y][x] > 0)
 	{
@@ -3033,7 +3035,9 @@ void do_cmd_alter(bool deliberate)
 		}
 		else
 		{
-			/* -KN- (STA); burglary should check for sleeping or running (?) */
+			/* -KN- (STA); burglary should check for sleeping or running (?)
+			 *	if (m_ptr->min_range > MAX_SIGHT) // is running (ICI)
+			 */
 			if ((p_ptr->cstam > 0) ||
 				((p_ptr->pskills[S_SWORD].cur > 29) ||
 				(p_ptr->pskills[S_HAFTED].cur > 29) ||
@@ -3212,6 +3216,29 @@ void do_cmd_alter(bool deliberate)
 
 		/* Open -- unless we just locked it */
 		if (!flag) more = do_cmd_open_aux(y, x);
+	}
+
+	/* -KN- interact with CAULDRONs (ICI) */
+	else if ((feat == FEAT_CAULDRON) || (feat == FEAT_CAULDRON_X))
+	{
+		/* Investigate */
+		if (feat == FEAT_CAULDRON_X)
+		{
+			/* look inside // format("You see %s.", stuff) */
+			message(MSG_SLATE, 0, format("There's a foul liquid inside the cauldron."));
+		}
+		else
+		{
+			/* ...empty (IDEA) could be pushed one square */
+			message(MSG_SLATE, 0, format("The cauldron is empty."));
+		}
+	}
+
+	/* -KN- interact with smoke */
+	else if ((feat == FEAT_SMOKE) || (feat == FEAT_SMOKE_X))
+	{
+		/* certain skill can perhaps blow it away? */
+		message(MSG_SLATE, 0, format("You observe the smoke."));
 	}
 
 	/* -KN- hack away the webs */

@@ -1001,7 +1001,13 @@ void adjust_dam(int *damage, object_type *o_ptr, monster_type *m_ptr,
 				}
 
 				/* Otherwise, take extra damage */
-				else if (add < 10) add = 10;
+				else
+				{
+					if (add < 10) add = 10;
+					
+					/* -KN- (QADV) add multiplication to allow for multiple brands */
+					mul += 2;
+				}
 			}
 
 			/* Brand (Elec) */
@@ -1017,7 +1023,13 @@ void adjust_dam(int *damage, object_type *o_ptr, monster_type *m_ptr,
 				}
 
 				/* Otherwise, take extra damage */
-				else if (add < 14) add = 14;
+				else
+				{
+					if (add < 14) add = 14;
+					
+					/* -KN- (QADV) add multiplication */
+					mul += 2;
+				}
 			}
 
 			/* Brand (Fire) */
@@ -1037,6 +1049,9 @@ void adjust_dam(int *damage, object_type *o_ptr, monster_type *m_ptr,
 				{
 					if ((f1 & (TR1_BRAND_FLAME)) && (add < 22)) add = 22;
 					else if (add < 14) add = 14;
+					
+					/* -KN- (QADV) add multiplication */
+					mul += 2;
 
 					/* Notice susceptibility */
 					if (r_ptr->flags3 & (RF3_HURT_FIRE))
@@ -1069,6 +1084,9 @@ void adjust_dam(int *damage, object_type *o_ptr, monster_type *m_ptr,
 				{
 					if (add < 14) add = 14;
 
+					/* -KN- (QADV) add multiplication */
+					mul += 2;
+
 					/* Notice susceptibility */
 					if (r_ptr->flags3 & (RF3_HURT_COLD))
 					{
@@ -1095,8 +1113,20 @@ void adjust_dam(int *damage, object_type *o_ptr, monster_type *m_ptr,
 				}
 
 				/* Otherwise, take extra damage */
-				else if ((f1 & (TR1_BRAND_VENOM)) && (add < 22)) add = 22;
-				else if (add < 14) add = 14;
+				else if ((f1 & (TR1_BRAND_VENOM)) && (add < 22))
+				{
+					add = 22;
+					
+					/* -KN- (QADV) add +30% multiplication */
+					mul += 3;
+				}
+				else if (add < 14)
+				{
+					add = 14;
+					
+					/* -KN- (QADV) add multiplication */
+					mul += 2;
+				}
 			}
 
 			/* Special attack (Impact and Tunneling) */

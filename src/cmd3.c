@@ -2030,18 +2030,18 @@ static cptr ident_info[] =
 	"K:Killer Beetle/Scorpion",		/* -KN- moved scorpions here */
 	"L:Lich",
 	"M:Mummy",
-	"N:N['o]os archetype",	/* -KN- added */
+	"N:N['o]os archetype",			/* -KN- added */
 	"O:Ogre",
 	"P:Giant Humanoid",
 	"Q:Quylthulg (Pulsing Flesh Mound)",
 	"R:Reptile/Amphibian",
-	"S:Spider",				/* -KN- removed scorpions & ticks */
+	"S:Spider",						/* -KN- removed scorpions & ticks */
 	"T:Troll",
-	"U:Ultr[/o] major",		/* -KN- added */
+	"U:Ultr[/o] major",				/* -KN- added */
 	"V:Vampire",
 	"W:Wight/Wraith/etc",
 	"X:Xorn/Xaren/etc",
-	"Y:Tree/Huorn",			/* -KN- changed, added */
+	"Y:Tree/Huorn",					/* -KN- changed, added */
 	"Z:Zephyr Hound",
 	"[:Hard armor",
 	"\\:A hafted (blunt) weapon",
@@ -2051,16 +2051,16 @@ static cptr ident_info[] =
 	"`:A tool or junk",
 	"a:Ant",
 	"b:Bat",
-	"c:Centipede/Crawler",	/* -KN- modified */
+	"c:Centipede/Crawler",			/* -KN- modified */
 	"d:Dragon",
 	"e:Floating Eye",
 	"f:Feline",
 	"g:Golem",
 	"h:Hobbit/Elf/Dwarf",
-	"i:Icky/Insectoid",		/* -KN- changed */
+	"i:Icky/Insectoid",				/* -KN- changed */
 	"j:Jelly",
 	"k:Kobold",
-	"l:Larvae",				/* -KN- changed, added */
+	"l:Larvae",						/* -KN- changed, added */
 	"m:Mold",
 	"n:Naga",
 	"o:Orc",
@@ -2069,12 +2069,12 @@ static cptr ident_info[] =
 	"r:Rodent",
 	"s:Skeleton",
 	"t:Townsperson",
-	"u:Ultr[/o] minor",		/* -KN- added */
+	"u:Ultr[/o] minor",				/* -KN- added */
 	"v:Vortex",
 	"w:Worm/Worm-Mass",
 	/* "x:unused", */
-	"y:Yeek/Oryapin",		/* -KN- modified; added badgerfolk */
-	"z:Zombie",				/* -KN- removed Mummy */
+	"y:Yeek/Oryapin",				/* -KN- modified; added badgerfolk */
+	"z:Zombie",						/* -KN- removed Mummy */
 	"{:A missile",
 	"|:An edged weapon",
 	"}:A missile launcher",
