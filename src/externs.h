@@ -84,6 +84,7 @@ extern byte spell_range_RF5[32];
 extern byte spell_range_RF6[32];
 extern byte spell_range_RF7[32];
 extern const byte race_adj_cost_skill[NUM_SKILLS][MAX_RACES];
+extern const totems totem_info[16]; 								// -KN- added (TOT)
 extern const skill_type skill_info[NUM_SKILLS];
 extern talent_type talent_info[NUM_TALENTS];
 extern flag_data flag_creation_data[128];

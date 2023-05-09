@@ -5054,13 +5054,39 @@ F:GLOW_WORDS
 
 #### Magic Books - ??? ####
 
-## XXX 690 XXX ##
+## -KN- added as Totem Books ##
+N:690:[Your First Totems]
+G:?:t
+I:89:0:0
+W:5:0:30:35
+A:5/60
+C:0:2d4:0:0:0
+F:GLOW_WORDS
 
-## XXX 691 XXX ##
+N:691:[Advanced Totemics]
+G:?:t
+I:89:1:0
+W:10:0:30:225
+A:10/60
+C:0:4d8:-5:0:0
+F:GLOW_WORDS
 
-## XXX 692 XXX ##
+N:692:[Expert Level Shamanism]
+G:?:t
+I:89:2:0
+W:25:0:30:1000
+A:25/60
+C:0:5d17:-5:0:0
+F:GLOW_WORDS
 
-## XXX 693 XXX ##
+N:693:[The Exquisite Totems]
+G:?:t
+I:89:3:0
+W:40:0:30:4000
+A:40/40:55/20
+C:0:5d29:-5:0:0
+F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD |
+F:GLOW_WORDS
 
 ## XXX 694 XXX ##
 

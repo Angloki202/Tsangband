@@ -492,6 +492,41 @@ C:10
 F:TF_PASSABLE | TF_OBJECT | TF_TRAP | TF_LOS | TF_PROJECT | TF_FLOOR | TF_NO_SCENT
 D:Smoking ground.
 
+## added terrain -KN- (TOT) expansion
+N:76:fire totem
+G:;:R
+C:20
+F:TF_PASSABLE | TF_LOS | TF_PROJECT
+D:A makeshift totem made with red and orange flamy accents.
+
+## added terrain -KN- (TOT) expansion
+N:77:water totem
+G:;:B
+C:20
+F:TF_PASSABLE | TF_LOS | TF_PROJECT
+D:A makeshift totem made with blue and green benthic patterns.
+
+## added terrain -KN- (TOT) expansion
+N:78:earth totem
+G:;:U
+C:20
+F:TF_PASSABLE | TF_LOS | TF_PROJECT
+D:A makeshift totem made with brown and mossy rocky elements.
+
+## added terrain -KN- (TOT) expansion
+N:79:air totem
+G:;:Y
+C:20
+F:TF_PASSABLE | TF_LOS | TF_PROJECT
+D:A makeshift totem made with yellow, azure cloudy details.
+
+
+#
+#
+# space for more terrain here
+#
+#
+
 
 N:84:the General Store
 G:1:U

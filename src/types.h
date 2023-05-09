@@ -96,6 +96,7 @@ typedef struct stock_type stock_type;
 typedef struct store_type store_type;
 typedef struct magic_type magic_type;
 typedef struct player_magic player_magic;
+typedef struct totems totems;
 typedef struct skill_type skill_type;
 typedef struct skill_data skill_data;
 typedef struct talent_type talent_type;
@@ -924,6 +925,18 @@ struct player_magic
 /*
  * Information about skills
  */
+
+/*
+ * -KN- (TOT) totem variables from table
+ */
+struct totems
+{
+	cptr name;            /* Name */
+	cptr desc;            /* Brief description */
+	s16b freq;	      	  /* Frequency how often this totem triggers */
+	s16b val; 		      /* Basic value, further modified by CHR % S_SHAMANIC */
+	s16b upg; 		      /* Improvement steps by S_SHAMANIC */
+};
 
 /*
  * General skill information.

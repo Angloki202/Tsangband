@@ -1300,12 +1300,16 @@
 #define FEAT_CRYPT	       69
 #define FEAT_MONOLITH      70
 
-/* -KN- added corpse pile */
+/* -KN- added corpse pile (ICI) unused yet */
 #define FEAT_CORPSES       72
 
-/* -KN- added smoke (modified by MARK flags) */
+/* -KN- added smoke (ruled by MARK_SMOKE) and (TOT) */
 #define FEAT_SMOKE         74
 #define FEAT_SMOKE_X       75
+#define FEAT_TOTEM_FIRE    76
+#define FEAT_TOTEM_WATER   77
+#define FEAT_TOTEM_EARTH   78
+#define FEAT_TOTEM_AIR     79
 
 /* Shops */
 #define FEAT_SHOP_HEAD     84
@@ -1951,6 +1955,7 @@
 #define TV_FLASK                   77	/* Flasks of oil */
 #define TV_FOOD                    80	/* Food and mushrooms */
 
+#define TV_TOTEM_BOOK              89   /* -KN- manual of totem construction */
 #define TV_MAGIC_BOOK              90	/* Books of Sorcery */
 #define TV_PRAYER_BOOK             91	/* Books of Piety */
 #define TV_NATURE_BOOK             92	/* Stones of Nature Lore */
@@ -3367,7 +3372,7 @@
  */
 #define MARK_SEEN         0x0001  /* mark the room spot as seen, not triggering desc. */
 #define MARK_SEARCHED     0x0002  /* mark the spot as already searched */
-#define MARK_0004         0x0004  /*  */
+#define MARK_MADE         0x0004  /* (TOT) made by the player */
 #define MARK_0008         0x0008  /*  */
 #define MARK_0010         0x0010  /*  */
 #define MARK_0020         0x0020  /*  */
@@ -3378,18 +3383,18 @@
 #define MARK_BROKEN       0x0200  /* susceptible for collapse */
 #define MARK_0400         0x0400  /*  */
 #define MARK_0800         0x0800  /*  */
-#define MARK_1000         0x1000  /*  */
-#define MARK_2000         0x2000  /*  */
-#define MARK_4000         0x4000  /*  */
-#define MARK_8000         0x8000  /*  */
+#define MARK_FIRE         0x1000  /* (TOT) fire element */
+#define MARK_WATER        0x2000  /* (TOT) water element */
+#define MARK_EARTH        0x4000  /* (TOT) earth element */
+#define MARK_AIR          0x8000  /* (TOT) air element */
 
 /*
  * Cave grid marks that get saved in the savefile (all, atm)
  */
-#define SAVE_CAVE_MARKS (MARK_SEEN | MARK_SEARCHED | MARK_0004 | MARK_0008 | \
+#define SAVE_CAVE_MARKS (MARK_SEEN | MARK_SEARCHED | MARK_MADE | MARK_0008 | \
 						 MARK_0010 | MARK_0020 | MARK_FLICKER | MARK_SMOKE | \
 						 MARK_ICE | MARK_BROKEN | MARK_0400 | MARK_0800 | \
- 						 MARK_1000 | MARK_2000 | MARK_4000 | MARK_8000)
+ 						 MARK_FIRE | MARK_WATER | MARK_EARTH | MARK_AIR)
 
 
 /*** Trap defines ***/
@@ -4953,7 +4958,8 @@
  * Object is a magic book
  */
 #define is_magic_book(T) \
-	(((T)->tval == TV_MAGIC_BOOK)      || \
+	(((T)->tval == TV_TOTEM_BOOK)      || \
+	 ((T)->tval == TV_MAGIC_BOOK)      || \
 	 ((T)->tval == TV_PRAYER_BOOK)     || \
 	 ((T)->tval == TV_NATURE_BOOK)     || \
 	 ((T)->tval == TV_DARK_BOOK))

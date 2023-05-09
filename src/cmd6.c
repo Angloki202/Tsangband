@@ -2208,8 +2208,7 @@ cptr do_object(int mode, object_type *o_ptr)
  * a direction should be given one automatically, but those that require
  * other kinds of user interaction should usually not go off.
  */
-cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used,
-	bool uncontrolled)
+cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used, bool uncontrolled)
 {
 	/* Get the object kind */
 	object_kind *k_ptr = &k_info[o_ptr->k_idx];
@@ -2243,6 +2242,12 @@ cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used,
 
 	/* Determine device skill (0 to 100) */
 	int power = get_skill(S_DEVICE, 0, 100);
+	
+	/* -KN- (TOT) */
+	if (o_ptr->tval == TV_TOTEM_BOOK) power = get_skill(S_SHAPECHANGE, 50, 100);
+
+
+
 
 	char buf[DESC_LEN];
 	char o_name[DESC_LEN];
@@ -2261,9 +2266,10 @@ cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used,
 	}
 
 	/* Jump to the right category of item */
-	if      (o_ptr->tval == TV_STAFF) goto do_staff;
-	else if (o_ptr->tval == TV_WAND)  goto do_wand;
-	else if (o_ptr->tval == TV_ROD)   goto do_rod;
+	if      (o_ptr->tval == TV_STAFF) 		goto do_staff;
+	else if (o_ptr->tval == TV_WAND)  		goto do_wand;
+	else if (o_ptr->tval == TV_ROD)   		goto do_rod;
+	else if (o_ptr->tval == TV_TOTEM_BOOK)  goto do_totem;
 	else return ("");
 
 
@@ -3806,6 +3812,148 @@ cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used,
 
 	/* Return */
 	return ("");
+	
+	
+	/*** -KN- Handle Totems ***/
+	do_totem:
+
+	/* Sound (ICI) */
+	//if (use) sound(MSG_USE_STAFF);
+
+	/* Special message when using TOTEM tome for the first time */
+	if (msg)
+	{
+		msg_print("You can understand several totemic rituals.");
+		
+		/* first time opening the book */
+		/* unlock spells randomly via SPECIAL_XXX1 through XXX3 */
+	}
+
+
+	screen_save(FALSE);
+
+	int tot = 0;
+	int i;
+	int xx = (Term->cols - 40) / 3;
+
+	/* Print name of the totem book out */
+	(void)strnfmt(buf, sizeof(buf), "%s", o_name);
+	c_put_str(TERM_TEAL, format("%s", buf), 1, xx);
+
+	for (i = 0; i < 4; i++)
+	{
+		tot = (o_ptr->sval * 4) + i;
+		
+		/* clear the line for the totem info */
+		clear_space(i + 2, 0, 65);	
+		
+		if		(i == 0) (void)strnfmt(buf, sizeof(buf), "a) %s", totem_info[tot].name);
+		else if (i == 1) (void)strnfmt(buf, sizeof(buf), "b) %s", totem_info[tot].name);
+		else if (i == 2) (void)strnfmt(buf, sizeof(buf), "c) %s", totem_info[tot].name);
+		else if (i == 3) (void)strnfmt(buf, sizeof(buf), "d) %s", totem_info[tot].name);
+		c_put_str(TERM_TEAL, format("%s", buf), i + 2, 6);
+		
+		(void)strnfmt(buf, sizeof(buf), "%d each %d turns",
+			totem_info[tot].val, totem_info[tot].freq);
+		c_put_str(TERM_MUD, format("%s", buf), i + 2, 30);		
+	}
+
+	/* Prompt for a command */
+	prt("", 0, 0);
+	put_str(format("(Browsing) Choose a totem, or ESC: "), 0, 0);
+	//c_put_str(TERM_TEAL, "What totem do you wish to construct?", 7, xx);
+	
+	char ch;
+
+	/* Get command */
+	while (TRUE)
+	{
+		/* Prompt */
+		ch = inkey(FALSE);
+
+		/* Leave */
+		if (ch == ESCAPE) break;
+		
+		if (ch == 'a')
+		{
+			/* all the 1st totems of a given book */
+			
+			if (o_ptr->sval == 0)
+			{
+				/* [Your First Totems] : Totem of the Dancing Monkey */
+				
+				if (info) return (format("(I totem: %d)", power));
+				if (use)
+				{
+					if (heal_player(power / 2, power)) *ident = TRUE;
+					if (set_cut(p_ptr->cut - 25)) *ident = TRUE;
+					break;
+				}
+			}
+		}
+		else if (ch == 'b')
+		{
+			/* all the 2nd totems of a given book */
+			
+			if (o_ptr->sval == 0)
+			{
+				/* [Your First Totems] */
+				
+				if (info) return (format("(II totem: %d)", power));
+				if (use)
+				{
+					if (heal_player(power / 2, power)) *ident = TRUE;
+					if (set_cut(p_ptr->cut - 25)) *ident = TRUE;
+					break;
+				}
+			}
+		}
+		else if (ch == 'c')
+		{
+			/* all the 3rd totems of a given book */
+			
+			if (o_ptr->sval == 0)
+			{
+				/* [Your First Totems] */
+				
+				if (info) return (format("(III totem: %d)", power));
+				if (use)
+				{
+					if (heal_player(power / 2, power)) *ident = TRUE;
+					if (set_cut(p_ptr->cut - 25)) *ident = TRUE;
+					break;
+				}
+			}
+		}
+		else if (ch == 'd')
+		{
+			/* all the 4th totems of a given book */
+			
+			if (o_ptr->sval == 0)
+			{
+				/* [Your First Totems] */
+				
+				if (info) return (format("(IV totem: %d)", power));
+				if (use)
+				{
+					if (heal_player(power / 2, power)) *ident = TRUE;
+					if (set_cut(p_ptr->cut - 25)) *ident = TRUE;
+					break;
+				}
+			}
+		}
+		else
+		{
+			bell("Unknown totem.");
+			continue;
+		}
+	}
+	
+	/* We used the totemic book */
+	if (ch != ESCAPE) *used = TRUE;
+
+	/* Return */
+	return ("");
 }
 
 
@@ -4227,10 +4375,11 @@ void use_object(int tval)
  */
 static bool item_tester_hook_device(const object_type *o_ptr)
 {
-	/* Must be a staff, wand, or rod */
+	/* Must be a staff, wand, or rod -KN- add totems */
 	if ((o_ptr->tval == TV_STAFF) ||
 	    (o_ptr->tval == TV_WAND) ||
-	    (o_ptr->tval == TV_ROD))
+	    (o_ptr->tval == TV_ROD) ||
+		(o_ptr->tval == TV_TOTEM_BOOK))
 	{
 		return (TRUE);
 	}
@@ -4284,6 +4433,14 @@ int device_chance(const object_type *o_ptr)
 	if (skill < lev) chance = MAX(0, 20 + skill - lev);
 	else             chance = 20 + rsqrt((skill - lev) * 256);
 
+	/* -KN- (TOT) */
+	if (o_ptr->tval == TV_TOTEM_BOOK)
+	{
+		/* using Totem tomes is probably 100% (ICI) */
+		skill = get_skill(S_SHAPECHANGE, 50, 100);
+		chance = skill;
+	}
+
 	/* Confusion or hallucination makes things harder */
 	if ((p_ptr->confused) || (p_ptr->image)) chance /= 2;
 
@@ -4299,7 +4456,6 @@ int device_chance(const object_type *o_ptr)
 	/* Blindness or lack of light makes things a little harder */
 	if ((p_ptr->blind) || (no_light() && (p_ptr->see_infra <= 0))) chance -= chance / 4;
 
-
 	/* Set bounds */
 	if (chance < 0) chance = 0;
 	if (chance > 100) chance = 100;
@@ -4309,7 +4465,7 @@ int device_chance(const object_type *o_ptr)
 
 
 /*
- * Use a staff, wand, or rod.
+ * Use a staff, wand, or rod. -KN- and "h"andle totems
  */
 void use_device(int tval)
 {
@@ -4373,6 +4529,11 @@ void use_device(int tval)
 			s = "You have no rod to zap.";
 		}
 	}
+	else if (tval == TV_TOTEM_BOOK)
+	{
+		q = "Consult which totem tome?";
+		s = "You have no totem manuals.";
+	}
 	else
 	{
 		msg_print("Unknown object type in \"use_device()\".");
@@ -4393,6 +4554,7 @@ void use_device(int tval)
 	if      (o_ptr->tval == TV_STAFF) p = "staff";
 	else if (o_ptr->tval == TV_WAND)  p = "wand";
 	else if (o_ptr->tval == TV_ROD)   p = "rod";
+	else if (o_ptr->tval == TV_TOTEM_BOOK)   p = "manual";
 	else                              p = "device";
 
 
@@ -4538,6 +4700,9 @@ void use_device(int tval)
 	{
 		/* Practice the device skill */
 		skill_being_used = S_DEVICE;
+		
+		/* -KN- (TOT) */
+		if (o_ptr->tval == TV_TOTEM_BOOK) skill_being_used = S_SHAPECHANGE;
 
 		/* Use device */
 		(void)do_device(OBJECT_USE, o_ptr, &ident, &used, FALSE);

@@ -265,6 +265,8 @@ D:672, 100,  2  # [Book of Combat]
 D:680, 100,  8  # [Beginner's Curses]
 D:681, 100,  4  # [Darker Elements]
 D:682, 100,  2  # [Frightful Realms]
+D:690, 100,  4  # -KN- [Your First Totems]
+D:691,  75,  2  # -KN- [Advanced Totemics]
 
 D: -1, 255,  0  # End of array marker
 

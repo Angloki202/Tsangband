@@ -34,7 +34,6 @@
 
 /*
  * Option to allow unlimited pits, vaults, and huge rooms (debug mode)
- * -KN- (ICI)
  */
 #define UNLIMITED_SPECIAL_ROOMS   FALSE
 

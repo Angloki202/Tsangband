@@ -3346,6 +3346,32 @@ byte spell_range_RF7[32] =
 };
 
 
+/*
+ * -KN- (TOT)
+ * 
+ * Basic values for totems from the manuals.
+ * name, desc, freq, val, upg
+ */
+const totems totem_info[16] =
+{
+	{"1 Totem of the Dancing Monkey", "makes everyone dance",					12, 6, 3},
+	{"2 Totem of the ii", "makes everyone dance",					12, 6, 3},
+	{"3 Totem of the iii", "makes everyone dance",					12, 6, 3},
+	{"4 Totem of the iv", "makes everyone dance",					12, 6, 3},
+	{"11 Totem of the v", "makes everyone dance",					12, 6, 3},
+	{"Totem of the vi", "makes everyone dance",					12, 6, 3},
+	{"Totem of the vii", "makes everyone dance",					12, 6, 3},
+	{"Totem of the viii", "makes everyone dance",					12, 6, 3},
+	{"Totem of the ix", "makes everyone dance",					12, 6, 3},
+	{"Totem of the x", "makes everyone dance",					12, 6, 3},
+	{"Totem of the xi", "makes everyone dance",					12, 6, 3},
+	{"Totem of the xii", "makes everyone dance",					12, 6, 3},
+	{"Totem of the xiii", "makes everyone dance",					12, 6, 3},
+	{"Totem of the xiv", "makes everyone dance",					12, 6, 3},
+	{"Totem of the xv", "makes everyone dance",					12, 6, 3},
+	{"Totem of the xvi", "makes everyone dance",					12, 6, 3},	
+};
+
 
 
 /*

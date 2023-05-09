@@ -1953,7 +1953,8 @@ bool hates_fire(const object_type *o_ptr)
 			return (TRUE);
 		}
 
-		/* Books */
+		/* Books -KN- Druid Stones could be excluded (ICI) */
+		case TV_TOTEM_BOOK:
 		case TV_MAGIC_BOOK:
 		case TV_PRAYER_BOOK:
 		case TV_NATURE_BOOK:

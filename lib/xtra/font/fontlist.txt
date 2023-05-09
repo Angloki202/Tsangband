@@ -16,6 +16,7 @@
 12x18xrb.fon
 14x20xrb.fon
 16x16x.fon
+16x16y.fon
 16x24xrb.fon
 16x24x.fon
 16x24xg.fon

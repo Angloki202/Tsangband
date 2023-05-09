@@ -1058,6 +1058,7 @@ static bool store_will_buy(const object_type *o_ptr)
 			/* Analyze the type */
 			switch (o_ptr->tval)
 			{
+				case TV_TOTEM_BOOK:
 				case TV_MAGIC_BOOK:
 				case TV_PRAYER_BOOK:
 				case TV_NATURE_BOOK:

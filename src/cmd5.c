@@ -1280,6 +1280,12 @@ void print_spells(int tval, int sval, int y, int x)
 
 
 	/* Choose appropriate spellbook color. */
+	if (tval == TV_TOTEM_BOOK)
+	{
+		/* -KN- totem books are used outside of the magic system, as anyone can build one (ICI) */
+		if (sval < SV_BOOK_MIN_GOOD) attr_book = TERM_TEAL;
+		else attr_book = TERM_MUD;
+	}
 	if (tval == TV_MAGIC_BOOK)
 	{
 		if (sval < SV_BOOK_MIN_GOOD) attr_book = TERM_L_RED;

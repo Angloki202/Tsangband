@@ -1840,6 +1840,7 @@ bool object_similar(const object_type *o_ptr, const object_type *j_ptr)
 			/* Probably okay */
 			break;
 		}
+		case TV_TOTEM_BOOK:
 		case TV_MAGIC_BOOK:
 		case TV_NATURE_BOOK:
 		case TV_DARK_BOOK:
@@ -4532,6 +4533,7 @@ static bool kind_is_good(int k_idx)
 		}
 
 		/* Books -- High level books are good */
+		case TV_TOTEM_BOOK:
 		case TV_MAGIC_BOOK:
 		case TV_PRAYER_BOOK:
 		case TV_NATURE_BOOK:
@@ -4974,6 +4976,7 @@ int breakage_chance(object_type *o_ptr)
 		case TV_CROWN:
 		case TV_HELM:
 		case TV_SHIELD:
+		case TV_TOTEM_BOOK:
 		case TV_MAGIC_BOOK:
 		case TV_PRAYER_BOOK:
 		case TV_NATURE_BOOK:
@@ -5144,6 +5147,7 @@ void drop_near(object_type *j_ptr, int chance, int y, int x, byte flags)
 		else if ((j_ptr->tval == TV_SCROLL) || (j_ptr->tval == TV_CHEST) ||
 		         (is_any_armor(j_ptr)) || (j_ptr->tval == TV_FOOD) ||
 		         (j_ptr->tval == TV_PARCHMENT) ||
+				 (j_ptr->tval == TV_TOTEM_BOOK) ||
 		         (j_ptr->tval == TV_MAGIC_BOOK) ||
 		         (j_ptr->tval == TV_PRAYER_BOOK) ||
 		         (j_ptr->tval == TV_NATURE_BOOK) ||

@@ -155,6 +155,7 @@ static grouper group_item[] =
 	{ TV_WAND,       "Wands" },
 	{ TV_STAFF,      "Staffs" },
 
+	{ TV_TOTEM_BOOK, "Books (Shaman)" },
 	{ TV_MAGIC_BOOK, "Books (Mage)" },
 	{ TV_PRAYER_BOOK,"Books (Priest)" },
 	{ TV_NATURE_BOOK,"Stones (Druid)" },

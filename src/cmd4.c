@@ -6160,6 +6160,7 @@ static obj_struct object_group[] =
 	{ TV_SOFT_ARMOR,  "Soft Body Armor" },
 	{ TV_HARD_ARMOR,  "Hard Body Armor" },
 	{ TV_DRAG_ARMOR,  "Dragon Scale Mail" },
+	{ TV_TOTEM_BOOK,  "Totemic Manuals" },
 	{ TV_MAGIC_BOOK,  "Books of Sorcery" },
 	{ TV_PRAYER_BOOK, "Books of Piety" },
 	{ TV_NATURE_BOOK, "Stones of Nature" },

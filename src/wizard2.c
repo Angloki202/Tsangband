@@ -517,6 +517,7 @@ tval_desc tvals[] =
 	{ TV_SCROLL,       "Scroll",             FALSE },
 	{ TV_POTION,       "Potion",             FALSE },
 	{ -1,              " ",                  FALSE },
+	{ TV_TOTEM_BOOK,   "Totemic Book",       FALSE },	// -KN- added
 	{ TV_MAGIC_BOOK,   "Magic Book",         FALSE },
 	{ TV_PRAYER_BOOK,  "Priest Book",        FALSE },
 	{ TV_NATURE_BOOK,  "Druid Stone",        FALSE },

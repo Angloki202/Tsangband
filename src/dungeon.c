@@ -2318,6 +2318,12 @@ static void process_command(void)
 			break;
 		}
 
+		/* Handle a totem */
+		case 'h':
+		{
+			use_device(TV_TOTEM_BOOK);
+			break;
+		}
 
 		/*** Looking at Things (nearby or on map) ***/
 

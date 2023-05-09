@@ -5212,7 +5212,7 @@ cptr describe_random(int y, int x)
 			case 50:  
 			{  
 				/* destroyed stone chamber */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("pieces of broken down statue of a nazgul");  
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("pieces of broken down statue of a nazgul");  
 				else if ((x % 2 == 1) && (y % 2 == 1)) return ("assortment of various rocky blocks");  
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a ruined stone altar");  
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a spot where a large floor tile is missing");  
@@ -5221,7 +5221,7 @@ cptr describe_random(int y, int x)
 			case 51:  
 			{  
 				/* collapsed room */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a few piles of sandy rubble");  
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a few piles of sandy rubble");  
 				else if ((x % 2 == 1) && (y % 2 == 1)) return ("quite a wide crack in the floor");  
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an opening of a tunnel in the ceiling");  
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a small scorpion nest in the rubbish");  
@@ -5230,7 +5230,7 @@ cptr describe_random(int y, int x)
 			case 52:  
 			{  
 				/* room with destroyed ceiling */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a broad tunnel in the ceiling");
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a broad tunnel in the ceiling");
 				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a nest of some colorful centipedes");  
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a pile of dirt, apparently from above");  
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a little puddle of water from the ceaseless dripping");  
@@ -5239,7 +5239,7 @@ cptr describe_random(int y, int x)
 			case 53:  
 			{  
 				/* very ruined room */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("rocky debris");  
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("rocky debris");  
 				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a heavily burnt section of rock");  
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a pile of abandoned rocks and brambles");  
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a section of the floor completely covered in heavy ash");  
@@ -5248,7 +5248,7 @@ cptr describe_random(int y, int x)
 			case 54:  
 			{  
 				/* room in total ruins */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("smoldering debris");  
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("smoldering debris");  
 				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a collapsed ceiling");  
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a broken-off chunk of rocky wall");  
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rubble and debris");  
@@ -5257,7 +5257,7 @@ cptr describe_random(int y, int x)
 			case 55:  
 			{  
 				/* room, blasted down in some kind of explosion */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a little crater of sorts");  
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a little crater of sorts");  
 				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a thick black burned spot");  
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris from a small explosion");  
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a collapsed ceiling from the explosion");  
@@ -5266,7 +5266,7 @@ cptr describe_random(int y, int x)
 			case 56:  
 			{  
 				/* room filled with tons of rubble */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("small pile of rubble and debris");  
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("small pile of rubble and debris");  
 				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a cracked floor, littered with stones");  
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a collapsed stone statue");  
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("ornate remains of decorated broken floor");  
@@ -5275,7 +5275,7 @@ cptr describe_random(int y, int x)
 			case 57:  
 			{  
 				/* room with collapsed walls */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a cracked mineral geode");  
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a cracked mineral geode");  
 				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a collapsed ceiling");  
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a shallow and rough pit");  
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("some bones buried beneath the rubble");  
@@ -5284,7 +5284,7 @@ cptr describe_random(int y, int x)
 			case 58:  
 			{  
 				/* completely messed up hall */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("debris and a collapsed pillar");  
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("debris and a collapsed pillar");  
 				else if ((x % 2 == 1) && (y % 2 == 1)) return ("old and broken tables and chairs");  
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an abandoned construction rack");  
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("rusty old tools");  
@@ -5293,7 +5293,7 @@ cptr describe_random(int y, int x)
 			case 59:  
 			{  
 				/* wrecked hall */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("stone and iron debris");  
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("stone and iron debris");  
 				else if ((x % 2 == 1) && (y % 2 == 1)) return ("some rags and rubbish, left there after a skirmish");  
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a blasted portion of the floor");  
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a signpost with a depiction of crossed out orc head");  

@@ -931,21 +931,22 @@ void map_info(int y, int x, byte *ap, char *cp, byte *tap, char *tcp)
 					if ((feat > 53) && (feat < 56)) a = 3;
 					
 					/* quartz and magma */
-					else if (feat == 50)			a = 15;
-					else if (feat == 51)			a = 15;
+					else if (feat == FEAT_MAGMA)	a = 15;
+					else if (feat == FEAT_QUARTZ)	a = 15;
 				}
 				else
 				{
 					a = 19;
-					if ((feat > 53) && (feat < 56)) a = 11;
-					if (feat < 53) 					a = 15;
+					if 		(feat == FEAT_MAGMA_K)	a = 24;
+					else if (feat == FEAT_QUARTZ_K)	a = 24;
+					else if (feat < 53) 			a = 19;
 				}
 			}
 			else if ((cave_wall_bold(y, x)) && (info & (CAVE_MARK)))
 			{
 				/* walls in EXPLORED darkness */
 				a = 7;
-				if ((feat > 53) && (feat < 56)) a = 30;
+				if ((feat > 53) && (feat < 56)) a = 24;
 			}
 			
 			if ((cave_feat[y][x] != FEAT_BROKEN) &&

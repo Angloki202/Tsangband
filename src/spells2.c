@@ -4723,7 +4723,7 @@ bool detect_objects_magic(bool extended)
 		if (artifact_p(o_ptr) || ego_item_p(o_ptr) ||
 		    (tv == TV_AMULET) || (tv == TV_RING) ||
 		    (tv == TV_STAFF) || (tv == TV_WAND) || (tv == TV_ROD) ||
-		    (tv == TV_SCROLL) || (tv == TV_POTION) ||
+		    (tv == TV_SCROLL) || (tv == TV_POTION) || (tv == TV_TOTEM_BOOK) ||
 		    (tv == TV_MAGIC_BOOK) || (tv == TV_PRAYER_BOOK) ||
 		    (tv == TV_NATURE_BOOK) || (tv == TV_DARK_BOOK) ||
 		    (o_ptr->to_a > 0) || (o_ptr->to_h + o_ptr->to_d > 0))

@@ -413,6 +413,7 @@ void easy_know_init(void)
 		switch (k_ptr->tval)
 		{
 			/* Spellbooks */
+			case TV_TOTEM_BOOK:
 			case TV_MAGIC_BOOK:
 			case TV_PRAYER_BOOK:
 			case TV_NATURE_BOOK:
@@ -1654,6 +1655,14 @@ void object_desc(char *buf, size_t max, const object_type *o_ptr, int pref, int 
 		{
 			modstr = basenm;
 			basenm = "& chunk~ of #";
+			break;
+		}
+
+		/* Totem Books */
+		case TV_TOTEM_BOOK:
+		{
+			modstr = basenm;
+			basenm = "& Manual~ of Totemic Arts #";
 			break;
 		}
 
