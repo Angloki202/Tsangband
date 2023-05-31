@@ -3047,31 +3047,31 @@ void describe_room(int room)
 		if (room == 199) desc = "room with a shimmering radiant lake";  
 	}
 	else if (room < 220)
-	{
-		// dark
-		if (room == 200) desc = "room filled up with a smoke";  
+	{  
+		// dark  
+		if (room == 200) desc = "room filled up with smoke";  
 		if (room == 201) desc = "room obscured in smoke and dust";  
 		if (room == 202) desc = "dark misty room";  
 		if (room == 203) desc = "room with strange shadows";  
-		if (room == 204) desc = "misty room";
-		if (room == 205) desc = "misty room";  
-		if (room == 206) desc = "misty room";  
-		if (room == 207) desc = "misty room";  
-		if (room == 208) desc = "misty room";  
+		if (room == 204) desc = "a cursed room";  
+		if (room == 205) desc = "a dark and ancient room";  
+		if (room == 206) desc = "gloomy room";  
+		if (room == 207) desc = "room with smoke and black tiles";  
+		if (room == 208) desc = "room with dark steam";  
 		if (room == 209) desc = "misty room";  
 		if (room == 210) desc = "room filled with heavy mist";  
-		if (room == 211) desc = "room with menacing dense fog";  
+		if (room == 211) desc = "a hall with menacing dense fog";  
 		if (room == 212) desc = "very obscured dark room";  
 		if (room == 213) desc = "dark room emanating vile sorcery";  
-		if (room == 214) desc = "dark room";  
-		if (room == 215) desc = "dark room";  
-		if (room == 216) desc = "dark room";  
-		if (room == 217) desc = "dark room";  
-		if (room == 218) desc = "dark room";  
-		if (room == 219) desc = "dark room";  
+		if (room == 214) desc = "room of Morgul sorcery";  
+		if (room == 215) desc = "a room with a horrible presence";  
+		if (room == 216) desc = "a cave of foul magic";  
+		if (room == 217) desc = "a cavern of lost souls";  
+		if (room == 218) desc = "an infernal cave";  
+		if (room == 219) desc = "a chamber of great malice";  
 	}
 	else if (room < 240)
-	{
+	{  
 		// archives
 		if (room == 220) desc = "room with old broken shelves";  
 		if (room == 221) desc = "room with rows of shelves";  
@@ -3084,19 +3084,91 @@ void describe_room(int room)
 		if (room == 228) desc = "musky old archive";  
 		if (room == 229) desc = "web infested archive room";  
 		if (room == 230) desc = "chamber of dragon archive";
-		if (room == 231) desc = "morgul library";  
-		if (room == 232) desc = "archive room";  
-		if (room == 233) desc = "archive room";  
+		if (room == 231) desc = "a Morgul library";  
+		if (room == 232) desc = "underground ancient archives";
+		if (room == 233) desc = "cavern of thousands books";  
 		if (room == 234) desc = "cartography archive";  
 		if (room == 235) desc = "room with strange exponates";  
 		if (room == 236) desc = "archive of ancient magic";  
-		if (room == 237) desc = "archive room";  
-		if (room == 238) desc = "archive room";  
-		if (room == 239) desc = "archive room";  
+		if (room == 237) desc = "room of dark secrets";
+		if (room == 238) desc = "murmuring archives";  
+		if (room == 239) desc = "library of elder giants";  
 	}
+	else if (room < 260)
+	{  
+		// storage
+		if (room == 240) desc = "a room with moldy boxes";  
+		if (room == 241) desc = "a room full of garbage";  
+		if (room == 242) desc = "a cave with piles of rubbish";
+		if (room == 243) desc = "a room with empty shelves";  
+		if (room == 244) desc = "an old storage room";  
+		if (room == 245) desc = "a room with several broken boxes";  
+		if (room == 246) desc = "a dusty room with some shelves";  
+		if (room == 247) desc = "a cavern with useless trash";
+		if (room == 248) desc = "a room with stacks of rotting meat";  
+		if (room == 249) desc = "a lair with piles of bones and filth";  
+		if (room == 250) desc = "a room with orcish trophies";  
+		if (room == 251) desc = "a treasury of sorts";
+		if (room == 252) desc = "a chamber of looted dragon treasure";  
+		if (room == 253) desc = "a room with shelves of curious items";  
+		if (room == 254) desc = "a room full of stored ingredients";  
+		if (room == 255) desc = "a hideout with stashed boxes";  
+		if (room == 256) desc = "a decorated vault";  
+		if (room == 257) desc = "an arched hall with a small treasure hoard";  
+		if (room == 258) desc = "a room with several loaded carts";  
+		if (room == 259) desc = "an orcish pantry";  
+	}
+	else if (room < 280)
+	{  
+		// prison
+		if (room == 260) desc = "a room with torture tools";
+		if (room == 261) desc = "a room with several smaller cages";  
+		if (room == 262) desc = "a dark prison cell";  
+		if (room == 263) desc = "a room of the prison warden";  
+		if (room == 264) desc = "a cell with blood splatters";  
+		if (room == 265) desc = "a smelly old cell";  
+		if (room == 266) desc = "a room with lines of prison bars";  
+		if (room == 267) desc = "a prison cell with dense cobwebs";  
+		if (room == 268) desc = "a prison pit";  
+		if (room == 269) desc = "an interrogation room";  
+		if (room == 270) desc = "a room with a giant cage";  
+		if (room == 271) desc = "dungeon fens";  
+		if (room == 272) desc = "a room with a prison cell";  
+		if (room == 273) desc = "a prison block";  
+		if (room == 274) desc = "a cursed prison block";  
+		if (room == 275) desc = "a room with a grated dungeon pit";  
+		if (room == 276) desc = "an oubliette";  
+		if (room == 277) desc = "a caged zoo";  
+		if (room == 278) desc = "a dungeon prison cell";  
+		if (room == 279) desc = "the darkest dungeon";  
+	}
+	else if (room < 300)
+	{  
+		// temple
+		if (room == 280) desc = "an underground shrine";
+		if (room == 281) desc = "a room with an altar";  
+		if (room == 282) desc = "";
+		if (room == 283) desc = ""; 
+		if (room == 284) desc = "";
+		if (room == 285) desc = "";
+		if (room == 286) desc = "";
+		if (room == 287) desc = "";
+		if (room == 288) desc = "";
+		if (room == 289) desc = "";
+		if (room == 290) desc = "";
+		if (room == 291) desc = "";
+		if (room == 292) desc = "";
+		if (room == 293) desc = "";
+		if (room == 294) desc = "";
+		if (room == 295) desc = "";
+		if (room == 296) desc = "";
+		if (room == 297) desc = "";
+		if (room == 298) desc = "";
+		if (room == 299) desc = "";
+	}  
 	else
 	{
-		desc = "( > 240 !!!)";
+		desc = "( > 299 !!!)";
 	}
 	
 	message_format(MSG_L_GREEN, 10, "You are in %s.", desc);	

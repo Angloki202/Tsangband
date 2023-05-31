@@ -464,7 +464,7 @@
 /*
  * Flags for player_type.spell_flags[]
  */
-#define PY_SPELL_X01         0x01 /* -KN- can be added for (UPG) upgrades (IDEA) */
+#define PY_SPELL_UPGRADED    0x01 /* -KN- can be added for (UPG) upgrades (IDEA) */
 #define PY_SPELL_WORKED      0x02 /* Spell has been successfully tried */
 #define PY_SPELL_FORGOTTEN   0x04 /* Spell has been forgotten */
 #define PY_SPELL_X08         0x08 /* -KN- can be added */

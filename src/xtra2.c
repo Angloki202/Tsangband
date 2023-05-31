@@ -3818,7 +3818,7 @@ int target_dir(char ch)
 
 	/* Paranoia */
 	//if (d == 5) d = 0;
-	
+
 	/* -KN- (YYY) tried self direction */
 
 	/* Return direction */
@@ -4830,7 +4830,7 @@ static int target_set_interactive_aux(int y, int x, int mode, cptr info)
 
 			/* Hack -- handle unknown grids */
 			if (feat == FEAT_NONE) name = "unexplored area";
-			
+
 			/* -KN- (DESC) adding room-dependent furniture description */
 			if ((feat == FEAT_FLOOR_MI) || (feat == FEAT_FLOOR_MA))
 			{
@@ -4954,7 +4954,7 @@ static int target_set_interactive_aux(int y, int x, int mode, cptr info)
 cptr describe_random(int y, int x)
 {
 	int d = cave_desc[y][x];
-	
+
 	if (cave_feat[y][x] == FEAT_FLOOR_MI)
 	{
 		/* minor debris */
@@ -4978,7 +4978,7 @@ cptr describe_random(int y, int x)
 				else if ((d == 9) && (x % 2 == 0))		return ("a small hole, leading to dark burrow");
 				else if (d == 9) 						return ("several little holes that emmit clicking sounds");
 				else if ((x % 2 == 0) && (y % 2 == 0))	return ("broken glass and dirt");
-				else if ((x % 2 == 1) && (y % 2 == 1))	return ("irregular footprints among debris");				
+				else if ((x % 2 == 1) && (y % 2 == 1))	return ("irregular footprints among debris");
 				else if ((x % 2 == 0) && (y % 2 == 1))	return ("debris and broken table");
 				else if ((x % 2 == 1) && (y % 2 == 0))	return ("small piles of rodent crap");
 				break;
@@ -5019,629 +5019,1456 @@ cptr describe_random(int y, int x)
 				else if ((x % 2 == 1) && (y % 2 == 0))	return ("a glittering layer of ice in small crevices");
 				break;
 			}
-			case 14:  
-			{  
-				/* stone-carved room */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a suspicious pile of rocks");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a shallow pit, full of dirt and pebbles");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("artificially made small tunnel");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an area with holes in the stone");  
-				break;  
-			}  
-			case 15:  
-			{  
-				/* dirty room, covered in moss */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a small crevice with slime inside");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a grey patch of moss and lichen");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("oddly smelling carpet of moss");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("empty looking nest of some kind");  
-				break;  
-			}  
-			case 16:  
-			{  
-				/* decorated chamber */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("an ornate pattern on the floor");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an exquisite set of marble tiles");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a set of archaic vases");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an elevated sculpted stairway");  
-				break;  
-			}  
-			case 17:  
-			{  
-				/* oddly smelling chamber */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("something decaying in a small ditch");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a moldy pocket of undergrowth");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("bits and pieces of half-digested carcass");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a disgusting slimy trail");  
-				break;  
-			}  
-			case 18:  
-			{  
-				/* chamber with arched hallway */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a half-collapsed piece of the ceiling");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("sandy rubble");  
+			case 14:
+			{
+				/* stone-carved room */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a suspicious pile of rocks");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a shallow pit, full of dirt and pebbles");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("artificially made small tunnel");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an area with holes in the stone");
+				break;
+			}
+			case 15:
+			{
+				/* dirty room, covered in moss */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a small crevice with slime inside");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a grey patch of moss and lichen");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("oddly smelling carpet of moss");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("empty looking nest of some kind");
+				break;
+			}
+			case 16:
+			{
+				/* decorated chamber */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an ornate pattern on the floor");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an exquisite set of marble tiles");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a set of archaic vases");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an elevated sculpted stairway");
+				break;
+			}
+			case 17:
+			{
+				/* oddly smelling chamber */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("something decaying in a small ditch");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a moldy pocket of undergrowth");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("bits and pieces of half-digested carcass");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a disgusting slimy trail");
+				break;
+			}
+			case 18:
+			{
+				/* chamber with arched hallway */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a half-collapsed piece of the ceiling");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("sandy rubble");
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an orcish sign in gibberish");
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a large stone bench");  
-				break;  
-			}  
-			case 19:  
-			{  
-				/* black chamber */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a torn down orcish banner");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a suspicious really black rock");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an abandoned tribal bonfire");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a dumped pile of orcish ceramics");  
-				break;  
-			}  
-			case 20: // desc = "room with rough cave walls";  
-			case 21: // desc = "cavernous room";  
-			case 22: // desc = "cave chamber";  
-			case 23: // desc = "rough cave room";  
-			case 24: // desc = "cavern opening";  
-			case 25: // desc = "stone cave";  
-			case 26: // desc = "uneven room with stone floor";  
-			case 27: // desc = "room with cave-like features";  
-			case 28: // desc = "room carved into a cave";  
-			case 29: // desc = "rocky chamber";
-			{  
-				if ((d == 3) && (x % 2 == 0)) 		   return ("a small pile of broken glass and debris");  
-				else if (d == 3) 					   return ("a very dirty empty bottle");  
-				else if ((d == 4) && (x % 2 == 0)) 	   return ("rotten and funky rodent nests");  
-				else if (d == 4) 					   return ("rotting flesh wrapped in some old rags");  
-				else if ((d == 9) && (x % 2 == 0)) 	   return ("a small hole, leading to dark burrow");  
-				else if (d == 9) 					   return ("several little holes that emmit clicking sounds");  
-				else if ((x % 2 == 0) && (y % 2 == 0)) return ("broken glass and dirt");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("irregular footprints among debris");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris and broken table");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rodent crap");  
-				break;  
-			}  
-			case 30:  
-			{  
-				/* almost natural cave */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a quite remarkable flat stone slab");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("several vertical wooden poles");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a couple of very old wolf hides");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a makeshift bed of sorts");  
-				break;  
-			}  
-			case 31:  
-			{  
-				/* cave with high ceiling */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a chimney opening");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a perfect spot for bats, including the guano");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a solitary stalagtite");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an abandoned fireplace");  
-				break;  
-			}  
-			case 32:  
-			{  
-				/* cave with many small stone niches */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a couple of smaller anthills");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an area with several artificial holes");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a beautiful quartz cave pocket");  
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a large stone bench");
+				break;
+			}
+			case 19:
+			{
+				/* black chamber */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a torn down orcish banner");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a suspicious really black rock");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an abandoned tribal bonfire");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a dumped pile of orcish ceramics");
+				break;
+			}
+
+			//			CAVERN ROOMS
+			case 20: // "room with rough cave walls";
+			case 21: // "cavernous room";
+			case 22: // "cave chamber";
+			case 23: // "rough cave room";
+			case 24: // "cavern opening";
+			case 25: // "stone cave";
+			case 26: // "uneven room with stone floor";
+			case 27: // "room with cave-like features";
+			case 28: // "room carved into a cave";
+			case 29: // "rocky chamber";
+			{
+				if ((d == 3) && (x % 2 == 0)) 		   return ("a small pile of broken glass and debris");
+				else if (d == 3) 					   return ("a very dirty empty bottle");
+				else if ((d == 4) && (x % 2 == 0)) 	   return ("rotten and funky rodent nests");
+				else if (d == 4) 					   return ("rotting flesh wrapped in some old rags");
+				else if ((d == 9) && (x % 2 == 0)) 	   return ("a small hole, leading to dark burrow");
+				else if (d == 9) 					   return ("several little holes that emmit clicking sounds");
+				else if ((x % 2 == 0) && (y % 2 == 0)) return ("broken glass and dirt");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("irregular footprints among debris");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris and broken table");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rodent crap");
+				break;
+			}
+			case 30:
+			{
+				/* almost natural cave */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a quite remarkable flat stone slab");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("several vertical wooden poles");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a couple of very old wolf hides");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a makeshift bed of sorts");
+				break;
+			}
+			case 31:
+			{
+				/* cave with high ceiling */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a chimney opening");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a perfect spot for bats, including the guano");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a solitary stalagtite");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an abandoned fireplace");
+				break;
+			}
+			case 32:
+			{
+				/* cave with many small stone niches */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a couple of smaller anthills");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an area with several artificial holes");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a beautiful quartz cave pocket");
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("many small crevices and cracks");
-				break;  
-			}  
-			case 33:  
-			{  
-				/* mineral cave chamber */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a remarkable smoky quartz protrusion");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a fractured crystal geode");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a vien of sparkling calcite");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("multi-hued pattern on the rocky floor");  
-				break;  
-			}  
-			case 34:  
-			{  
-				/* damp and slippery cave */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("grassy floor with footsteps in the mud");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a couple of moldy logs");  
+				break;
+			}
+			case 33:
+			{
+				/* mineral cave chamber */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a remarkable smoky quartz protrusion");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a fractured crystal geode");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a vien of sparkling calcite");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("multi-hued pattern on the rocky floor");
+				break;
+			}
+			case 34:
+			{
+				/* damp and slippery cave */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("grassy floor with footsteps in the mud");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a couple of moldy logs");
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("very soft and treacherously wet moss");
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an underground mushroom ring");  
-				break;  
-			}  
-			case 35:  
-			{  
-				/* domed vertical cave */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a makeshift orcish altar");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an 'X' sign made by rocks and bones");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a suspicious ditch in the ground");  
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an underground mushroom ring");
+				break;
+			}
+			case 35:
+			{
+				/* domed vertical cave */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a makeshift orcish altar");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an 'X' sign made by rocks and bones");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a suspicious ditch in the ground");
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a circle of ritualistic candles");
-				break;  
-			}  
-			case 36:  
-			{  
-				/* rounded cave chamber */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a piece of weird rock structure");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a rune sigil marked on the ground");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an abandoned nest of a massive rodent");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("tattered orcish banner made of lizard skin");  
-				break;  
-			}  
-			case 37:  
-			{  
-				/* fungal cavern room */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a patch of calcified fungi");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a giant colorful mushroom");  
+				break;
+			}
+			case 36:
+			{
+				/* rounded cave chamber */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a piece of weird rock structure");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a rune sigil marked on the ground");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an abandoned nest of a massive rodent");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("tattered orcish banner made of lizard skin");
+				break;
+			}
+			case 37:
+			{
+				/* fungal cavern room */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a patch of calcified fungi");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a giant colorful mushroom");
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("several trampled and destroyed mushrooms");
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a large mushroom cup that smells funny");  
-				break;  
-			}  
-			case 38:  
-			{  
-				/* mossy cave with dark sand */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("pretty interesting dungeon flora");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("footseps of a large beast in the sand");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a piece of rock with a fossil inside");  
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a large mushroom cup that smells funny");
+				break;
+			}
+			case 38:
+			{
+				/* mossy cave with dark sand */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("pretty interesting dungeon flora");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("footseps of a large beast in the sand");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a piece of rock with a fossil inside");
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a little crab's mossy nest");
-				break;  
-			}  
-			case 39:  
-			{  
-				/* jagged cave */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("dangerously looking rocks");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a warg maw carved into the rock");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a bunch of stalagmites and stalagtites");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an old sprung trap of sorts");  
-				break;  
-			}  
-			case 40: // desc = "room with broken down walls";  
-			case 41: // desc = "room with large cracks in the walls";  
-			case 42: // desc = "room full of rubble";  
-			case 43: // desc = "ruined room";  
-			case 44: // desc = "partially broken room";  
-			case 45: // desc = "room with very uneven floor";  
-			case 46: // desc = "chamber with broken arches";  
-			case 47: // desc = "room with cracked floor";  
-			case 48: // desc = "room filled with various debris";  
-			case 49: // desc = "abandoned room";  
-			{  
-				if ((d == 3) && (x % 2 == 0)) 		   return ("a small pile of broken glass and debris");  
-				else if (d == 3) 					   return ("a very dirty empty bottle");  
-				else if ((d == 4) && (x % 2 == 0)) 	   return ("rotten and funky rodent nests");  
-				else if (d == 4) 					   return ("rotting flesh wrapped in some old rags");  
-				else if ((d == 9) && (x % 2 == 0)) 	   return ("a small hole, leading to dark burrow");  
-				else if (d == 9) 					   return ("several little holes that emmit clicking sounds");  
-				else if ((x % 2 == 0) && (y % 2 == 0)) return ("broken glass and dirt");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("irregular footprints among debris");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris and broken table");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rodent crap");  
-				break;  
-			}  
-			case 50:  
-			{  
-				/* destroyed stone chamber */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("pieces of broken down statue of a nazgul");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("assortment of various rocky blocks");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a ruined stone altar");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a spot where a large floor tile is missing");  
-				break;  
-			}  
-			case 51:  
-			{  
-				/* collapsed room */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a few piles of sandy rubble");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("quite a wide crack in the floor");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an opening of a tunnel in the ceiling");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a small scorpion nest in the rubbish");  
-				break;  
-			}  
-			case 52:  
-			{  
-				/* room with destroyed ceiling */  
+				break;
+			}
+			case 39:
+			{
+				/* jagged cave */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("dangerously looking rocks");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a warg maw carved into the rock");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a bunch of stalagmites and stalagtites");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an old sprung trap of sorts");
+				break;
+			}
+
+			//			BROKEN ROOMS
+			case 40: // "room with broken down walls";
+			case 41: // "room with large cracks in the walls";
+			case 42: // "room full of rubble";
+			case 43: // "ruined room";
+			case 44: // "partially broken room";
+			case 45: // "room with very uneven floor";
+			case 46: // "chamber with broken arches";
+			case 47: // "room with cracked floor";
+			case 48: // "room filled with various debris";
+			case 49: // "abandoned room";
+			{
+				if ((d == 3) && (x % 2 == 0)) 		   return ("a small pile of broken glass and debris");
+				else if (d == 3) 					   return ("a very dirty empty bottle");
+				else if ((d == 4) && (x % 2 == 0)) 	   return ("rotten and funky rodent nests");
+				else if (d == 4) 					   return ("rotting flesh wrapped in some old rags");
+				else if ((d == 9) && (x % 2 == 0)) 	   return ("a small hole, leading to dark burrow");
+				else if (d == 9) 					   return ("several little holes that emmit clicking sounds");
+				else if ((x % 2 == 0) && (y % 2 == 0)) return ("broken glass and dirt");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("irregular footprints among debris");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris and broken table");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rodent crap");
+				break;
+			}
+			case 50:
+			{
+				/* destroyed stone chamber */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("pieces of broken down statue of a nazgul");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("assortment of various rocky blocks");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a ruined stone altar");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a spot where a large floor tile is missing");
+				break;
+			}
+			case 51:
+			{
+				/* collapsed room */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a few piles of sandy rubble");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("quite a wide crack in the floor");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an opening of a tunnel in the ceiling");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a small scorpion nest in the rubbish");
+				break;
+			}
+			case 52:
+			{
+				/* room with destroyed ceiling */
 				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a broad tunnel in the ceiling");
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a nest of some colorful centipedes");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a pile of dirt, apparently from above");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a little puddle of water from the ceaseless dripping");  
-				break;  
-			}  
-			case 53:  
-			{  
-				/* very ruined room */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("rocky debris");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a heavily burnt section of rock");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a pile of abandoned rocks and brambles");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a section of the floor completely covered in heavy ash");  
-				break;  
-			}  
-			case 54:  
-			{  
-				/* room in total ruins */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("smoldering debris");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a collapsed ceiling");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a broken-off chunk of rocky wall");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rubble and debris");  
-				break;  
-			}  
-			case 55:  
-			{  
-				/* room, blasted down in some kind of explosion */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a little crater of sorts");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a thick black burned spot");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris from a small explosion");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a collapsed ceiling from the explosion");  
-				break;  
-			}  
-			case 56:  
-			{  
-				/* room filled with tons of rubble */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("small pile of rubble and debris");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a cracked floor, littered with stones");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a collapsed stone statue");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("ornate remains of decorated broken floor");  
-				break;  
-			}  
-			case 57:  
-			{  
-				/* room with collapsed walls */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a cracked mineral geode");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a collapsed ceiling");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a shallow and rough pit");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("some bones buried beneath the rubble");  
-				break;  
-			}  
-			case 58:  
-			{  
-				/* completely messed up hall */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("debris and a collapsed pillar");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("old and broken tables and chairs");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an abandoned construction rack");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("rusty old tools");  
-				break;  
-			}  
-			case 59:  
-			{  
-				/* wrecked hall */  
-				if ((x % 2 == 0) && (y % 2 == 0))	   return ("stone and iron debris");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("some rags and rubbish, left there after a skirmish");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a blasted portion of the floor");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a signpost with a depiction of crossed out orc head");  
-				break;  
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a nest of some colorful centipedes");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a pile of dirt, apparently from above");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a little puddle of water from the ceaseless dripping");
+				break;
 			}
-			
-			case 60: // desc = "overgrown room";  
-			case 61: // desc = "room with patches of cave grass";  
-			case 62: // desc = "room with walls covered in moss";  
-			case 63: // desc = "chamber with green moss on the floor";  
-			case 64: // desc = "room with puddles of water";  
-			case 65: // desc = "room with puddles and cavern grass";  
-			case 66: // desc = "mossy room with dirt and pebbles";  
-			case 67: // desc = "room with cavern vegetation";  
-			case 68: // desc = "room with some roots hanging from the ceiling";  
-			case 69: // desc = "room with moss and dropping water";  
-			{  
-				if ((d == 3) && (x % 2 == 0)) 		   return ("a small pile of broken glass and debris");  
-				else if (d == 3) 					   return ("a very dirty empty bottle");  
-				else if ((d == 4) && (x % 2 == 0)) 	   return ("rotten and funky rodent nests");  
-				else if (d == 4) 					   return ("rotting flesh wrapped in some old rags");  
-				else if ((d == 9) && (x % 2 == 0)) 	   return ("a small hole, leading to dark burrow");  
-				else if (d == 9) 					   return ("several little holes that emmit clicking sounds");  
-				else if ((x % 2 == 0) && (y % 2 == 0)) return ("broken glass and dirt");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("irregular footprints among debris");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris and broken table");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rodent crap");  
-				break;  
-			} 
-			case 70:  
-			{  
-				/* room with roots and patches of undergrowth */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("some interesting dungeon brambles");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a wild overgrown pile of rocks");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("dried deadwood");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a knoll with some kind of a burrow");  
-				break;  
+			case 53:
+			{
+				/* very ruined room */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("rocky debris");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a heavily burnt section of rock");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a pile of abandoned rocks and brambles");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a section of the floor completely covered in heavy ash");
+				break;
 			}
-			case 71:  
-			{  
-				/* room with thick patches of wild dungeon trees */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("pile of cut bramblewood");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a hollow tree trunk");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("several branches joint together with a rope");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a small trunk with wooden rubble around");  
-				break;  
+			case 54:
+			{
+				/* room in total ruins */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("smoldering debris");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a collapsed ceiling");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a broken-off chunk of rocky wall");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rubble and debris");
+				break;
 			}
-			case 72:  
-			{  
-				/* room overgrown with dungeon trees */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a small pile of dungeon tree bark");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a piece of log that might be cursed");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a young lacunaic willow");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a patch of black grass");  
-				break;  
+			case 55:
+			{
+				/* room, blasted down in some kind of explosion */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a little crater of sorts");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a thick black burned spot");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris from a small explosion");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a collapsed ceiling from the explosion");
+				break;
 			}
-			case 73:  
-			{  
-				/* lush chamber with dungeon vegetation */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("an odd looking insect nest");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("palm-like leaves scattered on the ground");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a strange foliage with red petals ");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("several fist-sized cocoons");  
-				break;  
+			case 56:
+			{
+				/* room filled with tons of rubble */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("small pile of rubble and debris");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a cracked floor, littered with stones");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a collapsed stone statue");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("ornate remains of decorated broken floor");
+				break;
 			}
-			case 74:  
-			{  
-				/* cave with branching roots all over the walls */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("dense cavern foliage");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a section of trampled ground");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("roots hanging from the ceiling");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("weirdly shaped brambles");  
-				break;  
+			case 57:
+			{
+				/* room with collapsed walls */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a cracked mineral geode");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a collapsed ceiling");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a shallow and rough pit");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("some bones buried beneath the rubble");
+				break;
 			}
-			case 75:  
-			{  
-				/* room with tangled branches of underwood */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a dungeon ivy all over the place");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("glistening black wooden logs");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("thick roots spiraling around the rocks");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("dark roots and brambles");  
-				break;  
+			case 58:
+			{
+				/* completely messed up hall */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("debris and a collapsed pillar");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("old and broken tables and chairs");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an abandoned construction rack");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("rusty old tools");
+				break;
 			}
-			case 76:  
-			{  
-				/* unusually vivid cave chamber */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a little green garden");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a small bush with some berries");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("dimly glowing roots");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a patch of dungeon reed");  
-				break;  
+			case 59:
+			{
+				/* wrecked hall */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("stone and iron debris");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("some rags and rubbish, left there after a skirmish");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a blasted portion of the floor");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a signpost with a depiction of crossed out orc head");
+				break;
 			}
-			case 77:  
-			{  
-				/* room with twisted dungeon roots */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("brown leaves amidst the old white roots");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("dark canopy, obscuring the ceiling");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("coiled brambles, sprouting from the ground");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a sapling of the dungeon willow");  
-				break;  
+
+			case 60: // "overgrown room";
+			case 61: // "room with patches of cave grass";
+			case 62: // "room with walls covered in moss";
+			case 63: // "chamber with green moss on the floor";
+			case 64: // "room with puddles of water";
+			case 65: // "room with puddles and cavern grass";
+			case 66: // "mossy room with dirt and pebbles";
+			case 67: // "room with cavern vegetation";
+			case 68: // "room with some roots hanging from the ceiling";
+			case 69: // "room with moss and dropping water";
+			{
+				if ((d == 3) && (x % 2 == 0)) 		   return ("a small pile of broken glass and debris");
+				else if (d == 3) 					   return ("a very dirty empty bottle");
+				else if ((d == 4) && (x % 2 == 0)) 	   return ("rotten and funky rodent nests");
+				else if (d == 4) 					   return ("rotting flesh wrapped in some old rags");
+				else if ((d == 9) && (x % 2 == 0)) 	   return ("a small hole, leading to dark burrow");
+				else if (d == 9) 					   return ("several little holes that emmit clicking sounds");
+				else if ((x % 2 == 0) && (y % 2 == 0)) return ("broken glass and dirt");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("irregular footprints among debris");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris and broken table");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rodent crap");
+				break;
 			}
-			case 78:  
-			{  
-				/* room that changes into an underground marsh */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a muddy ditch");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a little cloud of mosquitos");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a wet soil under a missing floor tile");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a dark and damp niche");  
-				break;  
+			case 70:
+			{
+				/* room with roots and patches of undergrowth */
+				if ((x % 2 == 0) && (y % 2 == 0)) return ("some interesting dungeon brambles");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a wild overgrown pile of rocks");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("dried deadwood");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a knoll with some kind of a burrow");
+				break;
 			}
-			case 79:  
-			{  
-				/* room with stacks of fallen darkwood */  
-				if ((x % 2 == 0) && (y % 2 == 0)) return ("a tree stump for cutting darkwood");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a stack of darkwood logs");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a pile of cut down darkwood branches");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a mushroom ring around a dark sapling");  
-				break;  
+			case 71:
+			{
+				/* room with thick patches of wild dungeon trees */
+				if ((x % 2 == 0) && (y % 2 == 0)) return ("pile of cut bramblewood");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a hollow tree trunk");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("several branches joint together with a rope");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a small trunk with wooden rubble around");
+				break;
 			}
-			
+			case 72:
+			{
+				/* room overgrown with dungeon trees */
+				if ((x % 2 == 0) && (y % 2 == 0)) return ("a small pile of dungeon tree bark");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a piece of log that might be cursed");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a young lacunaic willow");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a patch of black grass");
+				break;
+			}
+			case 73:
+			{
+				/* lush chamber with dungeon vegetation */
+				if ((x % 2 == 0) && (y % 2 == 0)) return ("an odd looking insect nest");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("palm-like leaves scattered on the ground");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a strange foliage with red petals ");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("several fist-sized cocoons");
+				break;
+			}
+			case 74:
+			{
+				/* cave with branching roots all over the walls */
+				if ((x % 2 == 0) && (y % 2 == 0)) return ("dense cavern foliage");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a section of trampled ground");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("roots hanging from the ceiling");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("weirdly shaped brambles");
+				break;
+			}
+			case 75:
+			{
+				/* room with tangled branches of underwood */
+				if ((x % 2 == 0) && (y % 2 == 0)) return ("a dungeon ivy all over the place");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("glistening black wooden logs");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("thick roots spiraling around the rocks");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("dark roots and brambles");
+				break;
+			}
+			case 76:
+			{
+				/* unusually vivid cave chamber */
+				if ((x % 2 == 0) && (y % 2 == 0)) return ("a little green garden");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a small bush with some berries");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("dimly glowing roots");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a patch of dungeon reed");
+				break;
+			}
+			case 77:
+			{
+				/* room with twisted dungeon roots */
+				if ((x % 2 == 0) && (y % 2 == 0)) return ("brown leaves amidst the old white roots");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("dark canopy, obscuring the ceiling");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("coiled brambles, sprouting from the ground");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a sapling of the dungeon willow");
+				break;
+			}
+			case 78:
+			{
+				/* room that changes into an underground marsh */
+				if ((x % 2 == 0) && (y % 2 == 0)) return ("a muddy ditch");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a little cloud of mosquitos");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a wet soil under a missing floor tile");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a dark and damp niche");
+				break;
+			}
+			case 79:
+			{
+				/* room with stacks of fallen darkwood */
+				if ((x % 2 == 0) && (y % 2 == 0)) return ("a tree stump for cutting darkwood");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a stack of darkwood logs");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a pile of cut down darkwood branches");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a mushroom ring around a dark sapling");
+				break;
+			}
+
 			// 			GUARD ROOMS
-			case 80: // desc = "guard post of some sort";  
-			case 81: // desc = "almost empty armoury";  
-			case 82: // desc = "small outpost";  
-			case 83: // desc = "room with broken bars of rusty metal";  
-			case 84: // desc = "rusty old room";
-			case 85: // desc = "abandoned outpost";
-			case 86: // desc = "room with a small collonade";  
-			case 87: // desc = "guarding chamber";  
-			case 88: // desc = "long forgotten armoury";  
-			case 89: // desc = "room with thin pillars";  
-			{  
-				if ((d == 3) && (x % 2 == 0)) 		   return ("a small pile of broken glass and debris");  
-				else if (d == 3) 					   return ("a very dirty empty bottle");  
-				else if ((d == 4) && (x % 2 == 0)) 	   return ("rotten and funky rodent nests");  
-				else if (d == 4) 					   return ("rotting flesh wrapped in some old rags");  
-				else if ((d == 9) && (x % 2 == 0)) 	   return ("a small hole, leading to dark burrow");  
-				else if (d == 9) 					   return ("several little holes that emmit clicking sounds");  
-				else if ((x % 2 == 0) && (y % 2 == 0)) return ("broken glass and dirt");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("irregular footprints among debris");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris and broken table");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rodent crap");  
-				break;  
+			case 80: // "guard post of some sort";
+			case 81: // "almost empty armoury";
+			case 82: // "small outpost";
+			case 83: // "room with broken bars of rusty metal";
+			case 84: // "rusty old room";
+			case 85: // "abandoned outpost";
+			case 86: // "room with a small collonade";
+			case 87: // "guarding chamber";
+			case 88: // "long forgotten armoury";
+			case 89: // "room with thin pillars";
+			{
+				if ((d == 3) && (x % 2 == 0)) 		   return ("a small pile of broken glass and debris");
+				else if (d == 3) 					   return ("a very dirty empty bottle");
+				else if ((d == 4) && (x % 2 == 0)) 	   return ("rotten and funky rodent nests");
+				else if (d == 4) 					   return ("rotting flesh wrapped in some old rags");
+				else if ((d == 9) && (x % 2 == 0)) 	   return ("a small hole, leading to dark burrow");
+				else if (d == 9) 					   return ("several little holes that emmit clicking sounds");
+				else if ((x % 2 == 0) && (y % 2 == 0)) return ("broken glass and dirt");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("irregular footprints among debris");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris and broken table");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rodent crap");
+				break;
 			}
-			case 90:  
-			{  
-				/* room with massive pillars */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a crack in the ancient fresco");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a fresco, depicting orcs in a battle");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("intricate floor mosaic");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("arches above the pillar structure");  
-				break;  
+			case 90:
+			{
+				/* room with massive pillars */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a crack in the ancient fresco");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a fresco, depicting orcs in a battle");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("intricate floor mosaic");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("arches above the pillar structure");
+				break;
 			}
-			case 91:  
-			{  
-				/*chamber with stone columns */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a shattered caryatid");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("red and black pattern on the floor");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a base of a pillar, missing the actual pillar");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("abandoned carpenter's tools");  
-				break;  
+			case 91:
+			{
+				/*chamber with stone columns */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a shattered caryatid");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("red and black pattern on the floor");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a base of a pillar, missing the actual pillar");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("abandoned carpenter's tools");
+				break;
 			}
-			case 92:  
-			{  
-				/* abandoned forge */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a large solitary anvil");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a pile of coal");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a rack with rusty tools");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a collapsed furnace");  
-				break;  
+			case 92:
+			{
+				/* abandoned forge */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a large solitary anvil");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a pile of coal");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a rack with rusty tools");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a collapsed furnace");
+				break;
 			}
-			case 93:  
-			{  
-				/* ornate collonade */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("debris from the fallen decorated ceiling");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a stone-carved podium of sorts");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("several stone steps from the collapsed stairs");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a line of empty torch sconces");  
-				break;  
+			case 93:
+			{
+				/* ornate collonade */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("debris from the fallen decorated ceiling");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a stone-carved podium of sorts");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("several stone steps from the collapsed stairs");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a line of empty torch sconces");
+				break;
 			}
-			case 94:  
-			{  
-				/* fortified hallway */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a small makeshift baricade");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("shattered shields and some metal pieces");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an iron grating that is just lying there");  
+			case 94:
+			{
+				/* fortified hallway */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a small makeshift baricade");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("shattered shields and some metal pieces");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an iron grating that is just lying there");
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("iron pikes hanging from the ceiling");
-				break;  
+				break;
 			}
-			case 95:  
-			{  
-				/* abandoned throne room */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("very old and dirty red carpet");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a pair of ceremonial chairs");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a decorated dais");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a pile of burned books and documents");  
-				break;  
+			case 95:
+			{
+				/* abandoned throne room */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("very old and dirty red carpet");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a pair of ceremonial chairs");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a decorated dais");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a pile of burned books and documents");
+				break;
 			}
-			case 96:  
-			{  
-				/* ruined hall */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a fallen humanoid statue");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a misplaced floor tile");  
+			case 96:
+			{
+				/* ruined hall */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a fallen humanoid statue");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a misplaced floor tile");
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a torso of a former pillar");
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("burned remains of a pyre");  
-				break;  
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("burned remains of a pyre");
+				break;
 			}
-			case 97:  
-			{  
-				/* hall of giant pillars */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a collapsed piece of the pillar");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("various stone debris");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an untouched block of marble");  
+			case 97:
+			{
+				/* hall of giant pillars */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a collapsed piece of the pillar");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("various stone debris");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an untouched block of marble");
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an unfinished part of the column head");
-				break;  
+				break;
 			}
-			case 98:  
-			{  
-				/* underground ruined temple */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an ancient altar");  
+			case 98:
+			{
+				/* underground ruined temple */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an ancient altar");
 				else if ((x % 2 == 1) && (y % 2 == 1)) return ("Morgul symbols etched on the floor");
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a dusty pile of clay tablets");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a black dais, covered in grey wax");  
-				break;  
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a dusty pile of clay tablets");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a black dais, covered in grey wax");
+				break;
 			}
-			case 99:  
-			{  
-				/* buried dungeon tower" */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a visible outline of the former tower");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a spot where an arched window was");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a ditch, buried in rocks and debris");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("iron remains of a tower gate");  
-				break;  
+			case 99:
+			{
+				/* buried dungeon tower" */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a visible outline of the former tower");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a spot where an arched window was");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a ditch, buried in rocks and debris");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("iron remains of a tower gate");
+				break;
 			}
-			
+
 			// 			 BONEYARD ROOMS
-			case 100: // desc = "rough natural catacombs";
-			case 101: // desc = "room with scattered animal bones";
-			case 102: // desc = "room with a nasty smell of decay";
-			case 103: // desc = "burial grounds";   
-			case 104: // desc = "underground graveyard";  
-			case 105: // desc = "site of digging operation";  
-			case 106: // desc = "chamber with the stench of death";
-			case 107: // desc = "abandoned silent garden";  
-			case 108: // desc = "chilly underground room";  
-			case 109: // desc = "strangely eerie place";  
-			{  
-				if ((d == 3) && (x % 2 == 0)) 		   return ("a small pile of broken glass and debris");  
-				else if (d == 3) 					   return ("a very dirty empty bottle");  
-				else if ((d == 4) && (x % 2 == 0)) 	   return ("rotten and funky rodent nests");  
-				else if (d == 4) 					   return ("rotting flesh wrapped in some old rags");  
-				else if ((d == 9) && (x % 2 == 0)) 	   return ("a small hole, leading to dark burrow");  
-				else if (d == 9) 					   return ("several little holes that emmit clicking sounds");  
-				else if ((x % 2 == 0) && (y % 2 == 0)) return ("broken glass and dirt");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("irregular footprints among debris");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris and broken table");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rodent crap");  
-				break;  
+			case 100: // "rough natural catacombs";
+			case 101: // "room with scattered animal bones";
+			case 102: // "room with a nasty smell of decay";
+			case 103: // "burial grounds";
+			case 104: // "underground graveyard";
+			case 105: // "site of digging operation";
+			case 106: // "chamber with the stench of death";
+			case 107: // "abandoned silent garden";
+			case 108: // "chilly underground room";
+			case 109: // "strangely eerie place";
+			{
+				if ((d == 3) && (x % 2 == 0)) 		   return ("a small pile of broken glass and debris");
+				else if (d == 3) 					   return ("a very dirty empty bottle");
+				else if ((d == 4) && (x % 2 == 0)) 	   return ("rotten and funky rodent nests");
+				else if (d == 4) 					   return ("rotting flesh wrapped in some old rags");
+				else if ((d == 9) && (x % 2 == 0)) 	   return ("a small hole, leading to dark burrow");
+				else if (d == 9) 					   return ("several little holes that emmit clicking sounds");
+				else if ((x % 2 == 0) && (y % 2 == 0)) return ("broken glass and dirt");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("irregular footprints among debris");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("debris and broken table");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("small piles of rodent crap");
+				break;
 			}
-			case 110:  
-			{  
-				/* hunting grounds */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a trail of dried up blood");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a trampled ground");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a nest made of grey dungeon grass");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a nasty looking burrow hole");  
-				break;  
+			case 110:
+			{
+				/* hunting grounds */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a trail of dried up blood");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a trampled ground");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a nest made of grey dungeon grass");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a nasty looking burrow hole");
+				break;
 			}
-			case 111:  
-			{  
-				/* boneyard */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a ground littered with bone fragments");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("necromantic debris");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a carpet of bones");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a very dark skeletal fence");  
-				break;  
+			case 111:
+			{
+				/* boneyard */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a ground littered with bone fragments");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("necromantic debris");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a carpet of bones");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a very dark skeletal fence");
+				break;
 			}
-			case 112:  
-			{  
-				/* ancient orcish cemetery */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a skeletal wheel and chains");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a large tombstone");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a tombstone with orcish runes");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a little orcish shrine");  
-				break;  
+			case 112:
+			{
+				/* ancient orcish cemetery */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a skeletal wheel and chains");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a large tombstone");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a tombstone with orcish runes");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a little orcish shrine");
+				break;
 			}
-			case 113:  
-			{  
-				/* barrow mounds ground */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("elevated grounds");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a dungeon cliff of sorts");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a hollow ground under the stone");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an unusually small burial mound");  
-				break;  
+			case 113:
+			{
+				/* barrow mounds ground */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("elevated grounds");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a dungeon cliff of sorts");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a hollow ground under the stone");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an unusually small burial mound");
+				break;
 			}
-			case 114:  
-			{  
-				/* cemetery lair */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a rotten pile of carcasses");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a collapsed grave");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an exotic cracked tombstone");  
+			case 114:
+			{
+				/* cemetery lair */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a rotten pile of carcasses");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a collapsed grave");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an exotic cracked tombstone");
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("arranged branches, making a kind of a lair");
-				break;  
+				break;
 			}
-			case 115:  
-			{  
-				/* ossuary */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("neatly arranged animal bones");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("horns and antlers hanging from the ceiling");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a small bone-made structure");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a little bone tower");  
-				break;  
+			case 115:
+			{
+				/* ossuary */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("neatly arranged animal bones");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("horns and antlers hanging from the ceiling");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a small bone-made structure");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a little bone tower");
+				break;
 			}
 			case 116:
-			{  
+			{
 				/* burial pits */
-				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a desecrated grave");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an empty grave");  
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a desecrated grave");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an empty grave");
 				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a stack of orcish oddities");
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a shallow pit with trash");  
-				break;  
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a shallow pit with trash");
+				break;
 			}
-			case 117:  
-			{  
-				/* catacomb with no abyss */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a rather large urn");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("decorated urns and herbs");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a chest with broken lid");  
+			case 117:
+			{
+				/* catacomb with no abyss */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a rather large urn");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("decorated urns and herbs");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a chest with broken lid");
 				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a cracked sarcophagus");
-				break;  
+				break;
 			}
-			case 118:  
-			{  
-				/* skeletal archway */  
-				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a ceiling, decorated with bones");  
+			case 118:
+			{
+				/* skeletal archway */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a ceiling, decorated with bones");
 				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a pile of unusually white bones");
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a bone paved pathway");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a giant bone, just lying there");  
-				break;  
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a bone paved pathway");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a giant bone, just lying there");
+				break;
 			}
-			case 119:  
-			{  
-				/* dark room with many graves */  
-				if ((x % 2 == 0) && (y % 2 == 0))	   return ("an animal graveyard");  
-				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a funky smelling hole");  
-				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a grave, marked by bones");  
-				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a ditch used as a mass grave");  
-				break;  
+			case 119:
+			{
+				/* dark room with many graves */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("an animal graveyard");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a funky smelling hole");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a grave, marked by bones");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a ditch used as a mass grave");
+				break;
+			}
+
+			// web infested
+			case 120: "web infested room";
+			case 121: "nesting ground";
+			case 122: "spider lair";
+			case 123: "ancient room with cobwebs";
+			case 124: "room covered in spider webs";
+			case 125: "perfect room for a spider ambush";
+			case 126: "gloomy room with ceiling all covered in webs";
+			case 127: "infested storage room";
+			case 128: "cavernous room with massive cobwebs";
+			case 129: "arachnid hunting grounds";
+			case 130:
+			{
+				/* dark room absolutely not suited for arachnophobes */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a cocoon with a trapped bat");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("nasty looking cobwebs");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a woven hole spider entrance");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a drained animal corpse");
+				break;
+			}
+			case 131:
+			{
+				/* web infested room full of cocoons */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("web covered stones");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("several cocoons hanging from the nets");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a couple of cocooned animal corpses");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("quite a big cocoon");
+				break;
+			}
+			case 132:
+			{
+				/* nasty spider cavern */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a cavern stalactite, holding a giant web above");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a hole in the ceiling, all covered in webs");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a nest of smaller spiders");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a dusty area, littered with bony remains");
+				break;
+			}
+			case 133:
+			{
+				/* chamber with cocoons and webs hanging from the ceiling */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an unusually beautiful spider web above");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a morbid cocoon garden");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an old and dusty black web");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an old pyriform protrusion");
+				break;
+			}
+			case 134:
+			{
+				/* webbed hideout */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a torn down spider web");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("dark cobwebs, covering the area");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a small entrance to a webbed hole");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a pile of debris, concealing a spider nest");
+				break;
+			}
+			case 135:
+			{
+				/* arachnid nest within a deep antechamber */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a thin column of spider silk");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a stone carved arched ceiling with a fresco");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("several mummified animal remains");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a stack of cobwebs covered rusty tools");
+				break;
+			}
+			case 136:
+			{
+				/* cocoon-littered hallway */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a bunch of cracked and smashed cocoons");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a rather large cocoon");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a few hanging down cocoons");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a dried up large frog-like remains");
+				break;
+			}
+			case 137:
+			{
+				/* room consumed by giant spider webs */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("web embalmed insect exhibition");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a some debris, stuck in the cobwebs");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a thick layer of webbing");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a nasty looking spider web above");
+				break;
+			}
+			case 138:
+			{
+				/* room with intricately woven webs */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a web that looks like a piece of art");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a unique, but disturbing cobweb pattern");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a rock that holds thin streams of grey web");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a lair of some giant beetles");
+				break;
+			}
+			case 139:
+			{
+				/* spider lair infused with malevolent intelligence of sorts */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("runes glowing from the layers of cobwebs");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a fuming crack in the web-covered floor");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an orcish banner, trapped in the web");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a rusty old trap, all covered in webs");
+				break;
+			}
+
+			// alchemy
+			case 140: // "strange laboratory";
+			case 141: // "alchemical workshop";
+			case 142: // "abandoned alchemy lab";
+			case 143: // "room with weird reagents and broken glass";
+			case 144: // "rat infested laboratory";
+			case 145: // "site of weird experiments";
+			case 146: // "room with broken lab equipment";
+			case 147: // "abandoned research chamber";
+			case 148: // "nauseating room with cooking tools";
+			case 149: // "room with impressive cooking pit";
+
+			case 150:
+			{
+				/* room with a large suspicious cauldron */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a broken shelf");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a weird oil spill");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a small table with dried reagents");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a pile of broken glass and debris");
+				break;
+			}
+			case 151:
+			{
+				/* witchy chamber with a great cauldron */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a stinky carcass of sorts");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("strange ingredients hanging on hooks");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a small stack of coal and weeds");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("rubbish of various nature");
+				break;
+			}
+			case 152:
+			{
+				/* vile abbatoire chamber */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a spot with really heavy stench of decay");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("some rotting meat on a dirty stool");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a large chopping board");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an assortment of different hooks and chains");
+				break;
+			}
+			case 153:
+			{
+				/* very dark ritual chamber */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a suspicious circle of candles");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a runic inscription");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an altar of Morgul sorcery");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a statue of the Dark Enemy");
+				break;
+			}
+			case 154:
+			{
+				/* hellish workshop with torture devices */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a rack with several bones scattered around");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a table with rusty tools");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an iron grating in the floor");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a barrel with a few skulls inside");
+				break;
+			}
+			case 155:
+			{
+				/* workshop room with a large furnace */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a rack with old armaments");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a ditch with dirty water");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a pile of coal and some ore leftovers");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a conce with smoldering embers");
+				break;
+			}
+			case 156:
+			{
+				/* laboratory with glowing substances in caskets */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a table with colorful minerals");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a casket with some kind of a powder");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a rather large casket");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a set of vials amidst the broken glass");
+				break;
+			}
+			case 157:
+			{
+				/* lab room with smoking barrels */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a barrel with some markings");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an oddly smelling barrel");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a broken barrel");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a puddle of oily substance");
+				break;
+			}
+			case 158:
+			{
+				/* room with orcish breeding experiments */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a vat with funky liquid");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a mechanical apparatus");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a completely rusted lever");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a rack with hooked iron bars");
+				break;
+			}
+			case 159:
+			{
+				/* necromancer's alchemical hideout */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a little pile of sulphur and bones");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("several chipped quartz rocks");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a broken floor tile with a black smudge");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a basket with dried up animal limbs");
+				break;
+			}
+
+			// stalagmite
+			case 160: // "cavern with jagged ceiling";
+			case 161: // "cavern room";
+			case 162: // "fungal cavern";
+			case 163: // "windy cave";
+			case 164: // "stalagmite chamber";
+			case 165: // "room with stalactites";
+			case 166: // "very rough cavernous room";
+			case 167: // "mossy cave chamber";
+			case 168: // "deep underground cavern";
+			case 169: // "icy cold cave chamber";
+
+			case 170:
+			{
+				/* crystal grotto */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("crystalline stalactites hanging above");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a colorful rocky ceiling");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a little ceremonial altar");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an 'X' shaped tunnel");
+				break;
+			}
+			case 171:
+			{
+				/* burial cave with painted ceiling */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("colourful murals on the ceiling");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("several funeral urns");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a cache where once was a treasure");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("painted footsteps on the floor");
+				break;
+			}
+			case 172:
+			{
+				/* underground dark shrine */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an altar with menacing sculptures");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a stepping stone, covered in blood");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a plate with some filthy offerings");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a lifelike statue with a fiendish face");
+				break;
+			}
+			case 173:
+			{
+				/* cavern vault of fossils */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a crack in the stone, exposing a fine fossil");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a fossilized fish of sorts");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a petrified hound");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an ancient fern tree fossil");
+				break;
+			}
+			case 174:
+			{
+				/* abandoned troll cave */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a messy cavern guardpost");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a stinky trollish toilet");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a single broken skull");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a giant femur bone");
+				break;
+			}
+			case 175:
+			{
+				/* orcish cave lair */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a table with an old rickety chair");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a filthy bedroll");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("several broken bottles");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an old orcish oriflame");
+				break;
+			}
+			case 176:
+			{
+				/* koboulderarium */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a little signpost with four 'k' letters");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an empty torch sconce");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a pile of boulders, each painted as a face");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a couple of torn down stalagmites");
+				break;
+			}
+			case 177:
+			{
+				/* grand stalagmite pits */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an uneven rocky surface");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a calcium mound");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("some volcanic sediment");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a small vermin nest amidst the stones");
+				break;
+			}
+			case 178:
+			{
+				/* great underground chimney */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a crystalline sparkling vein");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a narrow shaft, leading upwards");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a little stream coming from the above");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a wailing opening in the rocky ceiling");
+				break;
+			}
+			case 179:
+			{
+				/* foul smelling cavern */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a suspicious funky hole");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a stack of rather old rations");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a rotting carcass");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an eerie mushroom circle");
+				break;
+			}
+
+			// basin
+			case 180: // "room with a cascading stream";
+			case 181: // "room with natural fountains";
+			case 182: // "chamber with foul water wells";
+			case 183: // "room with underground pools";
+			case 184: // "room with running water";
+			case 185: // "room with ice cold stream";
+			case 186: // "room with dirty water puddles";
+			case 187: // "wet room with some water wells";
+			case 188: // "room with some water and nasty fish odour";
+			case 189: // "room with a primitive aquaduct";
+
+			case 190:
+			{
+				/* room with a shallow basin */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a little stream of dark water");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a small mossy hole in the rocks");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a very light foggy mist");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a set of orcish footsteps");
+				break;
+			}
+			case 191:
+			{
+				/* room with a dark watering hole */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a crevice in the rock");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("footprints of some dungeon beasts");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a spot where you can hear deep humming");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a large cracked egg shell");
+				break;
+			}
+			case 192:
+			{
+				/* cave chamber with large geyser */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a spot of wet and slippery floor");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a shallow niche with several snails");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a rocky protrusion, forming a spike");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("several smaller stalagnates");
+				break;
+			}
+			case 193:
+			{
+				/* steaming hot cave with a basin */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a couple of glistening puddles");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a moldy jelly of sorts");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a steamy mist, covering the ground");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a small pile of fish bones");
+				break;
+			}
+			case 194:
+			{
+				/* ice cold cave with a pool of water */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a dent on a rock, caused by water drops");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a broken club with dark troll blood");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a thick chain, vanishing into the water");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a flat stone slab");
+				break;
+			}
+			case 195:
+			{
+				/* room with a small underground lake */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an orcish signpost pointing towards the lake");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an abandoned campfire");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a small damaged boat");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a castle made of sand");
+				break;
+			}
+			case 196:
+			{
+				/* room with a water body, teeming with life */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a puddle with some weird larvae");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a trail left by something amphibious");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a little cascading stream");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a bunch of eroded rocks");
+				break;
+			}
+			case 197:
+			{
+				/* ruined aquatic temple */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a collapsed ornate pillar");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a fresco depicting endless waves");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a large amphora");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("several steps leading to a dais");
+				break;
+			}
+			case 198:
+			{
+				/* chamber of the great fountain */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a short decorative fence");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a floor tile marked with an eye symbol");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an elevated spot with some pots");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an unknown animal statue with tusks");
+				break;
+			}
+			case 199:
+			{
+				/* room with a shimmering radiant lake */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a mystical aura around one particular stone");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a spoooo");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a ditch, buried in rocks and debris");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("iron remains of a tower gate");
+				break;
+			}
+
+			// dark
+			case 200: // "room filled up with smoke";
+			case 201: // "room obscured in smoke and dust";
+			case 202: // "dark misty room";
+			case 203: // "room with strange shadows";
+			case 204: // "a cursed room";
+			case 205: // "a dark and ancient room";
+			case 206: // "gloomy room";
+			case 207: // "room with smoke and black tiles";
+			case 208: // "room with dark steam";
+			case 209: // "misty room";
+
+			case 210:
+			{
+				/* room filled with heavy mist */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a damp and moldy area");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a small rocky structure");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a nest of many dungeon snails");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a spot with a fog rising towards the ceiling");
+				break;
+			}
+			case 211:
+			{
+				/* a hall with menacing dense fog */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a couple of calcite vents");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a shallow pit, full of mist");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a foggy spiral of sorts");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an accumulated volume of dark winds");
+				break;
+			}
+			case 212:
+			{
+				/* very obscured dark room */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a spot of dense mist above the floor");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an occult altar");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a few sculpted statuettes");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a fog, radiating accursed magics");
+				break;
+			}
+			case 213:
+			{
+				/* dark room emanating vile sorcery */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a ritual spot covered with black blood");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an orcish sacrificial ground");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a stone with old engraved letters");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("iron pikes, forming a cage of sorts");
+				break;
+			}
+			case 214:
+			{
+				/* room of Morgul sorcery */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an obviously cursed chair");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a black lava rock with glowing glyphs");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an ornate ceremonial carpet");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a couple of metallic vases");
+				break;
+			}
+			case 215:
+			{
+				/* a room with a horrible presence */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("wildly scattered animal bones");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an oddly shaped abyssal rock");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a blood-stained little shrine");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a worm infested pile of filth");
+				break;
+			}
+			case 216:
+			{
+				/* a cave of foul magic */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a half-buried bramble effigy");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a smoke coming from the cracks in the floor");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a small pile of colorful dust");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a beam of light, coming from above");
+				break;
+			}
+			case 217:
+			{
+				/* a cavern of lost souls */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a strange humanoid statue");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a patch of giant fungi in a purple mist");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a bunch of dead rats");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("shattered mirror shards");
+				break;
+			}
+			case 218:
+			{
+				/* an infernal cave */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a jagged elevated rock");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a smoldering crack in the floor");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a 'horned' stone formation");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a demonic altar");
+				break;
+			}
+			case 219:
+			{
+				/* a chamber of great malice */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an empty display case");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a large, yet very thin vertical iron bar");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a little glowing emblem");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a nest made of bones");
+				break;
+			}
+
+			// archives
+			case 220: // "room with old broken shelves";
+			case 221: // "room with rows of shelves";
+			case 222: // "dusty chamber full of scrolls";
+			case 223: // "room with ancient scroll racks";
+			case 224: // "messy room with piles of broken clay tablets";
+			case 225: // "archive chamber, turned into a foul lair";
+			case 226: // "a museum chamber of sorts";
+			case 227: // "burned down archives";
+			case 228: // "musky old archive";
+			case 229: // "web infested archive room";
+
+			case 230:
+			{
+				/* chamber of dragon archive */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a pile of rotten scrolls");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an ancient caligraphic mural");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an empty looking ornate bookshelf");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a box with dragon teeth");
+				break;
+			}
+			case 231:
+			{
+				/* a Morgul library */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("dusty piles of moldy books");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a rather large pot of witch ink");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a rack with stretched pergamonum");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a smoking stack of burning books");
+				break;
+			}
+			case 232:
+			{
+				/* underground ancient archives */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a bookshelf with rat droppings");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a shelf overgrown with some moss");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a row of collapsed cabinets");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a stack of tattered parchments");
+				break;
+			}
+			case 233:
+			{
+				/* cavern of thousands books */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a tall stack of damaged books");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("several smaller piles of ruined books");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a block of moldy old parchments");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("disorderly scattered damaged books");
+				break;
+			}
+			case 234:
+			{
+				/* cartography archive */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a barrel with rolled up parchments");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a large unfolded map of eastern lands");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a broken set of cartographic tools");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a board with marked orcish routes");
+				break;
+			}
+			case 235:
+			{
+				/* room with strange exponates */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a broken and empty display");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a glass vat with a big dead insectoid");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a shelf with unknown contraptions");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a ceramic pot with tall dungeon grass");
+				break;
+			}
+			case 236:
+			{
+				/* archive of ancient magic */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a little cloud of purple sparks");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("some glowing Morgul runes");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a pile of shattered glasses and bottles");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("several embers, smelling of Udun");
+				break;
+			}
+			case 237:
+			{
+				/* room of dark secrets */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a dark, yet glowing crack in the floor");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an old and rusty mechanical device");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a dark tongue spelling of 'NUDU'");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a sculpture depicting a twisted ent");
+				break;
+			}
+			case 238:
+			{
+				/* murmuring archives */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a spot where you cannot hear your breath");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a ruptured deep purple rock");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a fossil with a sign, warning of 'bbobb'");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a small library with empty books");
+				break;
+			}
+			case 239:
+			{
+				/* library of elder giants */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a mural, depicting Ungoliant in battle pose");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a bookshelf with burned books");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a stack, overflowing with odd mathematics");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a shelf with carved tablets");
+				break;
+			}
+
+			// storage
+			case 240: // "a room with moldy boxes";
+			case 241: // "a room full of garbage";
+			case 242: // "a cave with piles of rubbish";
+			case 243: // "a room with empty shelves";
+			case 244: // "an old storage room";
+			case 245: // "a room with several broken boxes";
+			case 246: // "a dusty room with some shelves";
+			case 247: // "a cavern with useless trash";
+			case 248: // "a room with stacks of rotting meat";
+			case 249: // "a lair with piles of bones and filth";
+
+			case 250:
+			{
+				/* a room with orcish trophies */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("some crude furniture");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a small pagoda made of chained bones");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a set of dragon horns");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("bronze and copper plates");
+				break;
+			}
+			case 251:
+			{
+				/* a treasury of sorts */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an empty decorated chest");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a sturdy wardrobe");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an assortment of fine fabrics");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("several silver-plated vases");
+				break;
+			}
+			case 252:
+			{
+				/* a chamber of looted dragon treasure */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a set of marks left by dragging something heavy");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a small empty cauldron");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("an already looted chest");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("some worthless trinkets");
+				break;
+			}
+			case 253:
+			{
+				/* a room with shelves of curious items */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a shelf with really small skulls");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a cabinet with glass statuettes");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a broad shelf with clay forms");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a tall shelf with stuffed animals");
+				break;
+			}
+			case 254:
+			{
+				/* a room full of stored ingredients */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a table full of glass vats");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a shelf with little creatures in brine");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a broken drawer");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("dried herbs hanging from a pole");
+				break;
+			}
+			case 255:
+			{
+				/* a hideout with stashed boxes */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a couple of boxes");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an empty wooden crate");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a box, marked as dangerous");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a bunch of broken planks");
+				break;
+			}
+			case 256:
+			{
+				/* a decorated vault */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a painted empty casket");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a beautiful, but smashed guild chest");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a large painting, all torn and tattered");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an elevated spot with a fence around");
+				break;
+			}
+			case 257:
+			{
+				/* an arched hall with a small treasure hoard */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a rather large bronze plate");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a set of copper and brass cups");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a decorated table with some trinkets");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a pair of demonic looking statues");
+				break;
+			}
+			case 258:
+			{
+				/* a room with several loaded carts */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an old rusty cart");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a cart full of coal");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("railway tracks on the floor");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a mining cart filled with dirt");
+				break;
+			}
+			case 259:
+			{
+				/* an orcish pantry */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a cabinet with mostly broken flasks");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a dead boar, hanging on a hook");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("some dirty pots with dubious contents");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a sack with nasty meatballs");
+				break;
+			}
+
+			// prison
+			case 260: // "a room with torture tools";
+			case 261: // "a room with several smaller cages";
+			case 262: // "a dark prison cell";
+			case 263: // "a room of the prison warden";
+			case 264: // "a cell with blood splatters";
+			case 265: // "a smelly old cell";
+			case 266: // "a room with lines of prison bars";
+			case 267: // "a prison cell with dense cobwebs";
+			case 268: // "a prison pit";
+			case 269: // "an interrogation room";
+
+			case 270:
+			{
+				/* a room with a giant cage */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a couple of lost teeth");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a pot with very funky content");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("rather large chains");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a ceramic bowl");
+				break;
+			}
+			case 271:
+			{
+				/* dungeon fens */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("several bowls with water");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an animal cage");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a smaller wooden cage");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a trough with mushy substance");
+				break;
+			}
+			case 272:
+			{
+				/* a room with a prison cell */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a dirty bucket");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a broken torture device");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a puddle of filth");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a small carved toy figurine");
+				break;
+			}
+			case 273:
+			{
+				/* a prison block */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a barrel of unclean water");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a small pile of dirt from digging");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a shallow pit full of rubbish");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an iron grating just lying there");
+				break;
+			}
+			case 274:
+			{
+				/* a cursed prison block */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a barrel of strange liquid");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a tunnel, at least a few yards deep");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a shallow pit, swarming with worms");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("an iron grating, mounted on the ceiling");
+				break;
+			}
+			case 275:
+			{
+				/* a room with a grated dungeon pit */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a menhir rock, standing tall");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an empty iron crate");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a barrel with broken and rusty blades");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("aggressively trampled dirt");
+				break;
+			}
+			case 276:
+			{
+				/* an oubliette */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an empty bucket");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("some scratched markings on the floor");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a thick layer of dust and debris");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a couple of bricks");
+				break;
+			}
+			case 277:
+			{
+				/* a caged zoo */
+				if ((x % 2 == 0) && (y % 2 == 0))	   return ("a pair of animal cages");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("an empty cell of a predator");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a bowl with a brew of some kind");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("scattered bone splinters");
+				break;
+			}
+			case 278:
+			{
+				/* a dungeon prison cell */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("an excrement pit");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a simple chair");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a little cockroach nest");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("a set of rusty chains");
+				break;
+			}
+			case 279:
+			{
+				/* the darkest dungeon */
+				if ((x % 2 == 0) && (y % 2 == 0)) 	   return ("a quiet spot for some respite");
+				else if ((x % 2 == 1) && (y % 2 == 1)) return ("a set of holes in the dungeon floor");
+				else if ((x % 2 == 0) && (y % 2 == 1)) return ("a little altar with some orcish elements");
+				else if ((x % 2 == 1) && (y % 2 == 0)) return ("makeshift battlements");
+				break;
 			}
 		}
 	}
@@ -5681,9 +6508,347 @@ cptr describe_random(int y, int x)
 				if ((x + y) % 2 == 0) return ("a circle of charred bones arranged in a strange pattern");
 				else 				  return ("a pile of blackened bones, with the smell of sulfur in the air"); break;
 			}
+			case 20: // "room with rough cave walls";
+			{
+				if 		((x + y) % 4 == 3) return ("a circle of charred bones");
+				else if ((x + y) % 4 == 2) return ("a circle of charred bones");
+				else if ((x + y) % 4 == 1) return ("a circle of charred bones");
+				else 				  	   return ("a pile of blackened bones");
+				break;
+			}
+			case 21: // "cavernous room";
+			{
+				return ("a circle of charred bones");
+				return ("a circle of charred bones");
+				return ("a circle of charred bones");
+				return ("a pile of blackened bones");
+				break;
+			}
+			case 22: // "cave chamber";
+			case 23: // "rough cave room";
+			case 24: // "cavern opening";
+			case 25: // "stone cave";
+			case 26: // "uneven room with stone floor
+			case 27: // "room with cave-like features
+			case 28: // "room carved into a cave";
+			case 29: // "rocky chamber";
+			case 30: // "almost natural cave";
+			case 31: // "cave with high ceiling";
+			case 32: // "cave with many small stone n
+			case 33: // "mineral cave chamber";
+			case 34: // "damp and slippery cave";
+			case 35: // "domed vertical cave";
+			case 36: // "rounded cave chamber";
+			case 37: // "fungal cavern room";
+			case 38: // "mossy cave with dark sand";
+			case 39: // "jagged cave";
+
+			case 40: // "room with broken down walls";
+			case 41: // "room with large cracks in the walls";
+			case 42: // "room full of rubble";
+			case 43: // "ruined room";
+			case 44: // "partially broken room";
+			case 45: // "room with very uneven floor";
+			case 46: // "chamber with broken arches";
+			case 47: // "room with cracked floor";
+			case 48: // "room filled with various debris";
+			case 49: // "abandoned room";
+			case 50: // "destroyed stone chamber";
+			case 51: // "collapsed room";
+			case 52: // "room with destroyed ceiling";
+			case 53: // "very ruined room";
+			case 54: // "room in total ruins";
+			case 55: // "room, blasted down in some kind of explosion";
+			case 56: // "room filled with tons of rubble";
+			case 57: // "room with collapsed walls";
+			case 58: // "completely messed up hall";
+			case 59: // "wrecked hall";
+
+			case 60: // "overgrown room";
+			case 61: // "room with patches of cave grass";
+			case 62: // "room with walls covered in moss";
+			case 63: // "chamber with green moss on the floor";
+			case 64: // "room with puddles of water";
+			case 65: // "room with puddles and cavern grass";
+			case 66: // "mossy room with dirt and pebbles";
+			case 67: // "room with cavern vegetation";
+			case 68: // "room with some roots hanging from the ceiling";
+			case 69: // "room with moss and dropping water";
+			case 70: // "room with roots and patches of undergrowth";
+			case 71: // "room with thick patches of wild dungeon trees";
+			case 72: // "room overgrown with dungeon trees";
+			case 73: // "lush chamber with dungeon vegetation";
+			case 74: // "cave with branching roots all over the walls";
+			case 75: // "room with tangled branches of underwood";
+			case 76: // "unusually vivid cave chamber";
+			case 77: // "room with twisted dungeon roots";
+			case 78: // "room that changes into an underground marsh";
+			case 79: // "room with stacks of fallen darkwood";
+
+			case 80: // "guard post of some sort";
+			case 81: // "almost empty armoury";
+			case 82: // "small outpost";
+			case 83: // "room with broken bars of rusty metal";
+			case 84: // "rusty old room";
+			case 85: // "abandoned outpost";
+			case 86: // "room with a small collonade";
+			case 87: // "guarding chamber";
+			case 88: // "long forgotten armoury";
+			case 89: // "room with thin pillars";
+			case 90: // "room with massive pillars";
+			case 91: // "chamber with stone columns";
+			case 92: // "abandoned forge";
+			case 93: // "ornate collonade";
+			case 94: // "fortified hallway";
+			case 95: // "abandoned throne room";
+			case 96: // "ruined hall";
+			case 97: // "hall of giant pillars";
+			case 98: // "underground ruined temple";
+			case 99: // "buried dungeon tower";
+
+			case 100: // "rough natural catacombs";
+			case 101: // "room with scattered animal bones";
+			case 102: // "room with a nasty smell of decay";
+			case 103: // "burial grounds";
+			case 104: // "underground graveyard";
+			case 105: // "site of digging operation";
+			case 106: // "chamber with the stench of death";
+			case 107: // "abandoned silent garden";
+			case 108: // "chilly underground room";
+			case 109: // "strangely eerie place";
+			case 110: // "hunting grounds";
+			case 111: // "boneyard";
+			case 112: // "ancient orcish cemetery";
+			case 113: // "barrow mounds ground";
+			case 114: // "cemetery lair";
+			case 115: // "ossuary";
+			case 116: // "burial pits";
+			case 117: // "catacomb with no abyss";
+			case 118: // "skeletal archway";
+			case 119: // "dark room with many graves";
+
+			case 120: // "web infested room";
+			{
+				if 		((x + y) % 4 == 3) return ("a circle of charred bones");
+				else if ((x + y) % 4 == 2) return ("a circle of charred bones");
+				else if ((x + y) % 4 == 1) return ("a circle of charred bones");
+				else 				  	   return ("a pile of blackened bones");
+				break;
+			}
+			case 121: // "nesting ground";
+			{
+				return ("a circle of charred bones");
+				return ("a circle of charred bones");
+				return ("a circle of charred bones");
+				return ("a pile of blackened bones");
+				break;
+			}
+			case 122: // "spider lair";
+			case 123: // "ancient room with cobwebs";
+			case 124: // "room covered in spider webs";
+			case 125: // "perfect room for a spider ambush";
+			case 126: // "gloomy room with ceiling all covered in webs";
+			case 127: // "infested storage room";
+			case 128: // "cavernous room with massive cobwebs";
+			case 129: // "arachnid hunting grounds";
+			case 130: // "dark room absolutely not suited for arachnophobes";
+			case 131: // "web infested room full of cocoons";
+			case 132: // "nasty spider cavern";
+			case 133: // "chamber with cocoons and webs hanging from the ceiling";
+			case 134: // "webbed hideout";
+			case 135: // "arachnid nest within a deep antechamber";
+			case 136: // "cocoon-littered hallway";
+			case 137: // "room consumed by giant spider webs";
+			case 138: // "room with intricately woven webs";
+			case 139: // "spider lair infused with malevolent intelligence of sorts";
+
+			case 140: // "strange laboratory";
+			case 141: // "alchemical workshop";
+			case 142: // "abandoned alchemy lab";
+			case 143: // "room with weird reagents and broken glass";
+			case 144: // "rat infested laboratory";
+			case 145: // "site of weird experiments";
+			case 146: // "room with broken lab equipment";
+			case 147: // "abandoned research chamber";
+			case 148: // "nauseating room with cooking tools";
+			case 149: // "room with impressive cooking pit";
+			case 150: // "room with a large suspicious cauldron";
+			case 151: // "witchy chamber with a great cauldron";
+			case 152: // "vile abbatoire chamber";
+			case 153: // "very dark ritual chamber";
+			case 154: // "hellish workshop with torture devices";
+			case 155: // "workshop room with a large furnace";
+			case 156: // "laboratory with glowing substances in caskets";
+			case 157: // "lab room with smoking barrels";
+			case 158: // "room with orcish breeding experiments";
+			case 159: // "necromancer's alchemical hideout";
+
+			case 160: // "cavern with jagged ceiling";
+			case 161: // "cavern room";
+			case 162: // "fungal cavern";
+			case 163: // "windy cave";
+			case 164: // "stalagmite chamber";
+			case 165: // "room with stalactites";
+			case 166: // "very rough cavernous room";
+			case 167: // "mossy cave chamber";
+			case 168: // "deep underground cavern";
+			case 169: // "icy cold cave chamber";
+			case 170: // "crystal grotto";
+			case 171: // "burial cave with painted ceiling";
+			case 172: // "underground dark shrine";
+			case 173: // "cavern vault of fossils";
+			case 174: // "abandoned troll cave";
+			case 175: // "orcish cave lair";
+			case 176: // "koboulderarium";
+			case 177: // "grand stalagmite pits";
+			case 178: // "great underground chimney";
+			case 179: // "foul smelling cavern";
+
+			case 180: // "room with a cascading stream";
+			case 181: // "room with natural fountains";
+			case 182: // "chamber with foul water wells";
+			case 183: // "room with underground pools";
+			case 184: // "room with running water";
+			case 185: // "room with ice cold stream";
+			case 186: // "room with dirty water puddles";
+			case 187: // "wet room with some water wells";
+			case 188: // "room with some water and nasty fish odour";
+			case 189: // "room with a primitive aquaduct";
+			case 190: // "room with a shallow basin";
+			case 191: // "room with a dark watering hole";
+			case 192: // "cave chamber with large geyser";
+			case 193: // "steaming hot cave with a basin";
+			case 194: // "ice cold cave with a pool of water";
+			case 195: // "room with a small underground lake";
+			case 196: // "room with a water body, teeming with life";
+			case 197: // "ruined aquatic temple";
+			case 198: // "chamber of the great fountain";
+			case 199: // "room with a shimmering radiant lake";
+
+			case 200: // "room filled up with smoke";
+			case 201: // "room obscured in smoke and dust";
+			case 202: // "dark misty room";
+			case 203: // "room with strange shadows";
+			case 204: // "a cursed room";
+			case 205: // "a dark and ancient room";
+			case 206: // "gloomy room";
+			case 207: // "room with smoke and black tiles";
+			case 208: // "room with dark steam";
+			case 209: // "misty room";
+			case 210: // "room filled with heavy mist";
+			case 211: // "a hall with menacing dense fog";
+			case 212: // "very obscured dark room";
+			case 213: // "dark room emanating vile sorcery";
+			case 214: // "room of Morgul sorcery";
+			case 215: // "a room with a horrible presence";
+			case 216: // "a cave of foul magic";
+			case 217: // "a cavern of lost souls";
+			case 218: // "an infernal cave";
+			case 219: // "a chamber of great malice";
+
+			case 220: // "room with old broken shelves";
+			{
+				if 		((x + y) % 4 == 3) return ("a circle of charred bones");
+				else if ((x + y) % 4 == 2) return ("a circle of charred bones");
+				else if ((x + y) % 4 == 1) return ("a circle of charred bones");
+				else 				  	   return ("a pile of blackened bones");
+				break;
+			}
+			case 221: // "room with rows of shelves";
+			{
+				return ("a circle of charred bones");
+				return ("a circle of charred bones");
+				return ("a circle of charred bones");
+				return ("a pile of blackened bones");
+				break;
+			}
+			case 222: // "dusty chamber full of scrolls";
+			case 223: // "room with ancient scroll racks";
+			case 224: // "messy room with piles of broken clay tablets";
+			case 225: // "archive chamber, turned into a foul lair";
+			case 226: // "a museum chamber of sorts";
+			case 227: // "burned down archives";
+			case 228: // "musky old archive";
+			case 229: // "web infested archive room";
+			case 230: // "chamber of dragon archive";
+			case 231: // "a Morgul library";
+			case 232: // "underground ancient archives";
+			case 233: // "cavern of thousands books";
+			case 234: // "cartography archive";
+			case 235: // "room with strange exponates";
+			case 236: // "archive of ancient magic";
+			case 237: // "room of dark secrets";
+			case 238: // "murmuring archives";
+			case 239: // "library of elder giants";
+
+			case 240: // "a room with moldy boxes";
+			case 241: // "a room full of garbage";
+			case 242: // "a cave with piles of rubbish";
+			case 243: // "a room with empty shelves";
+			case 244: // "an old storage room";
+			case 245: // "a room with several broken boxes";
+			case 246: // "a dusty room with some shelves";
+			case 247: // "a cavern with useless trash";
+			case 248: // "a room with stacks of rotting meat";
+			case 249: // "a lair with piles of bones and filth";
+			case 250: // "a room with orcish trophies";
+			case 251: // "a treasury of sorts";
+			case 252: // "a chamber of looted dragon treasure";
+			case 253: // "a room with shelves of curious items";
+			case 254: // "a room full of stored ingredients";
+			case 255: // "a hideout with stashed boxes";
+			case 256: // "a decorated vault";
+			case 257: // "an arched hall with a small treasure hoard";
+			case 258: // "a room with several loaded carts";
+			case 259: // "an orcish pantry";
+
+			case 260: // "a room with torture tools";
+			case 261: // "a room with several smaller cages";
+			case 262: // "a dark prison cell";
+			case 263: // "a room of the prison warden";
+			case 264: // "a cell with blood splatters";
+			case 265: // "a smelly old cell";
+			case 266: // "a room with lines of prison bars";
+			case 267: // "a prison cell with dense cobwebs";
+			case 268: // "a prison pit";
+			case 269: // "an interrogation room";
+			case 270: // "a room with a giant cage";
+			case 271: // "dungeon fens";
+			case 272: // "a room with a prison cell";
+			case 273: // "a prison block";
+			case 274: // "a cursed prison block";
+			case 275: // "a room with a grated dungeon pit";
+			case 276: // "an oubliette";
+			case 277: // "a caged zoo";
+			case 278: // "a dungeon prison cell";
+			case 279: // "the darkest dungeon";
+
+			case 280: // "an underground shrine";
+			case 281: // "a room with an altar";
+			case 282: // "";
+			case 283: // "";
+			case 284: // "";
+			case 285: // "";
+			case 286: // "";
+			case 287: // "";
+			case 288: // "";
+			case 289: // "";
+			case 290: // "";
+			case 291: // "";
+			case 292: // "";
+			case 293: // "";
+			case 294: // "";
+			case 295: // "";
+			case 296: // "";
+			case 297: // "";
+			case 298: // "";
+			case 299: // "";
+			{
+				break;
+			}
 		}
 	}
-	
+
 	/* all the cases should be covered in the end, but still... */
 	return ("unidentifiable pile of debris");
 }

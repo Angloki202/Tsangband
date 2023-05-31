@@ -3814,11 +3814,12 @@ cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used, bool uncon
 	return ("");
 	
 	
-	/*** -KN- Handle Totems ***/
+	/*** -KN- Handle Totems (TOT) ***/
 	do_totem:
 
 	/* Sound (ICI) */
 	//if (use) sound(MSG_USE_STAFF);
+	screen_save(FALSE);
 
 	/* Special message when using TOTEM tome for the first time */
 	if (msg)
@@ -3828,9 +3829,7 @@ cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used, bool uncon
 		/* first time opening the book */
 		/* unlock spells randomly via SPECIAL_XXX1 through XXX3 */
 	}
-
-
-	screen_save(FALSE);
+	
 
 	int tot = 0;
 	int i;
@@ -3845,23 +3844,22 @@ cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used, bool uncon
 		tot = (o_ptr->sval * 4) + i;
 		
 		/* clear the line for the totem info */
-		clear_space(i + 2, 0, 65);	
+		clear_space(i + 2, 20, 75);	
 		
 		if		(i == 0) (void)strnfmt(buf, sizeof(buf), "a) %s", totem_info[tot].name);
 		else if (i == 1) (void)strnfmt(buf, sizeof(buf), "b) %s", totem_info[tot].name);
 		else if (i == 2) (void)strnfmt(buf, sizeof(buf), "c) %s", totem_info[tot].name);
 		else if (i == 3) (void)strnfmt(buf, sizeof(buf), "d) %s", totem_info[tot].name);
-		c_put_str(TERM_TEAL, format("%s", buf), i + 2, 6);
+		c_put_str(TERM_TEAL, format("%s", buf), i + 2, 25);
 		
 		(void)strnfmt(buf, sizeof(buf), "%d each %d turns",
 			totem_info[tot].val, totem_info[tot].freq);
-		c_put_str(TERM_MUD, format("%s", buf), i + 2, 30);		
+		c_put_str(TERM_MUD, format("%s", buf), i + 2, 60);		
 	}
 
 	/* Prompt for a command */
 	prt("", 0, 0);
 	put_str(format("(Browsing) Choose a totem, or ESC: "), 0, 0);
-	//c_put_str(TERM_TEAL, "What totem do you wish to construct?", 7, xx);
 	
 	char ch;
 
@@ -3872,11 +3870,15 @@ cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used, bool uncon
 		ch = inkey(FALSE);
 
 		/* Leave */
-		if (ch == ESCAPE) break;
+		if (ch == ESCAPE)
+		{
+			break;
+		}
 		
 		if (ch == 'a')
 		{
 			/* all the 1st totems of a given book */
+			//message_flush();
 			
 			if (o_ptr->sval == 0)
 			{
@@ -3887,6 +3889,22 @@ cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used, bool uncon
 				{
 					if (heal_player(power / 2, power)) *ident = TRUE;
 					if (set_cut(p_ptr->cut - 25)) *ident = TRUE;
+					
+					/* test for clean floor (move) */
+					if cave_clean_bold(py, px)
+					{
+						/* make the FIRE 'court' / secondary FIRE totem */
+						cave_set_feat(py, px, FEAT_TOTEM_FIRE);
+						cave_mark[py][px] |= (MARK_FIRE);
+						cave_mark[py][px] |= (MARK_MADE);
+						msg_print("You had built a monkey totem!");
+					}
+					else
+					{
+						/* no room for totem */
+						msg_print("Totems need some space to build.");
+						ch = ESCAPE;
+					}
 					break;
 				}
 			}
@@ -3894,6 +3912,7 @@ cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used, bool uncon
 		else if (ch == 'b')
 		{
 			/* all the 2nd totems of a given book */
+			
 			
 			if (o_ptr->sval == 0)
 			{
@@ -3912,6 +3931,7 @@ cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used, bool uncon
 		{
 			/* all the 3rd totems of a given book */
 			
+			
 			if (o_ptr->sval == 0)
 			{
 				/* [Your First Totems] */
@@ -3928,6 +3948,7 @@ cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used, bool uncon
 		else if (ch == 'd')
 		{
 			/* all the 4th totems of a given book */
+			
 			
 			if (o_ptr->sval == 0)
 			{
@@ -3952,6 +3973,9 @@ cptr do_device(int mode, object_type *o_ptr, bool *ident, bool *used, bool uncon
 	/* We used the totemic book */
 	if (ch != ESCAPE) *used = TRUE;
 
+	/* Restore the screen */
+	screen_load();
+	
 	/* Return */
 	return ("");
 }
@@ -4717,6 +4741,9 @@ void use_device(int tval)
 
 		/* Special message only prints once */
 		k_info[o_ptr->k_idx].special |= (SPECIAL_MESSAGE);
+		
+		/* -KN- Reset the screen for totem menus; probably redundant */
+		//if (o_ptr->tval == TV_TOTEM_BOOK) screen_load();
 	}
 
 

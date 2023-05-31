@@ -1365,6 +1365,13 @@ void print_spells(int tval, int sval, int y, int x)
 			attr_name  = TERM_WHITE;
 			attr_extra = TERM_WHITE;
 		}
+		else if (!(p_ptr->spell_flags[i] & (PY_SPELL_UPGRADED)))
+		{
+			/* -KN- upgraded spells (ICI) (UPG) */
+			strcpy(comment, "mastered");
+			attr_name  = TERM_YELLOW;
+			attr_extra = TERM_YELLOW;
+		}		
 		else
 		{
 			/* Get extra spell info */
@@ -1644,7 +1651,6 @@ static int get_spell(int *sn, cptr prompt, int tval, int sval)
 
 	/* Restore the screen */
 	if ((redraw) && (!always_show)) screen_load();
-
 
 	/* Abort if needed */
 	if (!flag) return (FALSE);

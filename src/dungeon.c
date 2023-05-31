@@ -1725,6 +1725,28 @@ static void process_world(void)
 				/* (IDEA) call in STEALTH check to reduce danger */
 				rr = rand_int(255);				
 				
+				
+				/* (TOT) activate totems (move)? */
+				if ((cave_feat[y][x] == FEAT_TOTEM_FIRE) && (rr > 119))
+				{
+					int yy;
+					int xx;
+					
+					for (i = 0; i < 3; i++)
+					{
+						/* Get a totally random grid nerby */
+						yy = rand_spread(p_ptr->py + y1, p_ptr->py + y2);
+						xx = rand_spread(p_ptr->px + x1, p_ptr->px + x2);
+
+						/* Fire a beam of (strong) light towards it */
+						project(0, 0, y, x, yy, xx, 1, GF_LITE,
+							PROJECT_BEAM | PROJECT_KILL | PROJECT_GRID, 0, 0);
+					}
+					
+					project_star(0, 2, y, x, yy, xx, 3, GF_LITE, 0L);
+				}
+				
+				
 				if ((cave_feat[y][x] == FEAT_WEB) && (rr < 3))
 				{
 					// being nearby webs can (in rare cases) provoke a spider to climb down
@@ -2321,6 +2343,7 @@ static void process_command(void)
 		/* Handle a totem */
 		case 'h':
 		{
+			/* (TOT) (ICI) */
 			use_device(TV_TOTEM_BOOK);
 			break;
 		}
